@@ -1,0 +1,284 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-text-default-500: #30363d;
+  --color-text-neutral-400: #76808b;
+  --color-text-disabled-300: #b6bcc4;
+  --color-text-on-accent-bg: #9b4f10;
+  --color-text-negative: #94233a;
+  --color-text-success: #12802a;
+  --color-text-warning: #9a6810;
+  --color-text-info: #253f91;
+  --color-text-on-solid-bg: #ffffff;
+
+  --color-bg-canvas: #ffffff;
+  --color-bg-on-canvas: #fbfbfb;
+  --color-bg-default-100: #f2f4f7;
+  --color-bg-active-200: #dde2e8;
+  --color-bg-overlay: rgb(48 54 61 / 60%);
+  --color-bg-accent: #ff7a1a;
+  --color-bg-accent-soft: #f9ecdf;
+  --color-bg-dropdown-modal: #ffffff;
+  --color-bg-negative-soft: #f7e1e8;
+  --color-bg-success-soft: #ddf2e5;
+  --color-bg-warning-soft: #f8f0e2;
+  --color-bg-info-soft: #dde5ff;
+  --color-bg-nav: #24104a;
+  --color-bg-on-nav: #5d467d;
+  --color-bg-on-on-nav: #755d95;
+
+  --color-border-default-100: #ebeef2;
+  --color-border-on-bg-200: #dde2e8;
+  --color-border-input-default-200: #d7dce3;
+  --color-border-input-active: #ff7a1a;
+  --color-border-input-negative: #f43b61;
+
+  --color-button-primary: #2ea1fe;
+  --color-button-primary-clicked: #1d7fd4;
+  --color-button-negative: #f2385a;
+  --color-button-negative-clicked: #98263b;
+  --color-button-neutral: #ffffff;
+  --color-button-neutral-clicked: #dde3ea;
+  --color-button-disabled: #d8dde4;
+
+  --color-input-surface: #ffffff;
+  --color-input-surface-disabled: #eef2f6;
+  --color-input-placeholder: #97a2af;
+  --color-input-label: #47515c;
+  --color-input-helper: #7e8a97;
+  --color-control-muted: #9ba6b4;
+  --color-control-disabled-border: #f0f2f6;
+  --color-control-disabled-checked: #ffc290;
+  --color-switch-disabled-checked: #ffb987;
+  --color-switch-disabled-unchecked: #f1f4f8;
+  --color-button-primary-border: #2e8adb;
+  --color-button-primary-active-border: #1d568a;
+  --color-button-destructive-border: #d62d59;
+  --color-button-destructive-active-border: #78182e;
+  --color-button-neutral-hover: #fcfcfd;
+
+  --shadow-button-primary: inset 0 -2px 1px 0 rgb(25 89 140 / 50%);
+  --shadow-button-negative: inset 0 -2px 1px 0 rgb(134 31 52 / 50%);
+  --shadow-button-neutral:
+    0 0 0 1px rgb(44 50 55 / 8%),
+    0 1px 1px -0.5px rgb(44 50 55 / 4%);
+  --shadow-button-pressed: none;
+  --shadow-input-default: 0 1px 2px rgb(44 50 55 / 4%);
+  --shadow-control-elevated: 0 1px 2px rgb(44 50 55 / 0.12);
+  --shadow-control-pressed: inset 0 -4px 0 rgb(170 85 22 / 0.42);
+
+  --color-icon-default: #30363d;
+  --color-icon-neutral: #76808b;
+  --color-icon-disabled: #b6bcc4;
+  --color-icon-on-accent-bg: #ff7a1a;
+  --color-icon-negative: #f2385a;
+  --color-icon-info: #325adb;
+  --color-icon-warning: #f6a019;
+  --color-icon-success: #17d345;
+  --color-icon-on-solid-bg: #ffffff;
+}
+
+:root {
+  --color-text-default-500: #30363d;
+  --color-text-neutral-400: #76808b;
+  --color-text-disabled-300: #b6bcc4;
+  --color-text-on-accent-bg: #9b4f10;
+  --color-text-negative: #94233a;
+  --color-text-success: #12802a;
+  --color-text-warning: #9a6810;
+  --color-text-info: #253f91;
+  --color-text-on-solid-bg: #ffffff;
+
+  --color-bg-canvas: #ffffff;
+  --color-bg-on-canvas: #fbfbfb;
+  --color-bg-default-100: #f2f4f7;
+  --color-bg-active-200: #dde2e8;
+  --color-bg-overlay: rgb(48 54 61 / 60%);
+  --color-bg-accent: #ff7a1a;
+  --color-bg-accent-soft: #f9ecdf;
+  --color-bg-dropdown-modal: #ffffff;
+  --color-bg-negative-soft: #f7e1e8;
+  --color-bg-success-soft: #ddf2e5;
+  --color-bg-warning-soft: #f8f0e2;
+  --color-bg-info-soft: #dde5ff;
+  --color-bg-nav: #24104a;
+  --color-bg-on-nav: #5d467d;
+  --color-bg-on-on-nav: #755d95;
+
+  --color-border-default-100: #ebeef2;
+  --color-border-on-bg-200: #dde2e8;
+  --color-border-input-default-200: #d7dce3;
+  --color-border-input-active: #ff7a1a;
+  --color-border-input-negative: #f43b61;
+
+  --color-button-primary: #2ea1fe;
+  --color-button-primary-clicked: #1d7fd4;
+  --color-button-negative: #f2385a;
+  --color-button-negative-clicked: #98263b;
+  --color-button-neutral: #ffffff;
+  --color-button-neutral-clicked: #dde3ea;
+  --color-button-disabled: #d8dde4;
+
+  --color-input-surface: #ffffff;
+  --color-input-surface-disabled: #eef2f6;
+  --color-input-placeholder: #97a2af;
+  --color-input-label: #47515c;
+  --color-input-helper: #7e8a97;
+
+  --color-control-muted: #9ba6b4;
+  --color-control-disabled-border: #f0f2f6;
+  --color-control-disabled-checked: #ffc290;
+  --color-switch-disabled-checked: #ffb987;
+  --color-switch-disabled-unchecked: #f1f4f8;
+  --color-button-primary-border: #2e8adb;
+  --color-button-primary-active-border: #1d568a;
+  --color-button-destructive-border: #d62d59;
+  --color-button-destructive-active-border: #78182e;
+  --color-button-neutral-hover: #fcfcfd;
+
+  --shadow-button-primary: inset 0 -2px 1px 0 rgb(25 89 140 / 50%);
+  --shadow-button-negative: inset 0 -2px 1px 0 rgb(134 31 52 / 50%);
+  --shadow-button-neutral:
+    0 0 0 1px rgb(44 50 55 / 8%),
+    0 1px 1px -0.5px rgb(44 50 55 / 4%);
+  --shadow-button-pressed: none;
+  --shadow-input-default: 0 1px 2px rgb(44 50 55 / 4%);
+  --shadow-control-elevated: 0 1px 2px rgb(44 50 55 / 0.12);
+  --shadow-control-pressed: inset 0 -4px 0 rgb(170 85 22 / 0.42);
+
+  --color-icon-default: #30363d;
+  --color-icon-neutral: #76808b;
+  --color-icon-disabled: #b6bcc4;
+  --color-icon-on-accent-bg: #ff7a1a;
+  --color-icon-negative: #f2385a;
+  --color-icon-info: #325adb;
+  --color-icon-warning: #f6a019;
+  --color-icon-success: #17d345;
+  --color-icon-on-solid-bg: #ffffff;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-canvas);
+  color: var(--color-text-default-500);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--color-text-default-500);
+  box-shadow: 0 0 0 1000px var(--color-input-surface) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+.font-display {
+  font-family: "Clash Display", ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes toast-slide-in {
+  from {
+    transform: translate3d(0, -120%, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.toast-root[data-state="open"] {
+  animation: toast-slide-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.onboarding-content {
+  transition:
+    opacity 0.22s ease-out,
+    transform 0.22s ease-out;
+}
+
+.onboarding-content--hidden {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
+
+.onboarding-content--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes plan-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.plan-content-enter {
+  animation: plan-content-enter 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Plan modal: prices “flip” into view when billing tab changes */
+.plan-price-flip {
+  perspective: 880px;
+}
+
+.plan-price-flip-inner {
+  transform-origin: 50% 55%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  animation: plan-price-flip 0.52s cubic-bezier(0.34, 1.12, 0.45, 1) both;
+}
+
+@keyframes plan-price-flip {
+  0% {
+    transform: rotateX(-92deg);
+    opacity: 0;
+  }
+  42% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+.plan-cadence-shift {
+  animation: plan-cadence-shift 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes plan-cadence-shift {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-price-flip-inner {
+    animation: none;
+  }
+
+  .plan-cadence-shift {
+    animation: none;
+  }
+}
