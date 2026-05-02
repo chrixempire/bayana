@@ -16,16 +16,19 @@ export function CheckEmailStep({
   const maskedDisplay = maskEmail(email) || maskEmail(DEMO_EMAIL_FALLBACK)
 
   return (
-    <div className="mx-auto w-full max-w-[344px] pt-28 text-center">
-      <BayanaLogo className="mx-auto mb-8 h-12 w-auto" />
-      <h1 className="text-2xl font-semibold leading-8">Check your email</h1>
-      <p className="mt-3 text-sm leading-[22px] text-text-neutral-400">
-        We have sent a confirmation link to <span className="text-text-default-500">{maskedDisplay}</span>,
-        please click the link to confirm your account
-      </p>
-      <div className="mt-8 space-y-4">
+    <div className="mx-auto flex w-full max-w-[350px] flex-col items-center gap-8 text-center">
+      <BayanaLogo className="h-12 w-auto" />
+      <div className="flex flex-col gap-3">
+        <h6 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
+          Check your email
+        </h6>
+        <p className="text-sm leading-[22px] text-text-neutral-400">
+          We have sent a confirmation link to <span className="text-text-default-500">{maskedDisplay}</span>,
+          please click the link to confirm your account
+        </p>
+      </div>
+      <div className="flex w-full flex-col gap-4">
         <Button
-          className="h-10 min-h-10 gap-2 rounded-xl px-3.5 shadow-[inset_0_-2px_1px_0_rgb(25,89,140,0.5)]"
           variant="primary"
           block
           onClick={onNext}

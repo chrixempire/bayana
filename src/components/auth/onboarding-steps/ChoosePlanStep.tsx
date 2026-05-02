@@ -150,10 +150,10 @@ export function ChoosePlanStep({
   const premiumFeatures = useMemo(() => PREMIUM_FEATURES[cycle], [cycle])
 
   return (
-    <div className="fixed inset-0 z-50 bg-bg-overlay px-6 py-8" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-bg-overlay p-4 sm:p-6" onClick={onClose}>
       <div className="flex h-full items-center justify-center">
         <div
-          className="relative grid h-full max-h-[700px] w-[80vw] max-w-[80vw] overflow-hidden rounded-[20px] bg-bg-dropdown-modal shadow-[0_24px_60px_rgb(16,24,40,0.22)] lg:grid-cols-[30%_minmax(0,1fr)]"
+          className="relative grid h-full max-h-[calc(100dvh-2rem)] w-full max-w-[1120px] overflow-hidden rounded-[20px] bg-bg-dropdown-modal shadow-[0_24px_60px_rgb(16,24,40,0.22)] lg:grid-cols-[30%_minmax(0,1fr)]"
           onClick={(event) => event.stopPropagation()}
         >
           <button
@@ -176,7 +176,7 @@ export function ChoosePlanStep({
             <DecorativeTrail />
           </aside>
 
-          <section className="flex min-h-0 min-w-0 flex-col p-5">
+          <section className="flex min-h-0 min-w-0 flex-col overflow-y-auto p-4 sm:p-5">
             <div className="relative rounded-[32px] bg-[#f9fafa] p-1">
               <div
                 className="absolute bottom-1 left-1 top-1 w-[calc((100%-8px)/3)] rounded-[40px] bg-white shadow-[0px_8px_8px_-4px_rgba(44,50,55,0.04),0px_4px_4px_-2px_rgba(44,50,55,0.04),0px_2px_2px_-1px_rgba(44,50,55,0.04),0px_1px_1px_-0.5px_rgba(44,50,55,0.04),0px_0px_0px_1px_rgba(44,50,55,0.08)] transition-transform duration-300 ease-out"
@@ -277,7 +277,12 @@ export function ChoosePlanStep({
                       {premiumPlan.cadence}
                     </p>
                   </div>
-                  <Button variant="primary" block className="h-10 rounded-xl text-sm font-semibold leading-[22px]" onClick={onComplete}>
+                  <Button
+                    variant="primary"
+                    block
+                    className="h-10 rounded-xl text-sm font-semibold leading-[22px]"
+                    onClick={onComplete}
+                  >
                     Subscribe
                   </Button>
                   <ul className="flex flex-col gap-2">

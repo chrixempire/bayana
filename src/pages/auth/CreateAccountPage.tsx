@@ -36,14 +36,14 @@ export function CreateAccountPage() {
   return (
     <main className="min-h-screen bg-bg-canvas text-text-default-500">
       <div className="mx-auto flex min-h-screen max-w-[1440px] justify-center px-6 py-14">
-        <div className="mx-auto flex w-full max-w-[396px] flex-col items-center gap-11 pt-[88px]">
+        <div className="mx-auto flex w-full max-w-[396px] flex-col items-center gap-8 pt-[88px]">
           <BayanaLogo className="h-12 w-auto" />
 
-          <div className="flex w-full flex-col gap-11">
-            <div className="flex flex-col gap-4 text-center">
-              <h1 className="font-display text-[20px] font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
+          <div className="flex w-full flex-col gap-8">
+            <div className="flex flex-col gap-3 text-center">
+              <h6 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
                 Get started with Bayana
-              </h1>
+              </h6>
               <p className="text-sm leading-[22px] text-text-neutral-400">
               Already have an account?{" "}
                 <Link to={AUTH_LOGIN_PATH} className="font-medium text-[#278cff] underline underline-offset-2">
@@ -53,13 +53,13 @@ export function CreateAccountPage() {
             </div>
 
             <form
-              className="flex w-full flex-col gap-7"
+              className="flex w-full flex-col gap-6"
               onSubmit={(event) => {
                 event.preventDefault()
                 onContinue()
               }}
             >
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="create-account-email"
                   className="block text-sm font-medium leading-[22px] text-text-default-500"
@@ -102,8 +102,8 @@ export function CreateAccountPage() {
                 type="button"
                 variant="neutral"
                 block
-                className="h-11 rounded-[14px] text-base font-semibold"
-                leftIcon={<GoogleGIcon className="size-5" />}
+                className="h-11 text-sm font-semibold leading-[22px]"
+                leftIcon={<GoogleGIcon className="size-4" />}
                 onClick={() =>
                   toast({
                     variant: "success",
@@ -117,7 +117,7 @@ export function CreateAccountPage() {
             </form>
           </div>
 
-          <p className="max-w-[260px] text-center text-[10px] leading-5 text-text-neutral-400">
+          <p className="max-w-[260px] text-center text-[12px] leading-[20px] text-text-neutral-400">
             By signing up, you agree to Bayana&apos;s{" "}
             <button type="button" className="font-medium text-[#278cff] underline underline-offset-2">
               Privacy Policy

@@ -31,18 +31,32 @@ export function OnboardingStepShell({
   return (
     <div
       className={cn(
-        "grid w-full grid-cols-1 gap-y-8",
+        "mx-auto grid w-full max-w-[560px] grid-cols-1 gap-y-[40px]",
         wide
-          ? "lg:grid-cols-[minmax(0,1fr)_minmax(260px,368px)]"
-          : "lg:grid-cols-[minmax(0,368px)_minmax(260px,368px)] lg:justify-between",
-        "lg:items-start lg:gap-x-16 lg:gap-y-10",
+          ? "min-[1200px]:grid-cols-[minmax(0,1fr)_minmax(260px,368px)]"
+          : "min-[1200px]:grid-cols-[minmax(0,420px)_minmax(260px,368px)] min-[1200px]:justify-between",
+        "min-[900px]:mx-0 min-[900px]:max-w-none min-[1200px]:items-start min-[1200px]:gap-x-16",
       )}
     >
       {frameStart ? <div className="col-span-full min-w-0">{frameStart}</div> : null}
 
-      <div className={cn("col-span-full min-w-0 lg:col-span-1", wide ? "max-w-none" : "max-w-[368px]")}>
+      {showCallout ? (
+        <div className="col-span-full min-w-0 min-[1200px]:col-start-2 min-[1200px]:row-start-2">
+          {callout ?? (
+            <OnboardingInfoCallout className="w-full max-w-[368px] min-[1200px]:sticky min-[1200px]:top-8 min-[1200px]:justify-self-end" />
+          )}
+        </div>
+      ) : null}
+
+      <div
+        className={cn(
+          "col-span-full min-w-0",
+          wide ? "max-w-none" : "max-w-none min-[1200px]:max-w-[420px]",
+          "min-[1200px]:col-start-1 min-[1200px]:row-start-2",
+        )}
+      >
         {combineTitleAndContent ? (
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-[40px]">
             {titleBlock}
             {children}
           </div>
@@ -51,19 +65,14 @@ export function OnboardingStepShell({
         )}
       </div>
 
-      {showCallout ? (
-        <div className="col-span-full min-w-0 lg:col-span-1">
-          {callout ?? <OnboardingInfoCallout className="w-full max-w-[368px] lg:sticky lg:top-8 lg:justify-self-end" />}
-        </div>
-      ) : null}
-
       {!combineTitleAndContent ? (
         <div
           className={cn(
-            "min-w-0 w-full",
+            "col-span-full min-w-0 w-full",
             wide
-              ? "col-span-full max-w-none lg:col-span-2"
-              : "col-span-full max-w-[368px] lg:col-span-1 lg:max-w-[368px]",
+              ? "max-w-none min-[1200px]:col-span-2"
+              : "max-w-none min-[1200px]:col-span-1 min-[1200px]:max-w-[420px]",
+            "min-[1200px]:col-start-1 min-[1200px]:row-start-3",
           )}
         >
           {children}

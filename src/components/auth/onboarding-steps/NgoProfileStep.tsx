@@ -225,21 +225,15 @@ function NgoPhonePreview({
   const hasBusinessName = businessName.trim().length > 0
   const hasBusinessAddress = businessAddress.trim().length > 0
   const hasPhone = phone.trim().length > 0
-  const isEmptyState =
-    !logoPreviewUrl &&
-    !hasUploadedLogo &&
-    !hasBusinessName &&
-    !hasBusinessAddress &&
-    !hasPhone &&
-    !mission.trim() &&
-    causes.length === 0 &&
-    !pastActivities.trim()
+  const hasMission = mission.trim().length > 0
+  const hasCauses = causes.length > 0
+  const hasPastActivities = pastActivities.trim().length > 0
 
-  const previewName = businessName.trim() || "Teemplot"
+  const previewName = businessName.trim()
   const previewPhone = hasPhone ? `${dialCode || "+234"} ${phone.trim()}` : ""
 
   return (
-    <aside className="w-full max-w-[368px] overflow-hidden rounded-2xl border border-[#d8dde3] bg-white lg:sticky lg:top-8 lg:justify-self-end">
+    <aside className="w-full max-w-[368px] overflow-hidden rounded-2xl border border-[#d8dde3] bg-white min-[1200px]:sticky min-[1200px]:top-8 min-[1200px]:justify-self-end">
       <div className="flex h-[86px] items-end justify-center bg-[#f4f6f8] pb-4">
         <div className="h-5 w-20 rounded-full bg-[#cfd5dc]" />
       </div>
@@ -256,7 +250,11 @@ function NgoPhonePreview({
             )}
           </div>
         </div>
-        <p className="text-3.5 font-semibold leading-6 text-[#2c3237]">{previewName}</p>
+        {hasBusinessName ? (
+          <p className="text-3.5 font-semibold leading-6 text-[#2c3237]">{previewName}</p>
+        ) : (
+          <div className="h-5 w-[42%] rounded-full bg-[#d8dee5]" />
+        )}
         {hasBusinessAddress ? (
           <p className="text-xs leading-5 text-[#66717b]">📍 {businessAddress}</p>
         ) : (
@@ -277,7 +275,9 @@ function NgoPhonePreview({
 
       <div className="space-y-2 border-b border-[#eceff3] p-4">
         <p className="text-xl font-medium leading-5 text-[#2c3237]">Mission</p>
-        {isEmptyState ? (
+        {hasMission ? (
+          <p className="text-xs leading-6 text-[#66717b]">{mission.trim()}</p>
+        ) : (
           <div className="space-y-2 pt-1">
             <div className="h-3 rounded-full bg-[#d8dee5]" />
             <div className="h-3 rounded-full bg-[#d8dee5]" />
@@ -285,17 +285,25 @@ function NgoPhonePreview({
             <div className="h-3 rounded-full bg-[#d8dee5]" />
             <div className="h-3 w-1/2 rounded-full bg-[#d8dee5]" />
           </div>
-        ) : (
-          <p className="text-xs leading-6 text-[#66717b]">
-            {mission.trim() ||
-              "We are committed to helping people access job opportunities by providing guidance, support, and training that strengthens communities and transforms lives."}
-          </p>
         )}
       </div>
 
       <div className="space-y-2 border-b border-[#eceff3] p-4">
-        <p className={cn("text-xl font-medium leading-5", isEmptyState ? "text-[#737d86]" : "text-[#2c3237]")}>Cause areas</p>
-        {isEmptyState ? (
+        <p className={cn("text-xl font-medium leading-5", hasCauses ? "text-[#2c3237]" : "text-[#737d86]")}>
+          Cause areas
+        </p>
+        {hasCauses ? (
+          <div className="flex flex-wrap gap-2">
+            {causes.map((cause) => (
+              <span
+                key={cause}
+                className="inline-block max-w-full truncate rounded-lg bg-[#f2f3f5] px-2.5 py-1 text-[11px] font-medium leading-4 tracking-[-0.02em] text-[#5c6670]"
+              >
+                {cause}
+              </span>
+            ))}
+          </div>
+        ) : (
           <div className="grid grid-cols-4 gap-2 pt-1">
             <span className="col-span-1 h-6 rounded-md bg-bg-default-100" />
             <span className="col-span-2 h-6 rounded-md bg-bg-default-100" />
@@ -305,32 +313,18 @@ function NgoPhonePreview({
             <span className="col-span-1 h-6 rounded-md bg-bg-default-100" />
             <span className="col-span-2 h-6 rounded-md bg-bg-default-100" />
           </div>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {causes.length > 0
-              ? causes.map((cause) => (
-                  <span
-                    key={cause}
-                    className="inline-block max-w-full truncate rounded-lg bg-[#f2f3f5] px-2.5 py-1 text-[11px] font-medium leading-4 tracking-[-0.02em] text-[#5c6670]"
-                  >
-                    {cause}
-                  </span>
-                ))
-              : ["Tag", "Tag", "Tag", "Tag"].map((tag, idx) => (
-                  <span
-                    key={`${tag}-${idx}`}
-                    className="inline-block rounded-lg bg-[#f2f3f5] px-2.5 py-1 text-[11px] font-medium leading-4 text-[#5c6670]"
-                  >
-                    {tag}
-                  </span>
-                ))}
-          </div>
         )}
       </div>
 
       <div className="space-y-2 p-4">
-        <p className="text-xl font-medium leading-5 text-[#c3cad3]">Past activities</p>
-        {isEmptyState ? <div className="h-3 w-3/5 rounded-full bg-[#edf1f5]" /> : <p className="text-xs leading-6 text-[#8a949e]">{pastActivities.trim() || " "}</p>}
+        <p className={cn("text-xl font-medium leading-5", hasPastActivities ? "text-[#2c3237]" : "text-[#c3cad3]")}>
+          Past activities
+        </p>
+        {hasPastActivities ? (
+          <p className="text-xs leading-6 text-[#8a949e]">{pastActivities.trim()}</p>
+        ) : (
+          <div className="h-3 w-3/5 rounded-full bg-[#edf1f5]" />
+        )}
       </div>
     </aside>
   )

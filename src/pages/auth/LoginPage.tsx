@@ -12,12 +12,25 @@ import { maskEmail } from "../../lib/mask-email"
 const LOGIN_SENT_PARAM = "sent"
 const LOGIN_EMAIL_STORAGE_KEY = "bayana-login-email"
 
+function readInitialLoginEmail(): string {
+  if (typeof window === "undefined") return ""
+  try {
+    const stored = sessionStorage.getItem(LOGIN_EMAIL_STORAGE_KEY)
+    if (stored) return stored
+    const raw = new URLSearchParams(window.location.search).get("email")
+    if (!raw) return ""
+    return decodeURIComponent(raw.replace(/\+/g, " "))
+  } catch {
+    return ""
+  }
+}
+
 export function LoginPage() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const isCheckEmailState = searchParams.get(LOGIN_SENT_PARAM) === "1"
-  const [email, setEmail] = useState(() => sessionStorage.getItem(LOGIN_EMAIL_STORAGE_KEY) ?? "")
+  const [email, setEmail] = useState(readInitialLoginEmail)
   const emailForCheckView = sessionStorage.getItem(LOGIN_EMAIL_STORAGE_KEY) ?? email
   const maskedEmailForCheckView = maskEmail(emailForCheckView) || "your email"
 

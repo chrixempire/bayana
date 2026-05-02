@@ -9,6 +9,27 @@ import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
 
 const ID_TYPES = ["National ID card", "Driver's license", "International passport"] as const
 
+const ID_TYPE_FIELD_META = {
+  "National ID card": {
+    label: "NIN",
+    placeholder: "Enter national identification number",
+    hint: "Dial *346# to get your NIN",
+    inputMode: "numeric" as const,
+  },
+  "Driver's license": {
+    label: "Driver's license number",
+    placeholder: "Enter driver's license number",
+    hint: "Use the number printed on your license",
+    inputMode: "text" as const,
+  },
+  "International passport": {
+    label: "Passport number",
+    placeholder: "Enter passport number",
+    hint: "Use the number printed on your passport",
+    inputMode: "text" as const,
+  },
+} as const
+
 export function BusinessOwnerStep({
   data,
   errors,
@@ -23,9 +44,10 @@ export function BusinessOwnerStep({
   onBack: () => void
   onContinue: () => void
   onSkip: () => void
-}) {
+  }) {
   const phoneInvalid = Boolean(errors.phone)
   const dial = data.dialCode ?? "+234"
+  const idTypeMeta = ID_TYPE_FIELD_META[data.idType as keyof typeof ID_TYPE_FIELD_META] ?? ID_TYPE_FIELD_META["National ID card"]
 
   return (
     <OnboardingStepShell
@@ -107,10 +129,11 @@ export function BusinessOwnerStep({
             </div>
           </FormField>
 
-          <FormField label="NIN" hint="Dial *346# to get your NIN" error={errors.nin}>
+          <FormField label={idTypeMeta.label} hint={idTypeMeta.hint} error={errors.nin}>
             <Input
               density="compact"
-              placeholder="Enter national identification number"
+              placeholder={idTypeMeta.placeholder}
+              inputMode={idTypeMeta.inputMode}
               value={data.nin}
               onChange={(e) => onChange({ ...data, nin: e.target.value })}
               invalid={Boolean(errors.nin)}

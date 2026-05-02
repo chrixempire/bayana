@@ -1,12 +1,12 @@
 import { cva } from "class-variance-authority"
 
 export const buttonVariants = cva(
-  "inline-flex cursor-pointer items-center justify-center gap-3 whitespace-nowrap rounded-[18px] border text-sm font-semibold tracking-[0.01em] transition-all outline-none focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas disabled:pointer-events-none disabled:cursor-not-allowed",
+  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[18px] border text-sm font-semibold tracking-[0.01em] transition-all outline-none focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 focus-visible:ring-offset-bg-canvas disabled:pointer-events-none disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
         primary:
-          "border-button-primary-border bg-button-primary text-text-on-solid-bg shadow-button-primary hover:border-button-primary-active-border hover:bg-button-primary-clicked hover:shadow-none active:border-button-primary-active-border active:bg-button-primary-clicked active:shadow-none",
+          "border-button-primary-border bg-button-primary text-text-on-solid-bg shadow-button-primary hover:bg-button-primary-clicked hover:shadow-none active:border-button-primary-active-border active:bg-button-primary-clicked active:shadow-none",
         destructive:
           "border-button-destructive-border bg-button-negative text-text-on-solid-bg shadow-button-negative hover:border-button-destructive-active-border hover:bg-button-negative-clicked hover:shadow-none active:border-button-destructive-active-border active:bg-button-negative-clicked active:shadow-none",
         neutral:

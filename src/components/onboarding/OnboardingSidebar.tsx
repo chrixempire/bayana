@@ -11,6 +11,14 @@ type StepItem = {
   state: StepState
 }
 
+const ONBOARDING_STEPS = [
+  { title: "Basic information", description: "Provide basic information about your NGO" },
+  { title: "Business owner", description: "Provide your business owner details" },
+  { title: "Business verification", description: "Provide your business verification document" },
+  { title: "NGO profile setup", description: "Provide more information about your NGO" },
+  { title: "Review information", description: "Review the information you provided" },
+]
+
 function StepCheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 12 12" fill="none" aria-hidden>
@@ -37,6 +45,13 @@ function LogOutDoorIcon({ className }: { className?: string }) {
       />
     </svg>
   )
+}
+
+function buildStepItems(activeStep: number): StepItem[] {
+  return ONBOARDING_STEPS.map((step, index) => ({
+    ...step,
+    state: index < activeStep ? "completed" : index === activeStep ? "active" : "default",
+  }))
 }
 
 /**
@@ -76,22 +91,10 @@ function StepRow({ index, title, description, state }: StepItem & { index: numbe
 
 export function OnboardingSidebar({ activeStep }: { activeStep: number }) {
   const navigate = useNavigate()
-
-  const baseSteps = [
-    { title: "Basic information", description: "Provide basic information about your NGO" },
-    { title: "Business owner", description: "Provide your business owner details" },
-    { title: "Business verification", description: "Provide your business verification document" },
-    { title: "NGO profile setup", description: "Provide more information about your NGO" },
-    { title: "Review information", description: "Review the information you provided" },
-  ]
-
-  const steps: StepItem[] = baseSteps.map((step, index) => ({
-    ...step,
-    state: index < activeStep ? "completed" : index === activeStep ? "active" : "default",
-  }))
+  const steps = buildStepItems(activeStep)
 
   return (
-    <aside className="sticky top-0 flex h-screen flex-col overflow-hidden bg-[#f9fafa] pt-14">
+    <aside className="sticky top-0 hidden h-dvh flex-col overflow-hidden bg-[#f9fafa] pt-14 min-[900px]:flex">
       <div className="px-14">
         <div className="inline-flex items-center gap-2.5">
           <BayanaLogo className="h-9 w-auto" />
@@ -127,5 +130,42 @@ export function OnboardingSidebar({ activeStep }: { activeStep: number }) {
         </a>
       </footer>
     </aside>
+  )
+}
+
+export function OnboardingProgressStepper({ activeStep }: { activeStep: number }) {
+  const steps = buildStepItems(activeStep)
+
+  return (
+    <nav aria-label="Onboarding progress" className="w-full">
+      <ol className="relative grid grid-cols-5 gap-2">
+        <div aria-hidden className="absolute left-3 right-3 top-3 h-px bg-[#e4e8ee]" />
+        {steps.map((step, index) => {
+          const isActive = step.state === "active"
+          const isCompleted = step.state === "completed"
+
+          return (
+            <li key={step.title} className="relative flex min-w-0 flex-col items-center gap-2 px-1 text-center">
+              <div
+                className={cn(
+                  "relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold leading-none transition-colors",
+                  isActive && "border-[#ff7415] bg-[#ff7415] text-white",
+                  isCompleted && "border-[#36b55c] bg-[#36b55c] text-white",
+                  !isActive &&
+                    !isCompleted &&
+                    "border-[#dfe4ea] bg-white text-[#2c3237] shadow-[0_0_0_1px_rgba(44,50,55,0.05),0_1px_1px_-0.5px_rgba(44,50,55,0.04)]",
+                )}
+              >
+                {isCompleted ? <StepCheckIcon className="size-3 text-white" /> : <span>{index + 1}</span>}
+              </div>
+
+              <div className="flex min-w-0 flex-col gap-1">
+                <p className="text-[11px] font-medium leading-4 text-[#2c3237]">{step.title}</p>
+              </div>
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
   )
 }

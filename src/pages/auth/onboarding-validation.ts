@@ -20,6 +20,7 @@ const validators: Partial<Record<OnboardingFlowStep, StepValidator>> = {
   },
   "business-owner": (data) => {
     const errors: OnboardingStepErrors = {}
+    const idType = data.businessOwner.idType
 
     if (!data.businessOwner.fullName.trim()) {
       errors.fullName = "Full name is required"
@@ -29,7 +30,12 @@ const validators: Partial<Record<OnboardingFlowStep, StepValidator>> = {
       errors.phone = "Phone number is required"
     }
 
-    if (data.businessOwner.nin.trim().length !== 11) {
+    const identificationNumber = data.businessOwner.nin.trim()
+
+    if (!identificationNumber) {
+      errors.nin =
+        idType === "National ID card" ? "NIN is required" : "Identification number is required"
+    } else if (idType === "National ID card" && identificationNumber.length !== 11) {
       errors.nin = "NIN must be 11 digits"
     }
 

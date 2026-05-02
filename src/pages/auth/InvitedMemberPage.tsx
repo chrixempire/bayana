@@ -1,15 +1,10 @@
-import { useMemo, useState } from "react"
-import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import { useMemo } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { BayanaLogo } from "../../components/brand/BayanaLogo"
 import { Button } from "../../components/ui/button"
-import { Checkbox } from "../../components/ui/checkbox"
-import { Input } from "../../components/ui/input"
-import { toast } from "../../hooks/use-toast"
-import {
-  AUTH_CREATE_ACCOUNT_PATH,
-  AUTH_HOME_PATH,
-  AUTH_LOGIN_PATH,
-} from "../../lib/auth-paths"
+import { ContinueArrowIcon } from "../../components/auth/icons/ContinueArrowIcon"
+import { AUTH_LOGIN_PATH } from "../../lib/auth-paths"
+import { maskEmail } from "../../lib/mask-email"
 
 function decodeParam(value: string | null): string {
   if (!value) return ""
@@ -20,195 +15,81 @@ function decodeParam(value: string | null): string {
   }
 }
 
+function organisationInitial(name: string): string {
+  const t = name.trim()
+  if (!t) return "?"
+  return t[0].toUpperCase()
+}
+
+/**
+ * Org invite landing — query params (all optional, demo defaults match design):
+ * `?name=` invitee first name · `inviter=` · `org=` | `organisation=` · `email=`
+ */
 export function InvitedMemberPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
+  const inviteeFirstName = useMemo(() => decodeParam(searchParams.get("name")).trim() || "", [searchParams])
+
+  const inviterName = useMemo(() => decodeParam(searchParams.get("inviter")).trim() || "", [searchParams])
+
   const organisationName = useMemo(() => {
     const raw = searchParams.get("org") ?? searchParams.get("organisation")
-    const name = decodeParam(raw)
-    return name.trim() || "Your organisation"
+    return decodeParam(raw).trim() || "n"
   }, [searchParams])
 
-  const emailFromInvite = useMemo(() => decodeParam(searchParams.get("email")).trim(), [searchParams])
-  const [emailInput, setEmailInput] = useState("")
+  const inviteEmail = useMemo(() => decodeParam(searchParams.get("email")).trim(), [searchParams])
+  const maskedEmail = maskEmail(inviteEmail) || maskEmail("")
 
-  const [fullName, setFullName] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [agreedToTerms, setAgreedToTerms] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const orgLetter = organisationInitial(organisationName)
 
-  const resolvedEmail = emailFromInvite || emailInput.trim()
-
-  const onSubmit = () => {
-    const next: Record<string, string> = {}
-    if (!resolvedEmail) next.email = "Email is required"
-    else if (!resolvedEmail.includes("@")) next.email = "Please enter a valid email address"
-    if (!fullName.trim()) next.fullName = "Full name is required"
-    if (password.length < 8) next.password = "Use at least 8 characters"
-    if (password !== confirmPassword) next.confirmPassword = "Passwords do not match"
-    if (!agreedToTerms) next.terms = "Please accept the terms to continue"
-
-    setErrors(next)
-    if (Object.keys(next).length > 0) {
-      toast({
-        variant: "destructive",
-        title: "There are issues with some fields",
-        description: "Please review highlighted fields and try again.",
-      })
+  const handleLogIn = () => {
+    if (inviteEmail) {
+      navigate(`${AUTH_LOGIN_PATH}?email=${encodeURIComponent(inviteEmail)}`)
       return
     }
-
-    console.log("invited-member-accept", { organisationName, email: resolvedEmail, fullName })
-    toast({
-      variant: "success",
-      title: "You're in",
-      description: `Welcome to ${organisationName} on Bayana.`,
-    })
-    navigate(AUTH_HOME_PATH)
+    navigate(AUTH_LOGIN_PATH)
   }
 
   return (
     <main className="min-h-screen bg-bg-canvas text-text-default-500">
-      <div className="mx-auto flex min-h-screen max-w-[1440px] justify-center px-6 py-14">
-        <div className="mx-auto w-full max-w-[400px] pt-20">
-          <div className="text-center">
-            <BayanaLogo className="mx-auto mb-8 h-12 w-auto" />
-            <h1 className="text-2xl font-semibold leading-8 tracking-[-0.1px]">You&apos;ve been invited</h1>
-            <p className="mt-3 text-sm leading-[22px] text-text-neutral-400">
-              <span className="font-medium text-text-default-500">{organisationName}</span> invited you to join their
-              workspace on Bayana as a team member.
-            </p>
+      <div className="mx-auto flex min-h-screen max-w-[1440px] flex-col items-center justify-center px-6 py-14">
+        <div className="flex w-full max-w-[420px] flex-col items-center gap-[40px] text-center">
+          <div className="flex w-full flex-col items-center gap-6">
+            <div className="flex items-center justify-center gap-3">
+              <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-border-default-100 bg-white shadow-[0_1px_2px_rgb(44_50_55/6%)]">
+                <BayanaLogo className="h-9 w-auto" alt="Bayana" />
+              </div>
+              <div
+                className="flex size-12 shrink-0 items-center justify-center rounded-[4.8px] bg-bg-accent text-[22px] font-semibold leading-none text-white shadow-[inset_0_-1px_0_rgb(0_0_0/8%)]"
+                aria-hidden
+              >
+                {orgLetter}
+              </div>
+            </div>
+
+            <div className="flex max-w-[400px] flex-col gap-3">
+              <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
+                Welcome, {inviteeFirstName}
+              </h1>
+              <p className="text-sm font-normal leading-[22px] text-text-neutral-400">
+                <span className="font-medium text-text-default-500">{inviterName}</span> has invited you to{" "}
+                <span className="font-medium text-text-default-500">{organisationName}</span>. To accept invitation please
+                login as <span className="font-medium text-text-default-500">{maskedEmail}</span>
+              </p>
+            </div>
           </div>
 
-          <form
-            className="mt-10 space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault()
-              onSubmit()
-            }}
+          <Button
+            type="button"
+            variant="primary"
+            block
+            className=" text-base font-semibold"
+            rightIcon={<ContinueArrowIcon className="size-4 text-white" />}
+            onClick={handleLogIn}
           >
-            <div className="space-y-2">
-              <label htmlFor="invite-email" className="text-sm font-medium leading-[22px] text-text-default-500">
-                Work email
-              </label>
-              <Input
-                id="invite-email"
-                type="email"
-                name="email"
-                autoComplete="email"
-                placeholder="you@organisation.org"
-                value={emailFromInvite || emailInput}
-                disabled={Boolean(emailFromInvite)}
-                readOnly={Boolean(emailFromInvite)}
-                invalid={Boolean(errors.email)}
-                onChange={(e) => {
-                  if (emailFromInvite) return
-                  setEmailInput(e.target.value)
-                  if (errors.email) setErrors((prev) => ({ ...prev, email: "" }))
-                }}
-                className={emailFromInvite ? "opacity-90" : undefined}
-              />
-              {errors.email ? <p className="text-xs text-text-negative">{errors.email}</p> : null}
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="invite-full-name" className="text-sm font-medium leading-[22px] text-text-default-500">
-                Full name
-              </label>
-              <Input
-                id="invite-full-name"
-                name="name"
-                autoComplete="name"
-                placeholder="Your full name"
-                value={fullName}
-                invalid={Boolean(errors.fullName)}
-                onChange={(e) => {
-                  setFullName(e.target.value)
-                  if (errors.fullName) setErrors((prev) => ({ ...prev, fullName: "" }))
-                }}
-              />
-              {errors.fullName ? <p className="text-xs text-text-negative">{errors.fullName}</p> : null}
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="invite-password" className="text-sm font-medium leading-[22px] text-text-default-500">
-                Create password
-              </label>
-              <Input
-                id="invite-password"
-                type="password"
-                name="new-password"
-                autoComplete="new-password"
-                placeholder="At least 8 characters"
-                value={password}
-                invalid={Boolean(errors.password)}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  if (errors.password) setErrors((prev) => ({ ...prev, password: "" }))
-                }}
-              />
-              {errors.password ? <p className="text-xs text-text-negative">{errors.password}</p> : null}
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="invite-confirm" className="text-sm font-medium leading-[22px] text-text-default-500">
-                Confirm password
-              </label>
-              <Input
-                id="invite-confirm"
-                type="password"
-                name="confirm-password"
-                autoComplete="new-password"
-                placeholder="Repeat password"
-                value={confirmPassword}
-                invalid={Boolean(errors.confirmPassword)}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value)
-                  if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: "" }))
-                }}
-              />
-              {errors.confirmPassword ? <p className="text-xs text-text-negative">{errors.confirmPassword}</p> : null}
-            </div>
-
-            <div className="space-y-1 pt-1">
-              <div className="flex items-start gap-2">
-                <Checkbox
-                  id="invite-terms"
-                  size="sm"
-                  className="mt-0.5"
-                  checked={agreedToTerms}
-                  onCheckedChange={(value) => {
-                    setAgreedToTerms(value === true)
-                    if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" }))
-                  }}
-                />
-                <label htmlFor="invite-terms" className="cursor-pointer text-sm leading-[22px] text-text-neutral-400">
-                  I agree to Bayana&apos;s Privacy Policy and Terms of Use
-                </label>
-              </div>
-              {errors.terms ? <p className="text-xs text-text-negative">{errors.terms}</p> : null}
-            </div>
-
-            <Button type="submit" variant="primary" block className="mt-2">
-              Accept invitation
-            </Button>
-          </form>
-
-          <p className="mt-8 text-center text-sm leading-[22px] text-text-neutral-400">
-            Already have an account?{" "}
-            <Link to={AUTH_LOGIN_PATH} className="font-medium text-text-default-500 underline-offset-2 hover:underline">
-              Sign in
-            </Link>
-            {" · "}
-            <Link
-              to={AUTH_CREATE_ACCOUNT_PATH}
-              className="font-medium text-text-default-500 underline-offset-2 hover:underline"
-            >
-              Create an account
-            </Link>
-          </p>
+            Log in
+          </Button>
         </div>
       </div>
     </main>

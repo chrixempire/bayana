@@ -22,7 +22,7 @@ export function BasicInformationStep({
     <OnboardingStepShell
       titleBlock={
         <header className="flex flex-col gap-3 tracking-[-0.1px]">
-          <h1 className="font-display text-2xl font-semibold leading-8 text-text-default-500">
+          <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
             Let&apos;s get to know your business
           </h1>
           <p className="text-sm font-normal leading-[22px] text-text-neutral-400">
@@ -31,7 +31,7 @@ export function BasicInformationStep({
         </header>
       }
     >
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
           <FormField label="Business name" error={errors.businessName}>
             <Input
@@ -46,7 +46,7 @@ export function BasicInformationStep({
           <FormField label="CAC number" error={errors.cacNumber}>
             <Input
               density="compact"
-              placeholder="Enter cac number"
+              placeholder="Enter CAC number"
               value={data.cacNumber}
               onChange={(e) => onChange({ ...data, cacNumber: e.target.value })}
               invalid={Boolean(errors.cacNumber)}
@@ -66,10 +66,10 @@ export function BasicInformationStep({
           <FormField label="Website" optional>
             <div
               className={cn(
-                "flex w-full items-stretch overflow-hidden rounded-xl border border-border-input-default-200 bg-white shadow-input-default transition-colors focus-within:border-border-input-active focus-within:ring-2 focus-within:ring-[rgb(255,122,26,0.12)]",
+                "flex w-full items-stretch overflow-hidden rounded-xl border border-border-input-default-200 bg-input-surface shadow-input-default transition-colors focus-within:border-border-input-active focus-within:ring-2 focus-within:ring-[rgb(255,122,26,0.12)]",
               )}
             >
-              <span className="flex h-10 shrink-0 items-center border-r border-border-default-100 bg-white px-3 text-sm leading-[22px] tracking-[-0.1px] text-text-neutral-400">
+              <span className="flex h-10 shrink-0 items-center border-r border-border-default-100 bg-input-surface px-3 text-sm leading-[22px] tracking-[-0.1px] text-text-neutral-400">
                 https://
               </span>
               <input
@@ -83,10 +83,10 @@ export function BasicInformationStep({
         </div>
 
         <Button
-          className="h-10 min-h-10 gap-2 rounded-xl px-3.5 py-3 shadow-[inset_0_-2px_1px_0_rgb(25,89,140,0.5)]"
+          className="h-11 min-h-11 rounded-xl text-base font-semibold"
           variant="primary"
           block
-          rightIcon={<ContinueArrowIcon className="text-white" />}
+          rightIcon={<ContinueArrowIcon className="size-4 text-white" />}
           onClick={onContinue}
         >
           Continue

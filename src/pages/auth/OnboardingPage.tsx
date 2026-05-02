@@ -1,3 +1,4 @@
+import { BayanaLogo } from "../../components/brand/BayanaLogo"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { BasicInformationStep } from "../../components/auth/onboarding-steps/BasicInformationStep"
 import { BusinessOwnerStep } from "../../components/auth/onboarding-steps/BusinessOwnerStep"
@@ -6,7 +7,7 @@ import { CheckEmailStep } from "../../components/auth/onboarding-steps/CheckEmai
 import { ChoosePlanStep } from "../../components/auth/onboarding-steps/ChoosePlanStep"
 import { NgoProfileStep } from "../../components/auth/onboarding-steps/NgoProfileStep"
 import { ReviewStep } from "../../components/auth/onboarding-steps/ReviewStep"
-import { OnboardingSidebar } from "../../components/onboarding/OnboardingSidebar"
+import { OnboardingProgressStepper, OnboardingSidebar } from "../../components/onboarding/OnboardingSidebar"
 import { cn } from "../../lib/utils"
 import { AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import { onboardingFlowSteps, type OnboardingFlowStep } from "./types"
@@ -16,11 +17,9 @@ export function OnboardingPage() {
   const navigate = useNavigate()
   const { step } = useParams<{ step: string }>()
 
-  if (!step || !onboardingFlowSteps.includes(step as OnboardingFlowStep)) {
-    return <Navigate to={`${AUTH_ONBOARDING_PATH}/check-email`} replace />
-  }
+  const stepValid = Boolean(step && onboardingFlowSteps.includes(step as OnboardingFlowStep))
+  const currentStep: OnboardingFlowStep = stepValid ? (step as OnboardingFlowStep) : "check-email"
 
-  const currentStep = step as OnboardingFlowStep
   const {
     data,
     errors,
@@ -41,20 +40,43 @@ export function OnboardingPage() {
     showSidebar,
   } = useOnboardingFlow(currentStep)
 
-  const mainPadding = showSidebar ? "px-16 pt-14 pb-20" : "flex justify-center px-6 py-14"
+  if (!stepValid) {
+    return <Navigate to={`${AUTH_ONBOARDING_PATH}/check-email`} replace />
+  }
+
+  const mainColumnClass = showSidebar
+    ? "flex min-h-0 flex-col px-4 py-6 sm:px-12 sm:py-8 min-[900px]:px-16 min-[900px]:py-14"
+    : "flex min-h-0 flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-10"
 
   return (
-    <main className="h-screen overflow-hidden bg-bg-canvas text-text-default-500">
-      <section className={`mx-auto h-full max-w-[1440px] ${showSidebar ? "grid grid-cols-[440px_1fr]" : ""}`}>
+    <main className="h-dvh overflow-hidden bg-bg-canvas text-text-default-500">
+      <section
+        className={cn(
+          "mx-auto grid h-full max-w-[1440px] overflow-hidden",
+          showSidebar ? "min-[900px]:grid-cols-[440px_minmax(0,1fr)]" : "grid-cols-1",
+        )}
+      >
         {showSidebar ? <OnboardingSidebar activeStep={activeSidebarIndex} /> : null}
 
-        <div className={cn("min-w-0 overflow-y-auto", mainPadding)}>
+        <div className={cn("min-w-0 h-full overflow-y-auto", mainColumnClass)}>
           <div
             className={cn(
-              "onboarding-content w-full max-w-[1000px]",
+              "onboarding-content w-full max-w-[1120px]",
               contentVisible ? "onboarding-content--visible" : "onboarding-content--hidden",
             )}
           >
+            {showSidebar ? (
+              <div className="mb-8 flex flex-col items-start gap-5 min-[900px]:hidden">
+                <div className="inline-flex items-center gap-2.5">
+                  <BayanaLogo className="h-10 w-auto" />
+                  <span className="font-display text-[18px] font-semibold leading-none tracking-[-0.2px] text-[#24104a]">
+                    Bayana
+                  </span>
+                </div>
+                <OnboardingProgressStepper activeStep={activeSidebarIndex} />
+              </div>
+            ) : null}
+
             {visibleStep === "check-email" ? (
               <CheckEmailStep
                 email={data.createAccount.email}
