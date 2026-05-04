@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import { toast } from "../../hooks/use-toast"
-import { AUTH_CREATE_ACCOUNT_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
+import { AUTH_CREATE_ACCOUNT_PATH, AUTH_HOME_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import { getStepValidationErrors, type OnboardingStepErrors } from "./onboarding-validation"
 import { defaultData, onboardingFlowSteps, routeToSidebarIndex, type OnboardingData, type OnboardingFlowStep } from "./types"
 
@@ -34,6 +34,7 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const [errors, setErrors] = useState<OnboardingStepErrors>({})
   const [visibleStep, setVisibleStep] = useState<OnboardingFlowStep>(currentStep)
   const [contentVisible, setContentVisible] = useState(true)
+  const returnToReview = (location.state as { returnToReview?: boolean } | null)?.returnToReview === true
 
   useEffect(() => {
     if (currentStep === visibleStep) {
@@ -103,7 +104,8 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
 
   const goNext = () => navigate(`${AUTH_ONBOARDING_PATH}/${nextStep(currentStep)}`)
   const goBack = () => navigate(`${AUTH_ONBOARDING_PATH}/${previousStep(currentStep)}`)
-  const goToStep = (step: OnboardingFlowStep) => navigate(`${AUTH_ONBOARDING_PATH}/${step}`)
+  const goToStep = (step: OnboardingFlowStep) =>
+    navigate(`${AUTH_ONBOARDING_PATH}/${step}`, { state: { returnToReview: true } })
   const closePlanModal = () => navigate(`${AUTH_ONBOARDING_PATH}/review`)
   const openPlanModal = () => navigate(`${AUTH_ONBOARDING_PATH}/review?plan=open`)
 
@@ -154,6 +156,11 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
       return
     }
 
+    if (returnToReview) {
+      navigate(`${AUTH_ONBOARDING_PATH}/review`, { replace: true })
+      return
+    }
+
     goNext()
   }
 
@@ -194,12 +201,13 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   }
 
   const handleChoosePlanComplete = () => {
-    closePlanModal()
     toast({
       variant: "success",
       title: "Your data is saved",
       description: "Welcome to Bayana — your plan is set.",
     })
+
+    navigate(AUTH_HOME_PATH, { replace: true })
   }
 
   return {

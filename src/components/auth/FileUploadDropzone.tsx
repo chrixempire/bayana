@@ -102,7 +102,7 @@ export function FileUploadDropzone({
             onFiles(e.dataTransfer.files)
           }}
           className={cn(
-            "flex h-[102px] w-full flex-col items-center justify-center rounded-xl border border-dashed bg-white px-4 py-3 text-center transition-colors",
+            "flex h-[102px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed bg-white px-4 py-3 text-center transition-colors",
             isDragging ? "border-[#ff7415] bg-[#fff7f2]" : "border-[#dfe4e9]",
           )}
         >
@@ -128,7 +128,7 @@ export function FileUploadDropzone({
             <button
               type="button"
               aria-label="Replace uploaded file"
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-[#8a949e] transition-colors hover:bg-[#f4f6f8] hover:text-[#59636e]"
+              className="inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded text-[#8a949e] transition-colors hover:bg-[#f4f6f8] hover:text-[#59636e]"
               onClick={() => inputRef.current?.click()}
             >
               <EditIcon />
@@ -136,7 +136,7 @@ export function FileUploadDropzone({
             <button
               type="button"
               aria-label="Remove uploaded file"
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-[#8a949e] transition-colors hover:bg-[#f4f6f8] hover:text-[#59636e]"
+              className="inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded text-[#8a949e] transition-colors hover:bg-[#f4f6f8] hover:text-[#59636e]"
               onClick={clearFile}
             >
               <TrashIcon />

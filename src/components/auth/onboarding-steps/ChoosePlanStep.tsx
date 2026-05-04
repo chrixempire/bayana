@@ -153,7 +153,7 @@ export function ChoosePlanStep({
     <div className="fixed inset-0 z-50 bg-bg-overlay p-4 sm:p-6" onClick={onClose}>
       <div className="flex h-full items-center justify-center">
         <div
-          className="relative grid h-full max-h-[calc(100dvh-2rem)] w-full max-w-[1120px] overflow-hidden rounded-[20px] bg-bg-dropdown-modal shadow-[0_24px_60px_rgb(16,24,40,0.22)] lg:grid-cols-[30%_minmax(0,1fr)]"
+          className="relative grid h-[85vh] max-h-[85vh] w-full max-w-[1200px] overflow-hidden rounded-[20px] bg-bg-dropdown-modal shadow-[0_24px_60px_rgb(16,24,40,0.22)] lg:grid-cols-[35%_minmax(0,1fr)]"
           onClick={(event) => event.stopPropagation()}
         >
           <button
@@ -165,15 +165,20 @@ export function ChoosePlanStep({
             <CloseIcon className="size-4" />
           </button>
 
-          <aside className="relative hidden min-h-0 overflow-hidden bg-bg-nav px-7 pb-8 pt-7 text-white lg:block">
-            <div className="relative z-10 flex h-full flex-col">
-              <BayanaLogo className="h-10 w-auto" alt="Bayana" />
-              <div className="mt-[92px] max-w-[196px]">
+          <aside className="relative hidden min-h-0 overflow-hidden bg-bg-nav p-7 text-white lg:block">
+            <div className="relative z-10 flex h-full flex-col gap-7">
+              <BayanaLogo className="h-10 w-auto self-start" alt="Bayana" />
+              <div className="max-w-[232px]">
                 <h2 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.3px]">Choose your plan</h2>
-                <p className="mt-4 text-sm leading-6 text-[rgb(245,245,250,0.86)]">Choose a plan that works for you</p>
+                <p className="mt-[2.5px] text-sm leading-6 text-[rgb(245,245,250,0.86)]">Choose a plan that works for you</p>
               </div>
             </div>
-            <DecorativeTrail />
+            <img
+              src="/dotted-design.svg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-0 left-0 w-[332px] max-w-none translate-x-[-14px] translate-y-[22px] select-none"
+            />
           </aside>
 
           <section className="flex min-h-0 min-w-0 flex-col overflow-y-auto p-4 sm:p-5">
@@ -341,44 +346,6 @@ function FeatureItem({
         ) : null}
       </span>
     </li>
-  )
-}
-
-function DecorativeTrail() {
-  const dots = [
-    [20, 440, 16],
-    [58, 437, 15],
-    [96, 441, 15],
-    [134, 452, 15],
-    [171, 468, 15],
-    [14, 472, 12],
-    [49, 474, 12],
-    [85, 477, 12],
-    [121, 486, 12],
-    [157, 501, 12],
-    [192, 518, 12],
-    [18, 500, 10],
-    [47, 500, 10],
-    [75, 500, 10],
-    [141, 530, 10],
-    [171, 549, 10],
-    [202, 575, 10],
-    [130, 558, 13],
-    [163, 584, 13],
-    [197, 612, 13],
-    [229, 648, 14],
-  ] as const
-
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {dots.map(([left, top, size], index) => (
-        <span
-          key={`${left}-${top}-${index}`}
-          className="absolute rounded-full bg-bg-on-on-nav/85"
-          style={{ left, top, width: size, height: size }}
-        />
-      ))}
-    </div>
   )
 }
 

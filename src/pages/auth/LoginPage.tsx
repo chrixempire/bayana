@@ -94,7 +94,7 @@ export function LoginPage() {
                   rightIcon={<ContinueArrowIcon className="size-4 text-white" />}
                   onClick={handleOpenEmail}
                 >
-                  Open email
+                  Check your mail
                 </Button>
 
                 <Button
