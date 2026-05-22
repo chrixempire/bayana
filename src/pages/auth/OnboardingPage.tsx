@@ -52,7 +52,7 @@ export function OnboardingPage() {
     <main className="h-dvh overflow-hidden bg-bg-canvas text-text-default-500">
       <section
         className={cn(
-          "mx-auto grid h-full max-w-[1440px] overflow-hidden",
+          "grid h-full w-full overflow-hidden",
           showSidebar ? "min-[900px]:grid-cols-[440px_minmax(0,1fr)]" : "grid-cols-1",
         )}
       >

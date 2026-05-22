@@ -4,5 +4,7 @@ export const AUTH_LOGIN_PATH = "/auth/login" as const
 /** Accept org invite — optional query: `?name=&inviter=&org=&email=` (or `organisation`). */
 export const AUTH_INVITE_PATH = "/auth/invite" as const
 export const AUTH_ONBOARDING_PATH = "/auth/onboarding" as const
-/** Post-login shell until a real dashboard route exists. */
+/** Post-login shell — redirects to the dashboard getting-started page. */
 export const AUTH_HOME_PATH = "/home" as const
+
+export { GETTING_STARTED_PATH } from "./dashboard-paths"

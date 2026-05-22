@@ -257,6 +257,14 @@ input:-webkit-autofill:active {
   font-family: "Clash Display", ui-sans-serif, system-ui, sans-serif;
 }
 
+@utility cursor-disabled {
+  cursor: not-allowed;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 @keyframes toast-slide-in {
   from {
     transform: translate3d(0, -120%, 0);
