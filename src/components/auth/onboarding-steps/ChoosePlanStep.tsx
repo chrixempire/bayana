@@ -116,9 +116,15 @@ function FlippingPrice({
 export function ChoosePlanStep({
   onComplete,
   onClose,
+  variant = "onboarding",
+  isPremium = false,
 }: {
   onComplete: () => void
   onClose: () => void
+  /** Onboarding copy vs create-event upgrade prompt. */
+  variant?: "onboarding" | "upgrade"
+  /** When true, premium card shows "Current plan" and free card is inactive. */
+  isPremium?: boolean
 }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const cycleParam = searchParams.get("billing")
@@ -169,8 +175,14 @@ export function ChoosePlanStep({
             <div className="relative z-10 flex h-full flex-col gap-7">
               <BayanaLogo className="h-10 w-auto self-start" alt="Bayana" />
               <div className="max-w-[232px]">
-                <h2 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.3px]">Choose your plan</h2>
-                <p className="mt-[2.5px] text-sm leading-6 text-[rgb(245,245,250,0.86)]">Choose a plan that works for you</p>
+                <h2 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.3px]">
+                  {variant === "upgrade" ? "Upgrade to Premium" : "Choose your plan"}
+                </h2>
+                <p className="mt-[2.5px] text-sm leading-6 text-[rgb(245,245,250,0.86)]">
+                  {variant === "upgrade"
+                    ? "To unlock access to our premium features, upgrade your plan now"
+                    : "Choose a plan that works for you"}
+                </p>
               </div>
             </div>
             <img
@@ -236,9 +248,10 @@ export function ChoosePlanStep({
                   <Button
                     variant="neutral"
                     block
+                    disabled={variant === "upgrade" || isPremium}
                     className="h-10 rounded-xl border-border-input-default-200 text-sm font-semibold leading-[22px] text-[#2c3237]"
                   >
-                    Choose
+                    {variant === "upgrade" ? "Current plan" : "Choose"}
                   </Button>
                   <ul className="flex flex-col gap-2">
                     {freeFeatures.map((feature) => (
@@ -285,10 +298,11 @@ export function ChoosePlanStep({
                   <Button
                     variant="primary"
                     block
+                    disabled={isPremium}
                     className="h-10 rounded-xl text-sm font-semibold leading-[22px]"
                     onClick={onComplete}
                   >
-                    Subscribe
+                    {isPremium ? "Current plan" : variant === "upgrade" ? "Upgrade" : "Subscribe"}
                   </Button>
                   <ul className="flex flex-col gap-2">
                     {premiumFeatures.map((feature) => (

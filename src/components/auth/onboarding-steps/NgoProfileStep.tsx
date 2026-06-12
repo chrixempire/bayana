@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react"
 import { Button } from "../../ui/button"
 import { Textarea } from "../../ui/textarea"
+import { SelectableChip } from "../../ui/selectable-chip"
 import { cn } from "../../../lib/utils"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
@@ -131,46 +132,14 @@ export function NgoProfileStep({
           </FormField>
           <FormField label="Cause areas">
             <div className="flex flex-wrap gap-2">
-              {CAUSE_AREAS.map((cause) => {
-                const active = selectedCauses.has(cause)
-                return (
-                  <button
-                    key={cause}
-                    type="button"
-                    onClick={() => toggleCause(cause)}
-                    className={cn(
-                      "inline-flex h-8 max-w-full items-center gap-2 rounded-full border pl-1.5 pr-3.5 text-sm font-normal leading-5 tracking-[-0.1px] transition-colors",
-                      active
-                        ? "border-[#f3853d] bg-[#f3853d] text-white shadow-none"
-                        : "border-[#dfe3e8] bg-white text-[#2c3237] hover:border-[#cfd6de] hover:bg-[#fafbfc]",
-                    )}
-                  >
-                    {active ? (
-                      <span className="inline-flex size-5 shrink-0 items-center justify-center text-white" aria-hidden>
-                        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-                          <path
-                            d="M1 4.5L4 7.5L10 1"
-                            stroke="currentColor"
-                            strokeWidth="1.75"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    ) : (
-                      <span
-                        className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-[#4b5563]"
-                        aria-hidden
-                      >
-                        <svg className="block size-[9px] shrink-0" viewBox="0 0 12 12" fill="none" aria-hidden>
-                          <path d="M6 3v6M3 6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-                        </svg>
-                      </span>
-                    )}
-                    <span className="min-w-0 truncate">{cause}</span>
-                  </button>
-                )
-              })}
+              {CAUSE_AREAS.map((cause) => (
+                <SelectableChip
+                  key={cause}
+                  label={cause}
+                  selected={selectedCauses.has(cause)}
+                  onClick={() => toggleCause(cause)}
+                />
+              ))}
             </div>
           </FormField>
           <FormField label="Past activities" error={errors.activities}>

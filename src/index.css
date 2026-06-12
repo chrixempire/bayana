@@ -58,6 +58,9 @@
 
 @theme inline {
   --color-text-default-500: #30363d;
+  --color-text-events-strong: #2c3237;
+  --color-text-table-header: #656f78;
+  --color-text-progress: #8c400c;
   --color-text-neutral-400: #76808b;
   --color-text-disabled-300: #b6bcc4;
   --color-text-on-accent-bg: #9b4f10;
@@ -74,6 +77,8 @@
   --color-bg-overlay: rgb(48 54 61 / 60%);
   --color-bg-accent: #ff7a1a;
   --color-bg-accent-soft: #f9ecdf;
+  --color-bg-nav-tab-active: #fff1e8;
+  --color-text-nav-tab-active: #ff7415;
   --color-bg-dropdown-modal: #ffffff;
   --color-bg-negative-soft: #f7e1e8;
   --color-bg-success-soft: #ddf2e5;
@@ -136,6 +141,9 @@
 
 :root {
   --color-text-default-500: #30363d;
+  --color-text-events-strong: #2c3237;
+  --color-text-table-header: #656f78;
+  --color-text-progress: #8c400c;
   --color-text-neutral-400: #76808b;
   --color-text-disabled-300: #b6bcc4;
   --color-text-on-accent-bg: #9b4f10;
@@ -152,6 +160,8 @@
   --color-bg-overlay: rgb(48 54 61 / 60%);
   --color-bg-accent: #ff7a1a;
   --color-bg-accent-soft: #f9ecdf;
+  --color-bg-nav-tab-active: #fff1e8;
+  --color-text-nav-tab-active: #ff7415;
   --color-bg-dropdown-modal: #ffffff;
   --color-bg-negative-soft: #f7e1e8;
   --color-bg-success-soft: #ddf2e5;
@@ -213,7 +223,10 @@
   --color-icon-on-solid-bg: #ffffff;
 }
 
-html,
+html {
+  height: 100%;
+}
+
 body,
 #root {
   min-height: 100%;
@@ -255,6 +268,142 @@ input:-webkit-autofill:active {
 
 .font-display {
   font-family: "Clash Display", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Events page typography (SF Pro) */
+@utility type-events-tab {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 510;
+  line-height: 22px;
+  letter-spacing: 0;
+  color: var(--color-text-events-strong);
+}
+
+@utility type-create-event-dropdown {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 510;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+@utility type-create-event-field-label {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 510;
+  line-height: 22px;
+  letter-spacing: 0;
+  color: var(--color-text-events-strong);
+}
+
+@utility type-create-event-caption {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--color-text-table-header);
+}
+
+@utility type-create-event-subtitle {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: -0.1px;
+  color: var(--color-text-table-header);
+}
+
+@utility type-create-event-step-label {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 510;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+@utility type-create-event-step-number {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 510;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+@utility type-events-filter {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 590;
+  line-height: 22px;
+  letter-spacing: 0;
+  color: var(--color-text-events-strong);
+}
+
+@utility type-events-table-head {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 510;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--color-text-table-header);
+}
+
+@utility type-pagination {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 510;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--color-text-events-strong);
+}
+
+@utility type-events-progress {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 510;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--color-text-progress);
+}
+
+@utility type-events-empty-title {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 510;
+  line-height: 22px;
+  letter-spacing: 0;
+  text-align: center;
+  color: var(--color-text-events-strong);
+}
+
+@utility type-table-cell-primary {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 510;
+  line-height: 22px;
+  letter-spacing: 0;
+  color: var(--color-text-events-strong);
+}
+
+@utility type-table-cell-secondary {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: -0.1px;
+  color: var(--color-text-table-header);
+}
+
+@utility type-events-empty-description {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-align: center;
+  color: var(--color-text-table-header);
 }
 
 @utility cursor-disabled {
@@ -361,4 +510,61 @@ button:disabled {
   .plan-cadence-shift {
     animation: none;
   }
+}
+
+/* Create event date range picker (react-day-picker) */
+.event-calendar.rdp-root {
+  --rdp-accent-color: var(--color-bg-accent);
+  --rdp-accent-background-color: var(--color-bg-nav-tab-active);
+  --rdp-day-height: 36px;
+  --rdp-day-width: 36px;
+  --rdp-day_button-height: 36px;
+  --rdp-day_button-width: 36px;
+  --rdp-day_button-border-radius: 8px;
+  --rdp-months-gap: 1.5rem;
+}
+
+.event-calendar .rdp-month_caption {
+  margin-bottom: 0.25rem;
+}
+
+.event-calendar .rdp-nav {
+  position: static;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-calendar .rdp-months {
+  position: relative;
+}
+
+.event-calendar .rdp-month {
+  position: relative;
+}
+
+.event-calendar .rdp-button_previous {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.event-calendar .rdp-button_next {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+
+/* Hide browser number spinners so values stay visible while typing */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
