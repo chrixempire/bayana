@@ -1,0 +1,370 @@
+{
+  "page": {
+    "title": "Events",
+    "createButtonLabel": "Create event",
+    "tabs": [
+      {
+        "id": "causes",
+        "label": "Causes",
+        "searchPlaceholder": "Search causes",
+        "progressLabel": "causes",
+        "progressLimit": 3
+      },
+      {
+        "id": "needs",
+        "label": "Needs",
+        "searchPlaceholder": "Search needs",
+        "progressLabel": "needs",
+        "progressLimit": 3
+      },
+      {
+        "id": "collaborations",
+        "label": "Collaborations",
+        "searchPlaceholder": "Search collaborations",
+        "progressLabel": "collaborations",
+        "progressLimit": 3
+      }
+    ],
+    "filters": [
+      {
+        "id": "category",
+        "label": "Category",
+        "options": ["All categories", "Youth Development", "Education", "Health & Wellness", "Environment", "Food Security", "Humanitarian"]
+      },
+      {
+        "id": "volunteeringType",
+        "label": "Volunteering type",
+        "options": ["All types", "In-person", "Virtual", "Hybrid"]
+      },
+      {
+        "id": "visibility",
+        "label": "Visibility",
+        "options": ["All visibility", "Public", "Private", "Drafts"]
+      },
+      {
+        "id": "status",
+        "label": "Status",
+        "options": ["All status", "Upcoming", "Active", "Completed"]
+      },
+      {
+        "id": "startDate",
+        "label": "Start date",
+        "options": ["Any start date", "Today", "This week", "This month", "Custom range"]
+      },
+      {
+        "id": "endDate",
+        "label": "End date",
+        "options": ["Any end date", "Today", "This week", "This month", "Custom range"]
+      }
+    ],
+    "columns": [
+      { "id": "select", "label": "", "type": "checkbox" },
+      { "id": "cause", "label": "Cause", "type": "cause" },
+      { "id": "visibility", "label": "Visibility", "type": "visibility" },
+      { "id": "category", "label": "Category", "type": "category" },
+      { "id": "volunteerType", "label": "Volunteer type", "type": "volunteerType" },
+      { "id": "date", "label": "Date", "type": "date" },
+      { "id": "volunteers", "label": "Volunteers", "type": "volunteers" },
+      { "id": "actions", "label": "", "type": "actions" }
+    ],
+    "rowActions": [
+      { "id": "view-details", "label": "View details", "icon": "eye" },
+      { "id": "edit-event", "label": "Edit event", "icon": "pencil" },
+      { "id": "view-volunteers", "label": "View volunteers", "icon": "user" },
+      { "id": "post-updates", "label": "Post updates", "icon": "megaphone" },
+      { "id": "share-link", "label": "Get shareable link", "icon": "share" },
+      { "id": "delete-event", "label": "Delete event", "icon": "trash", "destructive": true }
+    ],
+    "emptyState": {
+      "title": "No event yet",
+      "description": "Once you create a need, cause or campaign, it would appear here"
+    },
+    "pagination": {
+      "pageSizeOptions": [10, 25, 50],
+      "defaultPageSize": 10
+    }
+  },
+  "scenarios": {
+    "empty": {
+      "activeTab": "causes",
+      "progress": { "current": 0, "total": 3 },
+      "rows": [],
+      "pagination": {
+        "from": 0,
+        "to": 0,
+        "total": 0,
+        "page": 1,
+        "pageSize": 10,
+        "totalPages": 0
+      }
+    },
+    "filled": {
+      "activeTab": "causes",
+      "progress": { "current": 3, "total": 3 },
+      "rows": [
+        {
+          "id": "evt-001",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-1.jpg",
+            "title": "Weekend teaching program for out-of-school children",
+            "description": "Join us in providing quality education support every Saturday."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "upcoming"
+          },
+          "category": {
+            "tags": ["Youth Development"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "in-person",
+            "detail": "123 acme road, ikeja, lagos"
+          },
+          "date": {
+            "range": "6 Dec - 12 Dec 2025",
+            "time": "8:00 AM - 5:00 PM"
+          },
+          "volunteers": { "current": 0, "max": 30 },
+          "shareUrl": "https://bayana.com/events/weekend-teaching-program"
+        },
+        {
+          "id": "evt-002",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-2.jpg",
+            "title": "Community health outreach drive",
+            "description": "Volunteer medics and coordinators needed for a one-day clinic."
+          },
+          "visibility": {
+            "type": "private",
+            "lifecycleStatus": "active"
+          },
+          "category": {
+            "tags": ["Health & Wellness"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "virtual",
+            "detail": "meet.google.com/wqs-skyv-hjk"
+          },
+          "date": {
+            "range": "6 Dec 2025",
+            "time": "9:00 AM - 2:00 PM"
+          },
+          "volunteers": { "current": 4, "max": 30 },
+          "shareUrl": "https://bayana.com/events/community-health-outreach"
+        },
+        {
+          "id": "evt-003",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-3.jpg",
+            "title": "Food pantry distribution (draft)",
+            "description": "Monthly pantry setup — details still being finalized."
+          },
+          "visibility": {
+            "type": "drafts",
+            "lifecycleStatus": null
+          },
+          "category": {
+            "tags": ["Food Security"],
+            "extraCount": 0
+          },
+          "volunteerType": { "type": null, "detail": null },
+          "date": { "range": null, "time": null },
+          "volunteers": null,
+          "shareUrl": null
+        },
+        {
+          "id": "evt-004",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-4.jpg",
+            "title": "Beach cleanup and environmental awareness",
+            "description": "Help remove waste and educate residents on sustainable habits."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": ["Environment"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "in-person",
+            "detail": "Elegushi beach, lekki, lagos"
+          },
+          "date": {
+            "range": "6 Dec - 12 Dec 2025",
+            "time": "8:00 AM - 5:00 PM"
+          },
+          "volunteers": { "current": 30, "max": 30 },
+          "shareUrl": "https://bayana.com/events/beach-cleanup"
+        },
+        {
+          "id": "evt-005",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-5.jpg",
+            "title": "Mentorship circle for young professionals",
+            "description": "Pair mentors with graduates entering the workforce."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": ["Youth Development"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "virtual",
+            "detail": "meet.google.com/abc-defg-hij"
+          },
+          "date": {
+            "range": "6 Dec 2025",
+            "time": "6:00 PM - 8:00 PM"
+          },
+          "volunteers": { "current": 30, "max": 30 },
+          "shareUrl": "https://bayana.com/events/mentorship-circle"
+        },
+        {
+          "id": "evt-006",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-6.jpg",
+            "title": "Literacy workshop for primary students",
+            "description": "Reading sessions and learning materials for ages 8–12."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": ["Education"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "in-person",
+            "detail": "45 community centre road, surulere, lagos"
+          },
+          "date": {
+            "range": "6 Dec - 12 Dec 2025",
+            "time": "8:00 AM - 5:00 PM"
+          },
+          "volunteers": { "current": 30, "max": 30 },
+          "shareUrl": "https://bayana.com/events/literacy-workshop"
+        },
+        {
+          "id": "evt-007",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-7.jpg",
+            "title": "Senior citizens wellness check-in",
+            "description": "Friendly visits and basic vitals recording for elderly residents."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": ["Health & Wellness"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "in-person",
+            "detail": "12 palm grove estate, yaba, lagos"
+          },
+          "date": {
+            "range": "6 Dec 2025",
+            "time": "10:00 AM - 1:00 PM"
+          },
+          "volunteers": { "current": 30, "max": 30 },
+          "shareUrl": "https://bayana.com/events/senior-wellness-checkin"
+        },
+        {
+          "id": "evt-008",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-8.jpg",
+            "title": "Coding bootcamp for girls in STEM",
+            "description": "Introductory programming sessions over two weekends."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": ["Youth Development"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "virtual",
+            "detail": "meet.google.com/xyz-uvwx-rst"
+          },
+          "date": {
+            "range": "6 Dec - 12 Dec 2025",
+            "time": "8:00 AM - 5:00 PM"
+          },
+          "volunteers": { "current": 30, "max": 30 },
+          "shareUrl": "https://bayana.com/events/coding-bootcamp-girls"
+        },
+        {
+          "id": "evt-009",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-9.jpg",
+            "title": "Neighbourhood tree planting initiative",
+            "description": "Plant and maintain saplings across three local wards."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": ["Environment"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "in-person",
+            "detail": "Ward 4 open field, abuja"
+          },
+          "date": {
+            "range": "6 Dec 2025",
+            "time": "7:00 AM - 11:00 AM"
+          },
+          "volunteers": { "current": 30, "max": 30 },
+          "shareUrl": "https://bayana.com/events/tree-planting"
+        },
+        {
+          "id": "evt-010",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-10.jpg",
+            "title": "Refugee support kit packing day",
+            "description": "Assemble hygiene and food kits for partner shelters."
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": ["Humanitarian"],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": "in-person",
+            "detail": "Bayana warehouse, ikeja, lagos"
+          },
+          "date": {
+            "range": "6 Dec - 12 Dec 2025",
+            "time": "8:00 AM - 5:00 PM"
+          },
+          "volunteers": { "current": 30, "max": 30 },
+          "shareUrl": "https://bayana.com/events/refugee-kit-packing"
+        }
+      ],
+      "pagination": {
+        "from": 1,
+        "to": 10,
+        "total": 50,
+        "page": 1,
+        "pageSize": 10,
+        "totalPages": 5
+      }
+    }
+  }
+}

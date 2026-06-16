@@ -36,15 +36,12 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   density?: "comfortable" | "compact"
 }
 
-export function Input({
-  className,
-  leftIcon,
-  rightIcon,
-  invalid,
-  disabled,
-  density = "comfortable",
-  ...props
-}: InputProps) {
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
+  { className, leftIcon, rightIcon, invalid, disabled, density = "comfortable", type, ...props },
+  ref,
+) {
+  const isNumber = type === "number"
+
   return (
     <div
       className={cn(
@@ -54,9 +51,12 @@ export function Input({
     >
       {leftIcon ? <span className="pl-3 text-icon-neutral">{leftIcon}</span> : null}
       <input
+        ref={ref}
+        type={type}
         className={cn(
-          "w-full border-0 bg-transparent [border-radius:inherit] text-sm leading-[22px] tracking-[-0.1px] outline-none placeholder:text-input-placeholder disabled:cursor-not-allowed",
+          "w-full min-w-0 border-0 bg-transparent [border-radius:inherit] text-sm leading-[22px] tracking-[-0.1px] outline-none placeholder:text-input-placeholder disabled:cursor-not-allowed",
           density === "compact" ? "h-10 min-h-10 px-4 py-2" : "h-[44px] px-4 py-2",
+          isNumber && "tabular-nums",
         )}
         disabled={disabled}
         {...props}
@@ -64,4 +64,4 @@ export function Input({
       {rightIcon ? <span className="pr-3 text-icon-neutral">{rightIcon}</span> : null}
     </div>
   )
-}
+})

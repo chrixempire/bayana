@@ -20,6 +20,7 @@ export type OnboardingData = {
   basicInformation: { businessName: string; cacNumber: string; address: string; website: string }
   businessOwner: {
     fullName: string
+    countryCode: string
     dialCode: string
     phone: string
     idType: string
@@ -46,6 +47,7 @@ export const defaultData: OnboardingData = {
   basicInformation: { businessName: "", cacNumber: "", address: "", website: "" },
   businessOwner: {
     fullName: "",
+    countryCode: "NG",
     dialCode: "+234",
     phone: "",
     idType: DEFAULT_ID_TYPE,

@@ -1,11 +1,12 @@
 import { Button } from "../../ui/button"
+import { CountryDialCodeDropdown } from "../../ui/country-dial-code-dropdown"
+import { FormDropdown } from "../../ui/form-dropdown"
 import { Input } from "../../ui/input"
 import { ID_TYPE_OPTIONS } from "../../../lib/id-types"
 import { cn } from "../../../lib/utils"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
 import { OnboardingStepShell } from "../OnboardingStepShell"
-import { ChevronDownIcon } from "../icons/ChevronDownIcon"
 import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
 
 const ID_TYPE_FIELD_META = {
@@ -43,9 +44,8 @@ export function BusinessOwnerStep({
   onBack: () => void
   onContinue: () => void
   onSkip: () => void
-  }) {
+}) {
   const phoneInvalid = Boolean(errors.phone)
-  const dial = data.dialCode ?? "+234"
   const idTypeMeta =
     ID_TYPE_FIELD_META[data.idType as keyof typeof ID_TYPE_FIELD_META] ?? ID_TYPE_FIELD_META.nin
 
@@ -88,18 +88,13 @@ export function BusinessOwnerStep({
               )}
             >
               <div className="relative flex h-10 shrink-0 items-center border-r border-border-default-100 bg-white pl-2 pr-1">
-                <span className="mr-0.5 text-sm leading-none" aria-hidden>
-                  🇳🇬
-                </span>
-                <select
-                  aria-label="Country calling code"
-                  className="h-10 max-w-[5.5rem] cursor-pointer appearance-none border-0 bg-transparent py-2 pl-1 pr-6 text-sm leading-[22px] text-text-default-500 outline-none"
-                  value={dial}
-                  onChange={(e) => onChange({ ...data, dialCode: e.target.value })}
-                >
-                  <option value="+234">+234</option>
-                </select>
-                <ChevronDownIcon className="pointer-events-none absolute right-1 top-1/2 size-4 -translate-y-1/2 text-text-neutral-400" />
+                <CountryDialCodeDropdown
+                  countryCode={data.countryCode}
+                  onValueChange={(country) =>
+                    onChange({ ...data, countryCode: country.code, dialCode: country.dialCode })
+                  }
+                  invalid={phoneInvalid}
+                />
               </div>
               <input
                 className="h-10 min-h-10 min-w-0 flex-1 border-0 bg-transparent px-4 text-sm leading-[22px] tracking-[-0.1px] text-text-default-500 outline-none placeholder:text-input-placeholder"
@@ -113,23 +108,13 @@ export function BusinessOwnerStep({
           </FormField>
 
           <FormField label="Identification type" error={errors.idType}>
-            <div className="relative">
-              <select
-                className={cn(
-                  "h-10 w-full cursor-pointer appearance-none rounded-xl border bg-white px-4 py-2 pr-10 text-sm leading-[22px] text-text-default-500 shadow-input-default outline-none transition-colors focus:border-border-input-active focus:ring-2 focus:ring-[rgb(255,122,26,0.12)]",
-                  errors.idType ? "border-border-input-negative bg-bg-negative-soft" : "border-border-input-default-200",
-                )}
-                value={data.idType}
-                onChange={(e) => onChange({ ...data, idType: e.target.value })}
-              >
-                {ID_TYPE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-text-neutral-400" />
-            </div>
+            <FormDropdown
+              ariaLabel="Identification type"
+              value={data.idType}
+              invalid={Boolean(errors.idType)}
+              options={ID_TYPE_OPTIONS}
+              onValueChange={(idType) => onChange({ ...data, idType })}
+            />
           </FormField>
 
           <FormField label={idTypeMeta.label} hint={idTypeMeta.hint} error={errors.nin}>

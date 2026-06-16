@@ -1,7 +1,8 @@
 import { getAuthToken } from "../auth/session"
+import { getApiBaseUrl } from "./config"
+import { normalizeApiError } from "./errors"
 import { ApiError } from "./types"
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? ""
+import type { ApiClientOptions, ClientApiError } from "./types"
 
 type ApiRequestOptions = RequestInit & {
   auth?: boolean
@@ -10,7 +11,8 @@ type ApiRequestOptions = RequestInit & {
 export async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
   const { auth = true, headers, body, ...rest } = options
 
-  if (!API_BASE_URL) {
+  const apiBaseUrl = getApiBaseUrl()
+  if (!apiBaseUrl) {
     throw new ApiError("API base URL is not configured. Set VITE_API_BASE_URL in your environment.", 0)
   }
 
@@ -26,7 +28,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     if (token) requestHeaders.set("Authorization", `Bearer ${token}`)
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${apiBaseUrl}${path}`, {
     ...rest,
     headers: requestHeaders,
     body,
@@ -58,4 +60,142 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   }
 
   return payload as T
+}
+
+export interface ApiClient {
+  request<TResponse>(path: string, options?: RequestInit): Promise<TResponse>
+  get<TResponse>(path: string, options?: Omit<RequestInit, "method">): Promise<TResponse>
+  post<TResponse>(
+    path: string,
+    body?: unknown,
+    options?: Omit<RequestInit, "method" | "body">,
+  ): Promise<TResponse>
+  patch<TResponse>(
+    path: string,
+    body?: unknown,
+    options?: Omit<RequestInit, "method" | "body">,
+  ): Promise<TResponse>
+  put<TResponse>(
+    path: string,
+    body?: unknown,
+    options?: Omit<RequestInit, "method" | "body">,
+  ): Promise<TResponse>
+  delete<TResponse>(path: string, options?: Omit<RequestInit, "method">): Promise<TResponse>
+}
+
+export function createApiClient(options: ApiClientOptions = {}): ApiClient {
+  const {
+    baseURL = "",
+    defaultHeaders,
+    getDefaultHeaders,
+    getAuthToken: getClientAuthToken,
+    onAuthRefresh,
+    onAuthFailure,
+  } = options
+
+  async function request<TResponse>(path: string, options: RequestInit = {}): Promise<TResponse> {
+    const method = (options.method ?? "GET").toUpperCase()
+    const headers = new Headers(defaultHeaders)
+
+    const dynamicDefaultHeaders = getDefaultHeaders?.()
+    if (dynamicDefaultHeaders) {
+      new Headers(dynamicDefaultHeaders).forEach((value, key) => {
+        headers.set(key, value)
+      })
+    }
+
+    new Headers(options.headers).forEach((value, key) => {
+      headers.set(key, value)
+    })
+
+    if (["POST", "PUT", "PATCH", "DELETE"].includes(method) && !headers.has("Idempotency-Key")) {
+      headers.set("Idempotency-Key", crypto.randomUUID())
+    }
+
+    const token = getClientAuthToken?.()
+    const hasExplicitAuthorization = headers.has("Authorization")
+    const usesManagedAuth = Boolean(token && !hasExplicitAuthorization)
+
+    if (token && !hasExplicitAuthorization) {
+      headers.set("Authorization", `Bearer ${token}`)
+    }
+
+    const executeRequest = (requestHeaders: Headers) =>
+      fetch(`${baseURL}${path}`, {
+        ...options,
+        headers: requestHeaders,
+      })
+
+    let response = await executeRequest(headers)
+
+    if (response.status === 401 && usesManagedAuth && onAuthRefresh) {
+      try {
+        const nextToken = await onAuthRefresh()
+        if (nextToken) {
+          headers.set("Authorization", `Bearer ${nextToken}`)
+          response = await executeRequest(headers)
+        }
+      } catch {
+        // Fall through to normalized 401 handling below.
+      }
+    }
+
+    const contentType = response.headers.get("content-type") ?? ""
+    const payload = contentType.includes("application/json")
+      ? await response.json()
+      : await response.text()
+
+    if (!response.ok) {
+      const normalizedError = normalizeApiError({
+        ...(typeof payload === "object" && payload !== null ? payload : {}),
+        status: response.status,
+      } satisfies Partial<ClientApiError> & { status: number })
+
+      if (response.status === 401) {
+        await onAuthFailure?.(normalizedError)
+      }
+
+      throw normalizedError
+    }
+
+    return payload as TResponse
+  }
+
+  return {
+    request,
+    get: <TResponse>(path: string, options: Omit<RequestInit, "method"> = {}) =>
+      request<TResponse>(path, { ...options, method: "GET" }),
+    post: <TResponse>(path: string, body?: unknown, options: Omit<RequestInit, "method" | "body"> = {}) =>
+      request<TResponse>(path, {
+        ...options,
+        method: "POST",
+        body: body === undefined ? undefined : JSON.stringify(body),
+        headers: {
+          "content-type": "application/json",
+          ...(options.headers ?? {}),
+        },
+      }),
+    patch: <TResponse>(path: string, body?: unknown, options: Omit<RequestInit, "method" | "body"> = {}) =>
+      request<TResponse>(path, {
+        ...options,
+        method: "PATCH",
+        body: body === undefined ? undefined : JSON.stringify(body),
+        headers: {
+          "content-type": "application/json",
+          ...(options.headers ?? {}),
+        },
+      }),
+    put: <TResponse>(path: string, body?: unknown, options: Omit<RequestInit, "method" | "body"> = {}) =>
+      request<TResponse>(path, {
+        ...options,
+        method: "PUT",
+        body: body === undefined ? undefined : JSON.stringify(body),
+        headers: {
+          "content-type": "application/json",
+          ...(options.headers ?? {}),
+        },
+      }),
+    delete: <TResponse>(path: string, options: Omit<RequestInit, "method"> = {}) =>
+      request<TResponse>(path, { ...options, method: "DELETE" }),
+  }
 }

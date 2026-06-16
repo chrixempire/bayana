@@ -6,6 +6,9 @@ import { LoginPage } from "./pages/auth/LoginPage"
 import { EmailVerifyPage } from "./pages/auth/EmailVerifyPage"
 import { OnboardingPage } from "./pages/auth/OnboardingPage"
 import { HomePage } from "./pages/HomePage"
+import { GettingStartedPage } from "./pages/dashboard/GettingStartedPage"
+import { EventsPage } from "./pages/dashboard/EventsPage"
+import { CreateEventPage } from "./pages/dashboard/CreateEventPage"
 
 import {
   AUTH_CREATE_ACCOUNT_PATH,
@@ -14,7 +17,9 @@ import {
   AUTH_HOME_PATH,
   AUTH_LOGIN_PATH,
   AUTH_ONBOARDING_PATH,
+  GETTING_STARTED_PATH,
 } from "./lib/auth-paths"
+import { DASHBOARD_TAB_PATHS, GETTING_STARTED_LEGACY_PATH } from "./lib/dashboard-paths"
 
 function App() {
   return (
@@ -25,7 +30,12 @@ function App() {
       <Route path={AUTH_INVITE_PATH} element={<InvitedMemberPage />} />
       <Route path="/auth/create-account" element={<CreateAccountPage />} />
       <Route path={`${AUTH_EMAIL_VERIFY_PATH}/:id/:hash`} element={<EmailVerifyPage />} />
-      <Route path={AUTH_HOME_PATH} element={<HomePage />} />
+      <Route path={AUTH_HOME_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
+      <Route path={GETTING_STARTED_PATH} element={<GettingStartedPage />} />
+      <Route path={DASHBOARD_TAB_PATHS.events} element={<EventsPage />} />
+      <Route path="/events/create" element={<CreateEventPage />} />
+      <Route path={GETTING_STARTED_LEGACY_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
+      <Route path="/home/legacy" element={<HomePage />} />
       <Route path="/auth/onboarding/choose-plan" element={<Navigate to={`${AUTH_ONBOARDING_PATH}/review?plan=open`} replace />} />
       <Route path="/auth/onboarding/:step" element={<OnboardingPage />} />
       <Route path="/auth/onboarding" element={<Navigate to={`${AUTH_ONBOARDING_PATH}/check-email`} replace />} />

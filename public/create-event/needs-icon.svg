@@ -1,0 +1,51 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_needs)">
+<rect width="16" height="16" rx="8" fill="#36B55C"/>
+<path d="M3.19999 16.3137C4.65938 17.1563 6.31484 17.5999 7.99999 17.5999C9.68515 17.5999 11.3406 17.1563 12.8 16.3137L7.99999 7.9999L3.19999 16.3137Z" fill="url(#paint0_needs)"/>
+<path d="M12.8 -0.313942C11.3406 -1.15652 9.68515 -1.6001 7.99999 -1.6001C6.31484 -1.6001 4.65938 -1.15652 3.2 -0.313942L7.99999 7.9999L12.8 -0.313942Z" fill="url(#paint1_needs)"/>
+<g opacity="0.6">
+<path d="M-0.313748 3.1999C-1.15632 4.65929 -1.5999 6.31475 -1.5999 7.9999C-1.5999 9.68505 -1.15632 11.3405 -0.313748 12.7999L8.0001 7.9999L-0.313748 3.1999Z" fill="url(#paint2_needs)"/>
+<path d="M16.3139 12.7999C17.1565 11.3405 17.6001 9.68505 17.6001 7.9999C17.6001 6.31475 17.1565 4.65929 16.3139 3.1999L8.0001 7.9999L16.3139 12.7999Z" fill="url(#paint3_needs)"/>
+</g>
+<g filter="url(#filter0_needs)">
+<circle cx="7.99999" cy="7.9998" r="3.2" fill="#1FCB53"/>
+</g>
+<g clip-path="url(#clip1_needs)">
+<path d="M6.55566 8.1314L5.75966 8.6286C5.61025 8.48214 5.40928 8.40026 5.20006 8.4006H4.80006C4.58789 8.4006 4.3844 8.48488 4.23438 8.63491C4.08435 8.78494 4.00006 8.98842 4.00006 9.2006V10.8006C4.00006 11.0128 4.08435 11.2163 4.23438 11.3663C4.3844 11.5163 4.58789 11.6006 4.80006 11.6006H5.20006C5.34049 11.6006 5.47844 11.5636 5.60005 11.4934C5.72166 11.4232 5.82265 11.3222 5.89286 11.2006H6.21126C6.27331 11.2005 6.33453 11.2149 6.39006 11.2426L7.33006 11.7126C7.72794 11.9114 8.18074 11.9719 8.61686 11.8846L9.90086 11.6282C10.0764 11.5931 10.2418 11.519 10.3849 11.4114L11.6133 10.4902C11.7333 10.4002 11.8308 10.2834 11.8979 10.1492C11.965 10.015 12 9.86705 12.0001 9.717V9.6946C12.0001 8.9866 11.2549 8.5258 10.6213 8.8426C10.3453 8.9806 10.0905 9.1926 9.83406 9.3638C9.98206 8.9186 9.74646 8.4246 9.27806 8.3078L7.79166 7.9358C7.58307 7.88368 7.36611 7.87414 7.15375 7.90775C6.94138 7.94136 6.73797 8.01742 6.55566 8.1314Z" fill="white"/>
+<path d="M11.5997 5.9418C11.6129 5.3498 11.3113 4.8322 10.8665 4.573C10.4849 4.3506 10.0125 4.3302 9.60006 4.5878C9.18806 4.3302 8.71526 4.3506 8.33366 4.573C7.88886 4.8322 7.58726 5.3498 7.60046 5.9418C7.61766 6.7054 8.20886 7.3274 9.07406 7.8414L9.09831 7.85579C9.25211 7.94715 9.41616 8.0446 9.60006 8.0446C9.78396 8.0446 9.94801 7.94715 10.1018 7.85579L10.1261 7.8414C10.9913 7.3274 11.5825 6.7054 11.5997 5.9418Z" fill="url(#paint4_needs)"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_needs" x="3.19999" y="3.1998" width="9.59999" height="9.5999" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="0.8" result="effect1_foregroundBlur_needs"/>
+</filter>
+<linearGradient id="paint0_needs" x1="7.99999" y1="-1.6001" x2="7.99999" y2="17.5999" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint1_needs" x1="7.99999" y1="-1.6001" x2="7.99999" y2="17.5999" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint2_needs" x1="17.6001" y1="7.9999" x2="-1.5999" y2="7.9999" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint3_needs" x1="17.6001" y1="7.9999" x2="-1.5999" y2="7.9999" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint4_needs" x1="8.00006" y1="4.40039" x2="8.00006" y2="11.9235" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="clip0_needs">
+<rect width="16" height="16" rx="8" fill="white"/>
+</clipPath>
+<clipPath id="clip1_needs">
+<rect width="9.6" height="9.6" fill="white" transform="translate(3.20001 3.2002)"/>
+</clipPath>
+</defs>
+</svg>
