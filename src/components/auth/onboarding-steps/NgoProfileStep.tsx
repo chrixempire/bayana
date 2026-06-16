@@ -1,27 +1,12 @@
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "../../ui/button"
 import { Textarea } from "../../ui/textarea"
+import { getCauseAreas } from "../../../lib/api/public"
 import { cn } from "../../../lib/utils"
-import type { OnboardingData } from "../../../pages/auth/types"
+import type { CauseAreaSelection, OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
 import { OnboardingStepShell } from "../OnboardingStepShell"
 import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
-
-const CAUSE_AREAS = [
-  "Arts, Culture & Technology",
-  "Animal Welfare",
-  "Children's Welfare",
-  "Education",
-  "Environmental",
-  "Events",
-  "Faith-based",
-  "Fitness",
-  "Food & Hunger",
-  "Health & Wellness",
-  "Sports",
-  "Travel",
-  "Youth Development",
-] as const
 
 export function NgoProfileStep({
   data,
@@ -44,19 +29,54 @@ export function NgoProfileStep({
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string>("")
-  const selectedCauses = useMemo(() => new Set(data.causes), [data.causes])
+  const [causeAreas, setCauseAreas] = useState<CauseAreaSelection[]>([])
+  const [isLoadingCauses, setIsLoadingCauses] = useState(true)
+  const [causeLoadError, setCauseLoadError] = useState("")
+
+  const selectedCauseIds = useMemo(() => new Set(data.causes.map((cause) => cause.id)), [data.causes])
+
+  useEffect(() => {
+    let cancelled = false
+
+    void getCauseAreas()
+      .then((response) => {
+        if (cancelled) return
+        setCauseAreas(response.data.map((cause) => ({ id: cause.id, name: cause.name })))
+        setCauseLoadError("")
+      })
+      .catch(() => {
+        if (cancelled) return
+        setCauseLoadError("Unable to load cause areas. Please refresh and try again.")
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingCauses(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!data.logo) {
+      setLogoPreviewUrl("")
+      return
+    }
+
+    const nextUrl = URL.createObjectURL(data.logo)
+    setLogoPreviewUrl(nextUrl)
+
+    return () => URL.revokeObjectURL(nextUrl)
+  }, [data.logo])
 
   const handleLogoChange = (file?: File) => {
     if (!file) return
-    if (logoPreviewUrl) URL.revokeObjectURL(logoPreviewUrl)
-    const nextUrl = URL.createObjectURL(file)
-    setLogoPreviewUrl(nextUrl)
-    onChange({ ...data, logoName: file.name })
+    onChange({ ...data, logo: file })
   }
 
-  const toggleCause = (cause: string) => {
-    if (selectedCauses.has(cause)) {
-      onChange({ ...data, causes: data.causes.filter((item) => item !== cause) })
+  const toggleCause = (cause: CauseAreaSelection) => {
+    if (selectedCauseIds.has(cause.id)) {
+      onChange({ ...data, causes: data.causes.filter((item) => item.id !== cause.id) })
       return
     }
     onChange({ ...data, causes: [...data.causes, cause] })
@@ -65,6 +85,7 @@ export function NgoProfileStep({
   return (
     <OnboardingStepShell
       combineTitleAndContent
+      middleScrollOnly
       frameStart={
         <Button variant="neutral" size="sm" className="w-fit" onClick={onBack}>
           Back
@@ -85,9 +106,9 @@ export function NgoProfileStep({
           dialCode={businessOwner.dialCode}
           phone={businessOwner.phone}
           logoPreviewUrl={logoPreviewUrl}
-          hasUploadedLogo={Boolean(data.logoName)}
+          hasUploadedLogo={Boolean(data.logo)}
           mission={data.mission}
-          causes={data.causes}
+          causes={data.causes.map((cause) => cause.name)}
           pastActivities={data.activities}
         />
       }
@@ -117,7 +138,7 @@ export function NgoProfileStep({
                 className="h-8 px-3"
                 onClick={() => fileInputRef.current?.click()}
               >
-                {data.logoName ? "Change logo" : "Upload logo"}
+                {data.logo ? "Change logo" : "Upload logo"}
               </Button>
             </div>
             <p className="text-[11px] leading-4 text-[#8b96a1]">JPG, PNG & GIF file up to 5MB at least 400px by 400px</p>
@@ -129,49 +150,55 @@ export function NgoProfileStep({
               onChange={(e) => onChange({ ...data, mission: e.target.value })}
             />
           </FormField>
-          <FormField label="Cause areas">
-            <div className="flex flex-wrap gap-2">
-              {CAUSE_AREAS.map((cause) => {
-                const active = selectedCauses.has(cause)
-                return (
-                  <button
-                    key={cause}
-                    type="button"
-                    onClick={() => toggleCause(cause)}
-                    className={cn(
-                      "inline-flex h-8 max-w-full items-center gap-2 rounded-full border pl-1.5 pr-3.5 text-sm font-normal leading-5 tracking-[-0.1px] transition-colors",
-                      active
-                        ? "border-[#f3853d] bg-[#f3853d] text-white shadow-none"
-                        : "border-[#dfe3e8] bg-white text-[#2c3237] hover:border-[#cfd6de] hover:bg-[#fafbfc]",
-                    )}
-                  >
-                    {active ? (
-                      <span className="inline-flex size-5 shrink-0 items-center justify-center text-white" aria-hidden>
-                        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-                          <path
-                            d="M1 4.5L4 7.5L10 1"
-                            stroke="currentColor"
-                            strokeWidth="1.75"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    ) : (
-                      <span
-                        className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-[#4b5563]"
-                        aria-hidden
-                      >
-                        <svg className="block size-[9px] shrink-0" viewBox="0 0 12 12" fill="none" aria-hidden>
-                          <path d="M6 3v6M3 6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-                        </svg>
-                      </span>
-                    )}
-                    <span className="min-w-0 truncate">{cause}</span>
-                  </button>
-                )
-              })}
-            </div>
+          <FormField label="Cause areas" error={errors.causes}>
+            {isLoadingCauses ? (
+              <p className="text-sm text-text-neutral-400">Loading cause areas...</p>
+            ) : causeLoadError ? (
+              <p className="text-sm text-text-negative">{causeLoadError}</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {causeAreas.map((cause) => {
+                  const active = selectedCauseIds.has(cause.id)
+                  return (
+                    <button
+                      key={cause.id}
+                      type="button"
+                      onClick={() => toggleCause(cause)}
+                      className={cn(
+                        "inline-flex h-8 max-w-full cursor-pointer items-center gap-2 rounded-full border pl-1.5 pr-3.5 text-sm font-normal leading-5 tracking-[-0.1px] transition-colors",
+                        active
+                          ? "border-[#f3853d] bg-[#f3853d] text-white shadow-none"
+                          : "border-[#dfe3e8] bg-white text-[#2c3237] hover:border-[#cfd6de] hover:bg-[#fafbfc]",
+                      )}
+                    >
+                      {active ? (
+                        <span className="inline-flex size-5 shrink-0 items-center justify-center text-white" aria-hidden>
+                          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                            <path
+                              d="M1 4.5L4 7.5L10 1"
+                              stroke="currentColor"
+                              strokeWidth="1.75"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                      ) : (
+                        <span
+                          className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-[#4b5563]"
+                          aria-hidden
+                        >
+                          <svg className="block size-[9px] shrink-0" viewBox="0 0 12 12" fill="none" aria-hidden>
+                            <path d="M6 3v6M3 6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
+                        </span>
+                      )}
+                      <span className="min-w-0 truncate">{cause.name}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </FormField>
           <FormField label="Past activities" error={errors.activities}>
             <Textarea
@@ -233,7 +260,7 @@ function NgoPhonePreview({
   const previewPhone = hasPhone ? `${dialCode || "+234"} ${phone.trim()}` : ""
 
   return (
-    <aside className="w-full max-w-[368px] overflow-hidden rounded-2xl border border-[#d8dde3] bg-white min-[1200px]:sticky min-[1200px]:top-8 min-[1200px]:justify-self-end">
+    <aside className="w-full max-w-[368px] shrink-0 overflow-hidden rounded-2xl border border-[#d8dde3] bg-white min-[1200px]:w-[368px] min-[1200px]:justify-self-end">
       <div className="flex h-[86px] items-end justify-center bg-[#f4f6f8] pb-4">
         <div className="h-5 w-20 rounded-full bg-[#cfd5dc]" />
       </div>

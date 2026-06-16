@@ -16,8 +16,8 @@ export function FileUploadDropzone({
   accept = ".jpg,.jpeg,.png,.pdf",
   maxSizeHint = "JPG, PDF,& PNG file size up to 2MB",
 }: {
-  value: string
-  onChange: (fileName: string) => void
+  value: File | null
+  onChange: (file: File | null) => void
   accept?: string
   maxSizeHint?: string
 }) {
@@ -25,15 +25,21 @@ export function FileUploadDropzone({
   const [isDragging, setIsDragging] = useState(false)
   const [status, setStatus] = useState<UploadStatus>(value ? "uploaded" : "idle")
   const [progress, setProgress] = useState(value ? 100 : 0)
-  const [fileSize, setFileSize] = useState<string>(value ? "2MB" : "")
+  const [fileSize, setFileSize] = useState<string>(value ? formatFileSize(value.size) : "")
 
   useEffect(() => {
     if (value && status === "idle") {
       setStatus("uploaded")
       setProgress(100)
-      if (!fileSize) setFileSize("2MB")
+      setFileSize(formatFileSize(value.size))
     }
-  }, [fileSize, status, value])
+
+    if (!value && status !== "idle") {
+      setStatus("idle")
+      setProgress(0)
+      setFileSize("")
+    }
+  }, [status, value])
 
   useEffect(() => {
     if (status !== "uploading") return
@@ -52,9 +58,10 @@ export function FileUploadDropzone({
   }, [status])
 
   const supportedTypesText = useMemo(() => maxSizeHint, [maxSizeHint])
+  const fileName = value?.name ?? ""
 
   const startUpload = (file: File) => {
-    onChange(file.name)
+    onChange(file)
     setFileSize(formatFileSize(file.size))
     setProgress(18)
     setStatus("uploading")
@@ -67,7 +74,7 @@ export function FileUploadDropzone({
   }
 
   const clearFile = () => {
-    onChange("")
+    onChange(null)
     setProgress(0)
     setStatus("idle")
     setFileSize("")
@@ -119,7 +126,7 @@ export function FileUploadDropzone({
               <FileIcon />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium leading-5 text-[#2c3237]">{value}</p>
+              <p className="truncate text-sm font-medium leading-5 text-[#2c3237]">{fileName}</p>
               <p className="mt-0.5 text-[11px] leading-4 text-[#8a949e]">
                 {fileSize}
                 {status === "uploading" ? ` - ${progress}%` : ""}

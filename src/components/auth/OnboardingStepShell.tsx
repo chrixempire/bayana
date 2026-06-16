@@ -19,6 +19,7 @@ export function OnboardingStepShell({
   callout,
   combineTitleAndContent = false,
   wide = false,
+  middleScrollOnly = false,
 }: {
   frameStart?: ReactNode
   titleBlock: ReactNode
@@ -27,7 +28,28 @@ export function OnboardingStepShell({
   callout?: ReactNode
   combineTitleAndContent?: boolean
   wide?: boolean
+  /** Large screens: back/title and right callout stay fixed; only the form column scrolls. */
+  middleScrollOnly?: boolean
 }) {
+  if (middleScrollOnly) {
+    return (
+      <div className="mx-auto flex w-full max-w-[560px] flex-col gap-y-10 min-[900px]:mx-0 min-[900px]:max-w-none min-[1200px]:min-h-0 min-[1200px]:max-w-none min-[1200px]:flex-1 min-[1200px]:gap-y-10 min-[1200px]:overflow-hidden">
+        {frameStart ? <div className="shrink-0">{frameStart}</div> : null}
+
+        <div className="flex min-h-0 flex-col gap-y-10 min-[1200px]:min-h-0 min-[1200px]:flex-1 min-[1200px]:flex-row min-[1200px]:items-stretch min-[1200px]:gap-x-16 min-[1200px]:overflow-hidden">
+          <div className="flex min-h-0 w-full min-w-0 flex-col min-[1200px]:max-h-full min-[1200px]:max-w-[420px] min-[1200px]:flex-1 min-[1200px]:overflow-hidden">
+            <div className="shrink-0">{titleBlock}</div>
+            <div className="mt-10 min-h-0 flex-1 overflow-y-auto min-[1200px]:pr-1">{children}</div>
+          </div>
+
+          {showCallout ? (
+            <div className="w-full min-w-0 shrink-0 min-[1200px]:w-[368px] min-[1200px]:self-start">{callout}</div>
+          ) : null}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       className={cn(
@@ -38,10 +60,15 @@ export function OnboardingStepShell({
         "min-[900px]:mx-0 min-[900px]:max-w-none min-[1200px]:items-start min-[1200px]:gap-x-16",
       )}
     >
-      {frameStart ? <div className="col-span-full min-w-0">{frameStart}</div> : null}
+      {frameStart ? <div className="col-span-full min-w-0 shrink-0">{frameStart}</div> : null}
 
       {showCallout ? (
-        <div className="col-span-full min-w-0 min-[1200px]:col-start-2 min-[1200px]:row-start-2">
+        <div
+          className={cn(
+            "col-span-full min-w-0",
+            "min-[1200px]:col-span-1 min-[1200px]:col-start-2 min-[1200px]:row-start-2",
+          )}
+        >
           {callout ?? (
             <OnboardingInfoCallout className="w-full max-w-[368px] min-[1200px]:sticky min-[1200px]:top-8 min-[1200px]:justify-self-end" />
           )}
@@ -52,7 +79,7 @@ export function OnboardingStepShell({
         className={cn(
           "col-span-full min-w-0",
           wide ? "max-w-none" : "max-w-none min-[1200px]:max-w-[420px]",
-          "min-[1200px]:col-start-1 min-[1200px]:row-start-2",
+          "min-[1200px]:col-span-1 min-[1200px]:col-start-1 min-[1200px]:row-start-2",
         )}
       >
         {combineTitleAndContent ? (

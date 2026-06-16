@@ -29,7 +29,10 @@ export function OnboardingPage() {
     goBack,
     goToStep,
     validateAndNext,
-    handleCheckEmailNext,
+    handleContinueAfterVerification,
+    isCheckingVerification,
+    handleResendVerification,
+    isResendingVerification,
     handleSkipBusinessOwner,
     handleSkipBusinessVerification,
     handleSkipNgoProfile,
@@ -38,6 +41,7 @@ export function OnboardingPage() {
     isPlanModalOpen,
     activeSidebarIndex,
     showSidebar,
+    isSubmitting,
   } = useOnboardingFlow(currentStep)
 
   if (!stepValid) {
@@ -58,10 +62,20 @@ export function OnboardingPage() {
       >
         {showSidebar ? <OnboardingSidebar activeStep={activeSidebarIndex} /> : null}
 
-        <div className={cn("min-w-0 h-full overflow-y-auto", mainColumnClass)}>
+        <div
+          className={cn(
+            "flex min-h-0 min-w-0 h-full flex-col overflow-y-auto",
+            visibleStep === "ngo-profile" && "min-[1200px]:overflow-hidden",
+            mainColumnClass,
+          )}
+        >
           <div
             className={cn(
               "onboarding-content w-full max-w-[1120px]",
+              !showSidebar && "flex min-h-full flex-col items-center justify-center",
+              visibleStep === "ngo-profile" &&
+                showSidebar &&
+                "min-[1200px]:flex min-[1200px]:min-h-0 min-[1200px]:flex-1 min-[1200px]:flex-col",
               contentVisible ? "onboarding-content--visible" : "onboarding-content--hidden",
             )}
           >
@@ -80,8 +94,11 @@ export function OnboardingPage() {
             {visibleStep === "check-email" ? (
               <CheckEmailStep
                 email={data.createAccount.email}
-                onNext={handleCheckEmailNext}
+                onContinue={() => void handleContinueAfterVerification()}
                 onBackToSignup={() => navigate(AUTH_CREATE_ACCOUNT_PATH)}
+                onResend={handleResendVerification}
+                isResending={isResendingVerification}
+                isCheckingVerification={isCheckingVerification}
               />
             ) : null}
 
@@ -130,7 +147,12 @@ export function OnboardingPage() {
             ) : null}
 
             {visibleStep === "review" ? (
-              <ReviewStep onBack={goBack} onSubmit={validateAndNext} onEditSection={goToStep} />
+              <ReviewStep
+                onBack={goBack}
+                onSubmit={validateAndNext}
+                onEditSection={goToStep}
+                isSubmitting={isSubmitting}
+              />
             ) : null}
           </div>
         </div>

@@ -1,19 +1,53 @@
+import { useEffect, useState } from "react"
 import { BayanaLogo } from "../../brand/BayanaLogo"
 import { Button } from "../../ui/button"
 import { maskEmail } from "../../../lib/mask-email"
+import { openEmailInbox } from "../../../lib/open-email-inbox"
 
 const DEMO_EMAIL_FALLBACK = "john.doe@bayana.com"
+const RESEND_COOLDOWN_SECONDS = 60
+
+function formatCooldown(seconds: number) {
+  const minutes = Math.floor(seconds / 60)
+  const remainder = seconds % 60
+  return `${minutes}:${remainder.toString().padStart(2, "0")}`
+}
 
 export function CheckEmailStep({
   email,
-  onNext,
+  onContinue,
   onBackToSignup,
+  onResend,
+  isResending = false,
+  isCheckingVerification = false,
 }: {
   email: string
-  onNext: () => void
+  onContinue: () => void
   onBackToSignup: () => void
+  onResend: () => Promise<boolean>
+  isResending?: boolean
+  isCheckingVerification?: boolean
 }) {
+  const [cooldownSeconds, setCooldownSeconds] = useState(0)
   const maskedDisplay = maskEmail(email) || maskEmail(DEMO_EMAIL_FALLBACK)
+  const resendDisabled = cooldownSeconds > 0 || isResending
+
+  useEffect(() => {
+    if (cooldownSeconds <= 0) return
+
+    const timeoutId = window.setTimeout(() => {
+      setCooldownSeconds((prev) => Math.max(prev - 1, 0))
+    }, 1000)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [cooldownSeconds])
+
+  const handleResend = async () => {
+    if (resendDisabled) return
+
+    const sent = await onResend()
+    if (sent) setCooldownSeconds(RESEND_COOLDOWN_SECONDS)
+  }
 
   return (
     <div className="mx-auto flex w-full max-w-[350px] flex-col items-center gap-8 text-center">
@@ -28,15 +62,23 @@ export function CheckEmailStep({
         </p>
       </div>
       <div className="flex w-full flex-col gap-4">
-        <Button
-          variant="primary"
-          block
-          onClick={onNext}
-        >
+        <Button variant="primary" block onClick={() => openEmailInbox(email)}>
           Open email
         </Button>
-        <Button variant="neutral" disabled block>
-          Resend in 1:00
+        <Button
+          variant="neutral"
+          block
+          disabled={isCheckingVerification}
+          onClick={onContinue}
+        >
+          {isCheckingVerification ? "Checking verification..." : "I've verified my email"}
+        </Button>
+        <Button variant="neutral" disabled={resendDisabled} block onClick={() => void handleResend()}>
+          {isResending
+            ? "Resending..."
+            : cooldownSeconds > 0
+              ? `Resend in ${formatCooldown(cooldownSeconds)}`
+              : "Resend confirmation email"}
         </Button>
         <Button variant="text" block onClick={onBackToSignup}>
           Back to sign up

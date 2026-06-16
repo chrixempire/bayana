@@ -1,10 +1,12 @@
 import { Button } from "../../ui/button"
+import { SpinnerIcon } from "../icons/SpinnerIcon"
 import { OnboardingStepShell } from "../OnboardingStepShell"
 import type { OnboardingFlowStep } from "../../../pages/auth/types"
 
 const REVIEW_SECTIONS: { label: string; step: OnboardingFlowStep }[] = [
   { label: "Basic information", step: "basic-information" },
   { label: "Business information", step: "business-owner" },
+  { label: "Business verification", step: "business-verification" },
   { label: "NGO profile setup", step: "ngo-profile" },
 ]
 
@@ -12,10 +14,12 @@ export function ReviewStep({
   onBack,
   onSubmit,
   onEditSection,
+  isSubmitting = false,
 }: {
   onBack: () => void
   onSubmit: () => void
   onEditSection: (step: OnboardingFlowStep) => void
+  isSubmitting?: boolean
 }) {
   return (
     <OnboardingStepShell
@@ -23,7 +27,7 @@ export function ReviewStep({
       showCallout={false}
       wide
       frameStart={
-        <Button variant="neutral" size="sm" className="w-fit" onClick={onBack}>
+        <Button variant="neutral" size="sm" className="w-fit" onClick={onBack} disabled={isSubmitting}>
           Back
         </Button>
       }
@@ -51,7 +55,8 @@ export function ReviewStep({
               <button
                 type="button"
                 aria-label={`Edit ${section.label}`}
-                className="mt-0.5 cursor-pointer text-text-neutral-400"
+                className="mt-0.5 cursor-pointer text-text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isSubmitting}
                 onClick={() => onEditSection(section.step)}
               >
                 <PencilIcon />
@@ -65,8 +70,15 @@ export function ReviewStep({
           business information and grant you full access after confirmation
         </p>
 
-        <Button className="h-10 min-h-10 gap-2 rounded-xl px-3.5" variant="primary" block onClick={onSubmit}>
-          Submit
+        <Button
+          className="h-10 min-h-10 gap-2 rounded-xl px-3.5"
+          variant="primary"
+          block
+          disabled={isSubmitting}
+          rightIcon={isSubmitting ? <SpinnerIcon className="size-4 text-white" /> : undefined}
+          onClick={onSubmit}
+        >
+          {isSubmitting ? "Submitting..." : "Submit"}
         </Button>
       </div>
     </OnboardingStepShell>

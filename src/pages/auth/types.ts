@@ -10,6 +10,11 @@ export type RouteStep =
 /** Steps rendered under `/auth/onboarding/:step` (after create-account). */
 export type OnboardingFlowStep = Exclude<RouteStep, "create-account">
 
+export type CauseAreaSelection = {
+  id: number
+  name: string
+}
+
 export type OnboardingData = {
   createAccount: { email: string }
   basicInformation: { businessName: string; cacNumber: string; address: string; website: string }
@@ -21,13 +26,20 @@ export type OnboardingData = {
     nin: string
   }
   verification: {
-    cacDocument: string
-    ngoRegistrationCertificate: string
-    proofOfAddress: string
-    scumlDocument: string
+    cacDocument: File | null
+    ngoRegistrationCertificate: File | null
+    proofOfAddress: File | null
+    scumlDocument: File | null
   }
-  ngoProfile: { logoName: string; mission: string; causes: string[]; activities: string }
+  ngoProfile: {
+    logo: File | null
+    mission: string
+    causes: CauseAreaSelection[]
+    activities: string
+  }
 }
+
+import { DEFAULT_ID_TYPE } from "../../lib/id-types"
 
 export const defaultData: OnboardingData = {
   createAccount: { email: "" },
@@ -36,27 +48,16 @@ export const defaultData: OnboardingData = {
     fullName: "",
     dialCode: "+234",
     phone: "",
-    idType: "National ID card",
+    idType: DEFAULT_ID_TYPE,
     nin: "",
   },
   verification: {
-    cacDocument: "",
-    ngoRegistrationCertificate: "",
-    proofOfAddress: "",
-    scumlDocument: "",
+    cacDocument: null,
+    ngoRegistrationCertificate: null,
+    proofOfAddress: null,
+    scumlDocument: null,
   },
-  ngoProfile: { logoName: "", mission: "", causes: [], activities: "" },
-}
-
-export function mergeOnboardingFromPartial(parsed: Partial<OnboardingData> | null | undefined): OnboardingData {
-  if (!parsed) return defaultData
-  return {
-    createAccount: { ...defaultData.createAccount, ...parsed.createAccount },
-    basicInformation: { ...defaultData.basicInformation, ...parsed.basicInformation },
-    businessOwner: { ...defaultData.businessOwner, ...parsed.businessOwner },
-    verification: { ...defaultData.verification, ...parsed.verification },
-    ngoProfile: { ...defaultData.ngoProfile, ...parsed.ngoProfile },
-  }
+  ngoProfile: { logo: null, mission: "", causes: [], activities: "" },
 }
 
 export const onboardingFlowSteps: OnboardingFlowStep[] = [

@@ -2,21 +2,46 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { ContinueArrowIcon } from "../../components/auth/icons/ContinueArrowIcon"
 import { GoogleGIcon } from "../../components/auth/icons/GoogleGIcon"
+import { SpinnerIcon } from "../../components/auth/icons/SpinnerIcon"
 import { BayanaLogo } from "../../components/brand/BayanaLogo"
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { toast } from "../../hooks/use-toast"
+import { registerOrganisation } from "../../lib/api/auth"
+import { ApiError } from "../../lib/api/types"
+import { invalidateEmailVerificationCache } from "../../lib/auth/email-verification-cache"
+import { setAuthSession } from "../../lib/auth/session"
 import { AUTH_LOGIN_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
+import {
+  mapRegistrationApiErrors,
+  validateCreateAccount,
+  type CreateAccountFieldErrors,
+} from "./create-account-validation"
 
 export function CreateAccountPage() {
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
-  const [emailError, setEmailError] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordConfirmation, setPasswordConfirmation] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<CreateAccountFieldErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const onContinue = () => {
-    if (!email.includes("@")) {
-      const msg = "Please enter a valid business email address"
-      setEmailError(msg)
+  const clearFieldError = (field: keyof CreateAccountFieldErrors) => {
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
+
+  const onContinue = async () => {
+    const nextErrors = validateCreateAccount(email, password, passwordConfirmation)
+    setFieldErrors(nextErrors)
+
+    if (Object.keys(nextErrors).length > 0) {
       toast({
         variant: "destructive",
         title: "There are issues with some fields",
@@ -24,13 +49,45 @@ export function CreateAccountPage() {
       })
       return
     }
-    setEmailError("")
-    console.log("create-account", { email })
-    toast({
-      variant: "success",
-      title: "Confirmation email has been sent successfully!",
-    })
-    navigate(`${AUTH_ONBOARDING_PATH}/check-email`, { state: { email } })
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await registerOrganisation(email.trim(), password)
+      setAuthSession(response.data.token, response.data.user)
+      invalidateEmailVerificationCache()
+
+      toast({
+        variant: "success",
+        title: "Confirmation email has been sent successfully!",
+      })
+
+      navigate(`${AUTH_ONBOARDING_PATH}/check-email`, {
+        state: { email: response.data.user.email, fromRegistration: true },
+      })
+    } catch (error) {
+      if (error instanceof ApiError) {
+        const apiFieldErrors = mapRegistrationApiErrors(error.fieldErrors)
+        if (Object.keys(apiFieldErrors).length > 0) {
+          setFieldErrors((prev) => ({ ...prev, ...apiFieldErrors }))
+        }
+
+        toast({
+          variant: "destructive",
+          title: "Unable to create account",
+          description: error.message || "Please review highlighted fields and try again.",
+        })
+        return
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Unable to create account",
+        description: "Something went wrong. Please try again.",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -45,7 +102,7 @@ export function CreateAccountPage() {
                 Get started with Bayana
               </h6>
               <p className="text-sm leading-[22px] text-text-neutral-400">
-              Already have an account?{" "}
+                Already have an account?{" "}
                 <Link to={AUTH_LOGIN_PATH} className="font-medium text-[#278cff] underline underline-offset-2">
                   Sign in
                 </Link>
@@ -56,40 +113,120 @@ export function CreateAccountPage() {
               className="flex w-full flex-col gap-6"
               onSubmit={(event) => {
                 event.preventDefault()
-                onContinue()
+                void onContinue()
               }}
             >
               <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="create-account-email"
-                  className="block text-sm font-medium leading-[22px] text-text-default-500"
-                >
-                  Email address
-                </label>
-                <Input
-                  id="create-account-email"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  placeholder="name@work-email.com"
-                  value={email}
-                  invalid={Boolean(emailError)}
-                  onChange={(e) => {
-                    setEmail(e.target.value)
-                    if (emailError) setEmailError("")
-                  }}
-                />
-                {emailError ? <p className="text-xs text-text-negative">{emailError}</p> : null}
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="create-account-email"
+                    className="block text-sm font-medium leading-[22px] text-text-default-500"
+                  >
+                    Email address
+                  </label>
+                  <Input
+                    id="create-account-email"
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    placeholder="name@work-email.com"
+                    value={email}
+                    invalid={Boolean(fieldErrors.email)}
+                    disabled={isSubmitting}
+                    onChange={(e) => {
+                      setEmail(e.target.value)
+                      clearFieldError("email")
+                    }}
+                  />
+                  {fieldErrors.email ? <p className="text-xs text-text-negative">{fieldErrors.email}</p> : null}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="create-account-password"
+                    className="block text-sm font-medium leading-[22px] text-text-default-500"
+                  >
+                    Password
+                  </label>
+                  <Input
+                    id="create-account-password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    autoComplete="new-password"
+                    placeholder="Create a password"
+                    value={password}
+                    invalid={Boolean(fieldErrors.password)}
+                    disabled={isSubmitting}
+                    rightIcon={
+                      <button
+                        type="button"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="cursor-pointer text-text-neutral-400"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                      </button>
+                    }
+                    onChange={(e) => {
+                      setPassword(e.target.value)
+                      clearFieldError("password")
+                    }}
+                  />
+                  {fieldErrors.password ? <p className="text-xs text-text-negative">{fieldErrors.password}</p> : null}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="create-account-password-confirmation"
+                    className="block text-sm font-medium leading-[22px] text-text-default-500"
+                  >
+                    Confirm password
+                  </label>
+                  <Input
+                    id="create-account-password-confirmation"
+                    type={showPasswordConfirmation ? "text" : "password"}
+                    name="password_confirmation"
+                    autoComplete="new-password"
+                    placeholder="Re-enter your password"
+                    value={passwordConfirmation}
+                    invalid={Boolean(fieldErrors.passwordConfirmation)}
+                    disabled={isSubmitting}
+                    rightIcon={
+                      <button
+                        type="button"
+                        aria-label={showPasswordConfirmation ? "Hide password" : "Show password"}
+                        className="cursor-pointer text-text-neutral-400"
+                        onClick={() => setShowPasswordConfirmation((prev) => !prev)}
+                      >
+                        {showPasswordConfirmation ? <EyeOffIcon /> : <EyeIcon />}
+                      </button>
+                    }
+                    onChange={(e) => {
+                      setPasswordConfirmation(e.target.value)
+                      clearFieldError("passwordConfirmation")
+                    }}
+                  />
+                  {fieldErrors.passwordConfirmation ? (
+                    <p className="text-xs text-text-negative">{fieldErrors.passwordConfirmation}</p>
+                  ) : null}
+                </div>
               </div>
 
               <Button
                 type="submit"
                 variant="primary"
                 block
+                disabled={isSubmitting}
                 className="h-11 rounded-[14px] text-base font-semibold"
-                rightIcon={<ContinueArrowIcon className="size-4 text-white" />}
+                rightIcon={
+                  isSubmitting ? (
+                    <SpinnerIcon className="size-4 text-white" />
+                  ) : (
+                    <ContinueArrowIcon className="size-4 text-white" />
+                  )
+                }
               >
-                Continue with Email
+                {isSubmitting ? "Creating account..." : "Continue with Email"}
               </Button>
 
               <div className="flex items-center gap-4">
@@ -102,6 +239,7 @@ export function CreateAccountPage() {
                 type="button"
                 variant="neutral"
                 block
+                disabled={isSubmitting}
                 className="h-11 text-sm font-semibold leading-[22px]"
                 leftIcon={<GoogleGIcon className="size-4" />}
                 onClick={() =>
@@ -130,5 +268,34 @@ export function CreateAccountPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+function EyeIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M1.5 8s2.2-4.5 6.5-4.5S14.5 8 14.5 8s-2.2 4.5-6.5 4.5S1.5 8 1.5 8Z"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  )
+}
+
+function EyeOffIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M2 2l12 12M6.2 6.7A2.5 2.5 0 0 0 8 10.5c.6 0 1.1-.2 1.5-.6M3.7 4.4C2.5 5.4 1.5 6.6 1.5 8s2.2 4.5 6.5 4.5c1.2 0 2.3-.3 3.3-.8M10.8 10.1c1-.8 1.7-1.7 2.2-2.1"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }

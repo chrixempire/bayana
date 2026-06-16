@@ -1,5 +1,6 @@
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
+import { ID_TYPE_OPTIONS } from "../../../lib/id-types"
 import { cn } from "../../../lib/utils"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
@@ -7,22 +8,20 @@ import { OnboardingStepShell } from "../OnboardingStepShell"
 import { ChevronDownIcon } from "../icons/ChevronDownIcon"
 import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
 
-const ID_TYPES = ["National ID card", "Driver's license", "International passport"] as const
-
 const ID_TYPE_FIELD_META = {
-  "National ID card": {
+  nin: {
     label: "NIN",
     placeholder: "Enter national identification number",
     hint: "Dial *346# to get your NIN",
     inputMode: "numeric" as const,
   },
-  "Driver's license": {
+  drivers_license: {
     label: "Driver's license number",
     placeholder: "Enter driver's license number",
     hint: "Use the number printed on your license",
     inputMode: "text" as const,
   },
-  "International passport": {
+  passport: {
     label: "Passport number",
     placeholder: "Enter passport number",
     hint: "Use the number printed on your passport",
@@ -47,7 +46,8 @@ export function BusinessOwnerStep({
   }) {
   const phoneInvalid = Boolean(errors.phone)
   const dial = data.dialCode ?? "+234"
-  const idTypeMeta = ID_TYPE_FIELD_META[data.idType as keyof typeof ID_TYPE_FIELD_META] ?? ID_TYPE_FIELD_META["National ID card"]
+  const idTypeMeta =
+    ID_TYPE_FIELD_META[data.idType as keyof typeof ID_TYPE_FIELD_META] ?? ID_TYPE_FIELD_META.nin
 
   return (
     <OnboardingStepShell
@@ -112,16 +112,19 @@ export function BusinessOwnerStep({
             </div>
           </FormField>
 
-          <FormField label="Identification type">
+          <FormField label="Identification type" error={errors.idType}>
             <div className="relative">
               <select
-                className="h-10 w-full cursor-pointer appearance-none rounded-xl border border-border-input-default-200 bg-white px-4 py-2 pr-10 text-sm leading-[22px] text-text-default-500 shadow-input-default outline-none transition-colors focus:border-border-input-active focus:ring-2 focus:ring-[rgb(255,122,26,0.12)]"
+                className={cn(
+                  "h-10 w-full cursor-pointer appearance-none rounded-xl border bg-white px-4 py-2 pr-10 text-sm leading-[22px] text-text-default-500 shadow-input-default outline-none transition-colors focus:border-border-input-active focus:ring-2 focus:ring-[rgb(255,122,26,0.12)]",
+                  errors.idType ? "border-border-input-negative bg-bg-negative-soft" : "border-border-input-default-200",
+                )}
                 value={data.idType}
                 onChange={(e) => onChange({ ...data, idType: e.target.value })}
               >
-                {ID_TYPES.map((id) => (
-                  <option key={id} value={id}>
-                    {id}
+                {ID_TYPE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
                   </option>
                 ))}
               </select>

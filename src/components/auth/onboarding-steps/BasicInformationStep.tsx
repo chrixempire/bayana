@@ -53,12 +53,13 @@ export function BasicInformationStep({
             />
           </FormField>
 
-          <FormField label="Business address">
+          <FormField label="Business address" error={errors.address}>
             <Input
               density="compact"
               placeholder="Enter address"
               value={data.address}
               onChange={(e) => onChange({ ...data, address: e.target.value })}
+              invalid={Boolean(errors.address)}
               rightIcon={<GoogleGIcon />}
             />
           </FormField>

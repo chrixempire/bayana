@@ -1,8 +1,18 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import { toast } from "../../hooks/use-toast"
+import { resendVerificationNotification } from "../../lib/api/auth"
+import { mapOnboardingApiFieldErrors, submitOrganisationOnboarding } from "../../lib/api/onboarding"
+import { ApiError } from "../../lib/api/types"
+import {
+  checkEmailVerification,
+  getEmailVerificationStatus,
+  invalidateEmailVerificationCache,
+  markEmailAsVerified,
+} from "../../lib/auth/email-verification-cache"
+import { getAuthToken, getAuthUser } from "../../lib/auth/session"
 import { AUTH_CREATE_ACCOUNT_PATH, AUTH_HOME_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
-import { getStepValidationErrors, type OnboardingStepErrors } from "./onboarding-validation"
+import { getStepValidationErrors, getSubmitValidationErrors, type OnboardingStepErrors } from "./onboarding-validation"
 import { defaultData, onboardingFlowSteps, routeToSidebarIndex, type OnboardingData, type OnboardingFlowStep } from "./types"
 
 const ONBOARDING_CONTENT_FADE_MS = 220
@@ -25,16 +35,58 @@ function previousStep(step: OnboardingFlowStep): OnboardingFlowStep {
   return onboardingFlowSteps[Math.max(index - 1, 0)]
 }
 
+function createInitialOnboardingData(): OnboardingData {
+  const sessionEmail = getAuthUser()?.email?.trim()
+
+  return {
+    ...defaultData,
+    createAccount: {
+      email: sessionEmail || defaultData.createAccount.email,
+    },
+  }
+}
+
 export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
 
-  const [data, setData] = useState<OnboardingData>(defaultData)
+  const [data, setData] = useState<OnboardingData>(createInitialOnboardingData)
   const [errors, setErrors] = useState<OnboardingStepErrors>({})
   const [visibleStep, setVisibleStep] = useState<OnboardingFlowStep>(currentStep)
   const [contentVisible, setContentVisible] = useState(true)
+  const [isResendingVerification, setIsResendingVerification] = useState(false)
+  const [isCheckingVerification, setIsCheckingVerification] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const returnToReview = (location.state as { returnToReview?: boolean } | null)?.returnToReview === true
+  const fromRegistration = (location.state as { fromRegistration?: boolean } | null)?.fromRegistration === true
+
+  useEffect(() => {
+    if (getAuthToken()) return
+    navigate(AUTH_CREATE_ACCOUNT_PATH, { replace: true })
+  }, [navigate])
+
+  useEffect(() => {
+    let cancelled = false
+
+    void (async () => {
+      const verified = await getEmailVerificationStatus()
+      if (cancelled) return
+
+      if (currentStep === "check-email" && verified && !fromRegistration) {
+        navigate(`${AUTH_ONBOARDING_PATH}/basic-information`, { replace: true })
+        return
+      }
+
+      if (currentStep !== "check-email" && !verified) {
+        navigate(`${AUTH_ONBOARDING_PATH}/check-email`, { replace: true })
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [currentStep, fromRegistration, navigate])
 
   useEffect(() => {
     if (currentStep === visibleStep) {
@@ -61,14 +113,17 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
 
   useEffect(() => {
     const emailFromNavigation = (location.state as { email?: string } | null)?.email?.trim()
-    if (!emailFromNavigation || data.createAccount.email === emailFromNavigation) return
+    const emailFromSession = getAuthUser()?.email?.trim()
+    const nextEmail = emailFromNavigation || emailFromSession
+
+    if (!nextEmail || data.createAccount.email === nextEmail) return
 
     const frameId = requestAnimationFrame(() => {
       setData((prev) => ({
         ...prev,
         createAccount: {
           ...prev.createAccount,
-          email: emailFromNavigation,
+          email: nextEmail,
         },
       }))
     })
@@ -109,7 +164,60 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const closePlanModal = () => navigate(`${AUTH_ONBOARDING_PATH}/review`)
   const openPlanModal = () => navigate(`${AUTH_ONBOARDING_PATH}/review?plan=open`)
 
+  const submitOnboarding = async () => {
+    const nextErrors = getSubmitValidationErrors(data)
+    setErrors(nextErrors)
+
+    if (Object.keys(nextErrors).length > 0) {
+      toast({
+        variant: "destructive",
+        title: "There are issues with some fields",
+        description: "Please complete all required sections before submitting.",
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await submitOrganisationOnboarding(data)
+      toast({
+        variant: "success",
+        title: "Onboarding submitted",
+        description: response.message || "Your organisation details have been sent for verification.",
+      })
+      openPlanModal()
+    } catch (error) {
+      if (error instanceof ApiError) {
+        const apiFieldErrors = mapOnboardingApiFieldErrors(error.fieldErrors)
+        if (Object.keys(apiFieldErrors).length > 0) {
+          setErrors(apiFieldErrors)
+        }
+
+        toast({
+          variant: "destructive",
+          title: "Unable to submit onboarding",
+          description: error.message || "Please review highlighted fields and try again.",
+        })
+        return
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Unable to submit onboarding",
+        description: "Something went wrong. Please try again.",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const validateAndNext = () => {
+    if (currentStep === "review") {
+      void submitOnboarding()
+      return
+    }
+
     const nextErrors = getStepValidationErrors(currentStep, data)
     setErrors(nextErrors)
 
@@ -122,40 +230,6 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
       return
     }
 
-    if (currentStep === "basic-information") {
-      console.log("basic-information", data.basicInformation)
-      toast({
-        variant: "success",
-        title: "Your data is saved",
-        description: "Continue when you're ready — everything is stored securely.",
-      })
-    } else if (currentStep === "business-owner") {
-      console.log("business-owner", data.businessOwner)
-      toast({
-        variant: "success",
-        title: "Your data is saved",
-        description: "Continue when you're ready — everything is stored securely.",
-      })
-    } else if (currentStep === "business-verification") {
-      console.log("business-verification", data.verification)
-      toast({
-        variant: "success",
-        title: "Your data is saved",
-        description: "Continue when you're ready — everything is stored securely.",
-      })
-    } else if (currentStep === "ngo-profile") {
-      console.log("ngo-profile", data.ngoProfile)
-      toast({
-        variant: "success",
-        title: "Your data is saved",
-        description: "Continue when you're ready — everything is stored securely.",
-      })
-    } else if (currentStep === "review") {
-      console.log("review", data)
-      openPlanModal()
-      return
-    }
-
     if (returnToReview) {
       navigate(`${AUTH_ONBOARDING_PATH}/review`, { replace: true })
       return
@@ -164,20 +238,109 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
     goNext()
   }
 
-  const handleCheckEmailNext = () => {
-    toast({
-      variant: "success",
-      title: "Your data is saved",
-      description: "Moving on to the next step.",
-    })
-    goNext()
+  const handleContinueAfterVerification = async () => {
+    setIsCheckingVerification(true)
+
+    try {
+      const status = await checkEmailVerification()
+
+      if (status === "verified") {
+        markEmailAsVerified()
+        toast({
+          variant: "success",
+          title: "Email verified",
+          description: "Continuing with onboarding.",
+        })
+        navigate(`${AUTH_ONBOARDING_PATH}/basic-information`)
+        return
+      }
+
+      if (status === "error") {
+        toast({
+          variant: "destructive",
+          title: "Unable to check verification",
+          description: "We could not reach the server. Refresh the page or sign in again, then try once more.",
+        })
+        return
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Email not verified yet",
+        description: "Open your inbox and click the confirmation link in the same browser where you signed up.",
+      })
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Unable to check verification",
+        description: error instanceof ApiError ? error.message : "Please try again in a moment.",
+      })
+    } finally {
+      setIsCheckingVerification(false)
+    }
+  }
+
+  const handleResendVerification = async (): Promise<boolean> => {
+    setIsResendingVerification(true)
+
+    try {
+      const verified = await getEmailVerificationStatus()
+      if (verified) {
+        toast({
+          variant: "success",
+          title: "Email already verified",
+          description: "Continuing with onboarding.",
+        })
+        navigate(`${AUTH_ONBOARDING_PATH}/basic-information`)
+        return false
+      }
+
+      const response = await resendVerificationNotification()
+      toast({
+        variant: "success",
+        title: "Confirmation email resent",
+        description: response.message || "Check your inbox for a new verification link.",
+      })
+      return true
+    } catch (error) {
+      if (error instanceof ApiError && error.status >= 500) {
+        invalidateEmailVerificationCache()
+        const statusAfterError = await checkEmailVerification()
+        if (statusAfterError === "verified") {
+          markEmailAsVerified()
+          toast({
+            variant: "success",
+            title: "Email already verified",
+            description: "Your email is confirmed. Continuing with onboarding.",
+          })
+          navigate(`${AUTH_ONBOARDING_PATH}/basic-information`)
+          return false
+        }
+      }
+
+      const description =
+        error instanceof ApiError
+          ? error.status >= 500
+            ? "The server could not send the email right now. If you already verified, use “I've verified my email”."
+            : error.message
+          : "Please try again in a moment."
+
+      toast({
+        variant: "destructive",
+        title: "Unable to resend email",
+        description,
+      })
+      return false
+    } finally {
+      setIsResendingVerification(false)
+    }
   }
 
   const handleSkipBusinessOwner = () => {
     toast({
       variant: "success",
-      title: "Your data is saved",
-      description: "Owner details skipped — you can add them later from settings.",
+      title: "Section skipped",
+      description: "Owner details skipped — you'll need to complete them before submitting.",
     })
     goNext()
   }
@@ -185,8 +348,8 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const handleSkipBusinessVerification = () => {
     toast({
       variant: "success",
-      title: "Your data is saved",
-      description: "Business verification skipped — you can upload these files later from settings.",
+      title: "Section skipped",
+      description: "Business verification skipped — you'll need to upload documents before submitting.",
     })
     goNext()
   }
@@ -194,8 +357,8 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const handleSkipNgoProfile = () => {
     toast({
       variant: "success",
-      title: "Your data is saved",
-      description: "NGO profile details skipped — you can complete this later from settings.",
+      title: "Section skipped",
+      description: "NGO profile skipped — you'll need to complete it before submitting.",
     })
     goNext()
   }
@@ -203,8 +366,8 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const handleChoosePlanComplete = () => {
     toast({
       variant: "success",
-      title: "Your data is saved",
-      description: "Welcome to Bayana — your plan is set.",
+      title: "Welcome to Bayana",
+      description: "Your plan is set.",
     })
 
     navigate(AUTH_HOME_PATH, { replace: true })
@@ -219,7 +382,11 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
     goBack,
     goToStep,
     validateAndNext,
-    handleCheckEmailNext,
+    isSubmitting,
+    handleContinueAfterVerification,
+    isCheckingVerification,
+    handleResendVerification,
+    isResendingVerification,
     handleSkipBusinessOwner,
     handleSkipBusinessVerification,
     handleSkipNgoProfile,

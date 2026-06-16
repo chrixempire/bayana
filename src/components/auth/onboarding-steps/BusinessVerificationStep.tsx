@@ -41,28 +41,28 @@ export function BusinessVerificationStep({
           <FormField label="CAC document *" error={errors.cacDocument}>
             <FileUploadDropzone
               value={data.cacDocument}
-              onChange={(fileName) => onChange({ ...data, cacDocument: fileName })}
+              onChange={(file) => onChange({ ...data, cacDocument: file })}
             />
           </FormField>
 
           <FormField label="NGO Registration certificate *" error={errors.ngoRegistrationCertificate}>
             <FileUploadDropzone
               value={data.ngoRegistrationCertificate}
-              onChange={(fileName) => onChange({ ...data, ngoRegistrationCertificate: fileName })}
+              onChange={(file) => onChange({ ...data, ngoRegistrationCertificate: file })}
             />
           </FormField>
 
           <FormField label="Proof of address *" error={errors.proofOfAddress}>
             <FileUploadDropzone
               value={data.proofOfAddress}
-              onChange={(fileName) => onChange({ ...data, proofOfAddress: fileName })}
+              onChange={(file) => onChange({ ...data, proofOfAddress: file })}
             />
           </FormField>
 
           <FormField label="Scuml document *" error={errors.scumlDocument}>
             <FileUploadDropzone
               value={data.scumlDocument}
-              onChange={(fileName) => onChange({ ...data, scumlDocument: fileName })}
+              onChange={(file) => onChange({ ...data, scumlDocument: file })}
             />
           </FormField>
         </div>

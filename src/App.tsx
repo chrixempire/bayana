@@ -3,11 +3,13 @@ import { CreateAccountPage } from "./pages/auth/CreateAccountPage"
 import { LegacyOnboardingRedirect } from "./pages/auth/LegacyOnboardingRedirect"
 import { InvitedMemberPage } from "./pages/auth/InvitedMemberPage"
 import { LoginPage } from "./pages/auth/LoginPage"
+import { EmailVerifyPage } from "./pages/auth/EmailVerifyPage"
 import { OnboardingPage } from "./pages/auth/OnboardingPage"
 import { HomePage } from "./pages/HomePage"
 
 import {
   AUTH_CREATE_ACCOUNT_PATH,
+  AUTH_EMAIL_VERIFY_PATH,
   AUTH_INVITE_PATH,
   AUTH_HOME_PATH,
   AUTH_LOGIN_PATH,
@@ -22,6 +24,7 @@ function App() {
       <Route path={AUTH_LOGIN_PATH} element={<LoginPage />} />
       <Route path={AUTH_INVITE_PATH} element={<InvitedMemberPage />} />
       <Route path="/auth/create-account" element={<CreateAccountPage />} />
+      <Route path={`${AUTH_EMAIL_VERIFY_PATH}/:id/:hash`} element={<EmailVerifyPage />} />
       <Route path={AUTH_HOME_PATH} element={<HomePage />} />
       <Route path="/auth/onboarding/choose-plan" element={<Navigate to={`${AUTH_ONBOARDING_PATH}/review?plan=open`} replace />} />
       <Route path="/auth/onboarding/:step" element={<OnboardingPage />} />
