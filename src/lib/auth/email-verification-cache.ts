@@ -17,14 +17,19 @@ export function markEmailAsVerified() {
   inFlight = null
 }
 
-export async function checkEmailVerification(): Promise<EmailVerificationCheck> {
-  if (isEmailVerifiedInSession()) {
+export async function checkEmailVerification(force = false): Promise<EmailVerificationCheck> {
+  if (!force && isEmailVerifiedInSession()) {
     cachedStatus = "verified"
     return "verified"
   }
 
-  if (cachedStatus && cachedStatus !== "error") return cachedStatus
-  if (inFlight) return inFlight
+  if (!force && cachedStatus && cachedStatus !== "error") return cachedStatus
+  if (!force && inFlight) return inFlight
+
+  if (force) {
+    cachedStatus = null
+    inFlight = null
+  }
 
   inFlight = getAuthUserProfile()
     .then((response) => {
@@ -46,7 +51,7 @@ export async function checkEmailVerification(): Promise<EmailVerificationCheck> 
   return inFlight
 }
 
-export async function getEmailVerificationStatus(): Promise<boolean> {
-  const status = await checkEmailVerification()
+export async function getEmailVerificationStatus(force = false): Promise<boolean> {
+  const status = await checkEmailVerification(force)
   return status === "verified"
 }

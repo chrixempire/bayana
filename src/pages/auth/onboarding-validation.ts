@@ -2,6 +2,15 @@ import type { OnboardingData, OnboardingFlowStep } from "./types"
 
 export type OnboardingStepErrors = Record<string, string>
 
+export const LOGO_MAX_SIZE_BYTES = 2048 * 1024
+
+export const LOGO_MAX_SIZE_ERROR = "The logo field must not be greater than 2048 kilobytes."
+
+export function validateLogoFileSize(file: File): string | null {
+  if (file.size > LOGO_MAX_SIZE_BYTES) return LOGO_MAX_SIZE_ERROR
+  return null
+}
+
 type StepValidator = (data: OnboardingData) => OnboardingStepErrors
 
 const validators: Partial<Record<OnboardingFlowStep, StepValidator>> = {
@@ -67,6 +76,11 @@ const validators: Partial<Record<OnboardingFlowStep, StepValidator>> = {
   },
   "ngo-profile": (data) => {
     const errors: OnboardingStepErrors = {}
+
+    if (data.ngoProfile.logo) {
+      const logoError = validateLogoFileSize(data.ngoProfile.logo)
+      if (logoError) errors.logo = logoError
+    }
 
     if (!data.ngoProfile.mission.trim()) {
       errors.mission = "Mission is required"

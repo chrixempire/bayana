@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { ContinueArrowIcon } from "../../components/auth/icons/ContinueArrowIcon"
+import { EyeIcon } from "../../components/auth/icons/EyeIcon"
+import { EyeOffIcon } from "../../components/auth/icons/EyeOffIcon"
 import { GoogleGIcon } from "../../components/auth/icons/GoogleGIcon"
 import { SpinnerIcon } from "../../components/auth/icons/SpinnerIcon"
 import { BayanaLogo } from "../../components/brand/BayanaLogo"
@@ -9,6 +11,7 @@ import { Input } from "../../components/ui/input"
 import { toast } from "../../hooks/use-toast"
 import { registerOrganisation } from "../../lib/api/auth"
 import { ApiError } from "../../lib/api/types"
+import { redirectToGoogleAuth } from "../../lib/auth/google-oauth"
 import { invalidateEmailVerificationCache } from "../../lib/auth/email-verification-cache"
 import { setAuthSession } from "../../lib/auth/session"
 import { AUTH_LOGIN_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
@@ -242,13 +245,17 @@ export function CreateAccountPage() {
                 disabled={isSubmitting}
                 className="h-11 text-sm font-semibold leading-[22px]"
                 leftIcon={<GoogleGIcon className="size-4" />}
-                onClick={() =>
-                  toast({
-                    variant: "success",
-                    title: "Google sign-up",
-                    description: "Google authentication will be connected next.",
-                  })
-                }
+                onClick={() => {
+                  try {
+                    redirectToGoogleAuth("organisation")
+                  } catch {
+                    toast({
+                      variant: "destructive",
+                      title: "Google sign-up unavailable",
+                      description: "API base URL is not configured for OAuth redirects.",
+                    })
+                  }
+                }}
               >
                 Continue with Google
               </Button>
@@ -268,34 +275,5 @@ export function CreateAccountPage() {
         </div>
       </div>
     </main>
-  )
-}
-
-function EyeIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path
-        d="M1.5 8s2.2-4.5 6.5-4.5S14.5 8 14.5 8s-2.2 4.5-6.5 4.5S1.5 8 1.5 8Z"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
-    </svg>
-  )
-}
-
-function EyeOffIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path
-        d="M2 2l12 12M6.2 6.7A2.5 2.5 0 0 0 8 10.5c.6 0 1.1-.2 1.5-.6M3.7 4.4C2.5 5.4 1.5 6.6 1.5 8s2.2 4.5 6.5 4.5c1.2 0 2.3-.3 3.3-.8M10.8 10.1c1-.8 1.7-1.7 2.2-2.1"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   )
 }

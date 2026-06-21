@@ -3,6 +3,9 @@ import { CreateAccountPage } from "./pages/auth/CreateAccountPage"
 import { LegacyOnboardingRedirect } from "./pages/auth/LegacyOnboardingRedirect"
 import { InvitedMemberPage } from "./pages/auth/InvitedMemberPage"
 import { LoginPage } from "./pages/auth/LoginPage"
+import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage"
+import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage"
+import { GoogleCallbackPage } from "./pages/auth/GoogleCallbackPage"
 import { EmailVerifyPage } from "./pages/auth/EmailVerifyPage"
 import { OnboardingPage } from "./pages/auth/OnboardingPage"
 import { HomePage } from "./pages/HomePage"
@@ -13,10 +16,13 @@ import { CreateEventPage } from "./pages/dashboard/CreateEventPage"
 import {
   AUTH_CREATE_ACCOUNT_PATH,
   AUTH_EMAIL_VERIFY_PATH,
+  AUTH_FORGOT_PASSWORD_PATH,
+  AUTH_GOOGLE_CALLBACK_PATH,
   AUTH_INVITE_PATH,
   AUTH_HOME_PATH,
   AUTH_LOGIN_PATH,
   AUTH_ONBOARDING_PATH,
+  AUTH_RESET_PASSWORD_PATH,
   GETTING_STARTED_PATH,
 } from "./lib/auth-paths"
 import { DASHBOARD_TAB_PATHS, GETTING_STARTED_LEGACY_PATH } from "./lib/dashboard-paths"
@@ -27,6 +33,9 @@ function App() {
       <Route path="/" element={<Navigate to={AUTH_CREATE_ACCOUNT_PATH} replace />} />
       <Route path="/auth" element={<Navigate to={AUTH_CREATE_ACCOUNT_PATH} replace />} />
       <Route path={AUTH_LOGIN_PATH} element={<LoginPage />} />
+      <Route path={AUTH_FORGOT_PASSWORD_PATH} element={<ForgotPasswordPage />} />
+      <Route path={AUTH_RESET_PASSWORD_PATH} element={<ResetPasswordPage />} />
+      <Route path={AUTH_GOOGLE_CALLBACK_PATH} element={<GoogleCallbackPage />} />
       <Route path={AUTH_INVITE_PATH} element={<InvitedMemberPage />} />
       <Route path="/auth/create-account" element={<CreateAccountPage />} />
       <Route path={`${AUTH_EMAIL_VERIFY_PATH}/:id/:hash`} element={<EmailVerifyPage />} />

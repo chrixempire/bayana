@@ -81,8 +81,12 @@ export const routeToSidebarIndex: Partial<Record<OnboardingFlowStep, number>> = 
 
 export {
   AUTH_CREATE_ACCOUNT_PATH,
+  AUTH_EMAIL_VERIFY_PATH,
+  AUTH_FORGOT_PASSWORD_PATH,
+  AUTH_GOOGLE_CALLBACK_PATH,
   AUTH_HOME_PATH,
   AUTH_INVITE_PATH,
   AUTH_LOGIN_PATH,
   AUTH_ONBOARDING_PATH,
+  AUTH_RESET_PASSWORD_PATH,
 } from "../../lib/auth-paths"

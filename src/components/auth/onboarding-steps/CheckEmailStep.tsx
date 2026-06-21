@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { SpinnerIcon } from "../icons/SpinnerIcon"
 import { BayanaLogo } from "../../brand/BayanaLogo"
 import { Button } from "../../ui/button"
 import { maskEmail } from "../../../lib/mask-email"
@@ -69,16 +70,28 @@ export function CheckEmailStep({
           variant="neutral"
           block
           disabled={isCheckingVerification}
-          onClick={onContinue}
+          onClick={() => void onContinue()}
         >
-          {isCheckingVerification ? "Checking verification..." : "I've verified my email"}
+          {isCheckingVerification ? (
+            <span className="inline-flex items-center gap-2">
+              <SpinnerIcon className="size-4" />
+              Checking verification...
+            </span>
+          ) : (
+            "I've verified my email"
+          )}
         </Button>
         <Button variant="neutral" disabled={resendDisabled} block onClick={() => void handleResend()}>
-          {isResending
-            ? "Resending..."
-            : cooldownSeconds > 0
-              ? `Resend in ${formatCooldown(cooldownSeconds)}`
-              : "Resend confirmation email"}
+          {isResending ? (
+            <span className="inline-flex items-center gap-2">
+              <SpinnerIcon className="size-4" />
+              Resending...
+            </span>
+          ) : cooldownSeconds > 0 ? (
+            `Resend in ${formatCooldown(cooldownSeconds)}`
+          ) : (
+            "Resend confirmation email"
+          )}
         </Button>
         <Button variant="text" block onClick={onBackToSignup}>
           Back to sign up

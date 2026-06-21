@@ -20,6 +20,8 @@ export type RegistrationResponse = {
   }
 }
 
+export type LoginResponse = RegistrationResponse
+
 export interface ApiClientOptions {
   baseURL?: string
   defaultHeaders?: HeadersInit

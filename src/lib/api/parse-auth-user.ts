@@ -10,6 +10,18 @@ function isAuthUserShape(record: Record<string, unknown>): record is AuthUser {
   return typeof record.email === "string" && Boolean(record.uuid || record.user_type)
 }
 
+export function extractAuthToken(payload: unknown): string {
+  const root = asRecord(payload)
+  if (!root) throw new ApiError("Invalid auth response", 500)
+
+  const data = asRecord(root.data)
+  if (data && typeof data.token === "string" && data.token) return data.token
+
+  if (typeof root.token === "string" && root.token) return root.token
+
+  throw new ApiError("No authentication token in response", 500)
+}
+
 export function extractAuthUser(payload: unknown): AuthUser {
   const root = asRecord(payload)
   if (!root) throw new ApiError("Invalid profile response", 500)
@@ -39,6 +51,7 @@ export function isEmailVerified(user: AuthUser): boolean {
   if (record.email_verified === true) return true
   if (record.is_email_verified === true) return true
   if (record.is_verified === true) return true
+  if (record.has_verified_email === true) return true
   if (record.verification_status === "verified") return true
 
   return false

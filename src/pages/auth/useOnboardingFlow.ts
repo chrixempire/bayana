@@ -242,7 +242,7 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
     setIsCheckingVerification(true)
 
     try {
-      const status = await checkEmailVerification()
+      const status = await checkEmailVerification(true)
 
       if (status === "verified") {
         markEmailAsVerified()
@@ -284,7 +284,7 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
     setIsResendingVerification(true)
 
     try {
-      const verified = await getEmailVerificationStatus()
+      const verified = await getEmailVerificationStatus(true)
       if (verified) {
         toast({
           variant: "success",
@@ -305,7 +305,7 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
     } catch (error) {
       if (error instanceof ApiError && error.status >= 500) {
         invalidateEmailVerificationCache()
-        const statusAfterError = await checkEmailVerification()
+        const statusAfterError = await checkEmailVerification(true)
         if (statusAfterError === "verified") {
           markEmailAsVerified()
           toast({
@@ -320,9 +320,11 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
 
       const description =
         error instanceof ApiError
-          ? error.status >= 500
-            ? "The server could not send the email right now. If you already verified, use “I've verified my email”."
-            : error.message
+          ? error.status === 401
+            ? "Your session expired. Create your account again or sign in, then try resending."
+            : error.status >= 500
+              ? "The server could not send the email right now. If you already verified, use “I've verified my email”."
+              : error.message
           : "Please try again in a moment."
 
       toast({

@@ -10,6 +10,10 @@ export function setAuthSession(token: string, user: AuthUser) {
   sessionStorage.removeItem(EMAIL_VERIFIED_KEY)
 }
 
+export function setAuthTokenOnly(token: string) {
+  sessionStorage.setItem(TOKEN_KEY, token)
+}
+
 export function resetEmailVerificationInSession() {
   sessionStorage.removeItem(EMAIL_VERIFIED_KEY)
 }

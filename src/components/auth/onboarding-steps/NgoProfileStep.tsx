@@ -4,6 +4,7 @@ import { Textarea } from "../../ui/textarea"
 import { getCauseAreas } from "../../../lib/api/public"
 import { cn } from "../../../lib/utils"
 import type { CauseAreaSelection, OnboardingData } from "../../../pages/auth/types"
+import { validateLogoFileSize } from "../../../pages/auth/onboarding-validation"
 import { FormField } from "../FormField"
 import { OnboardingStepShell } from "../OnboardingStepShell"
 import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
@@ -29,6 +30,7 @@ export function NgoProfileStep({
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string>("")
+  const [logoError, setLogoError] = useState("")
   const [causeAreas, setCauseAreas] = useState<CauseAreaSelection[]>([])
   const [isLoadingCauses, setIsLoadingCauses] = useState(true)
   const [causeLoadError, setCauseLoadError] = useState("")
@@ -71,8 +73,19 @@ export function NgoProfileStep({
 
   const handleLogoChange = (file?: File) => {
     if (!file) return
+
+    const sizeError = validateLogoFileSize(file)
+    if (sizeError) {
+      setLogoError(sizeError)
+      if (fileInputRef.current) fileInputRef.current.value = ""
+      return
+    }
+
+    setLogoError("")
     onChange({ ...data, logo: file })
   }
+
+  const logoFieldError = errors.logo || logoError
 
   const toggleCause = (cause: CauseAreaSelection) => {
     if (selectedCauseIds.has(cause.id)) {
@@ -122,7 +135,7 @@ export function NgoProfileStep({
             className="hidden"
             onChange={(e) => handleLogoChange(e.target.files?.[0])}
           />
-          <FormField label="Business logo" optional>
+          <FormField label="Business logo" optional error={logoFieldError}>
             <div className="flex items-center gap-2">
               <div className="inline-flex size-12 items-center justify-center rounded-lg bg-[#f3f5f7]">
                 {logoPreviewUrl ? (
@@ -141,7 +154,9 @@ export function NgoProfileStep({
                 {data.logo ? "Change logo" : "Upload logo"}
               </Button>
             </div>
-            <p className="text-[11px] leading-4 text-[#8b96a1]">JPG, PNG & GIF file up to 5MB at least 400px by 400px</p>
+            <p className="text-[11px] leading-4 text-[#8b96a1]">
+              JPG, PNG & GIF file up to 2048KB at least 400px by 400px
+            </p>
           </FormField>
           <FormField label="Mission" error={errors.mission}>
             <Textarea

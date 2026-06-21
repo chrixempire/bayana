@@ -1,4 +1,13 @@
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { BayanaLogo } from "../brand/BayanaLogo"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu"
+import { performLogout } from "../../lib/auth/logout"
 import { BellIcon, ChevronUpDownIcon, LightbulbIcon, SearchIcon } from "./icons"
 
 type DashboardHeaderProps = {
@@ -14,6 +23,15 @@ export function DashboardHeader({
   planLabel = "Free",
   userInitial = "D",
 }: DashboardHeaderProps) {
+  const navigate = useNavigate()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+    await performLogout(navigate)
+  }
+
   return (
     <header className="grid w-full grid-cols-1 items-center gap-4 px-4 py-3 text-text-on-solid-bg sm:px-6 sm:py-3.5 lg:grid-cols-[minmax(0,1fr)_minmax(240px,480px)_minmax(0,1fr)] lg:gap-6">
       <div className="flex min-w-0 items-center gap-3 justify-self-start sm:gap-4">
@@ -74,13 +92,24 @@ export function DashboardHeader({
 
         <span className="hidden h-6 w-px bg-bg-on-on-nav/80 sm:block" aria-hidden />
 
-        <button
-          type="button"
-          className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#f5d9c8] text-sm font-semibold text-[#5c3d2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-          aria-label="Account menu"
-        >
-          {userInitial}
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            type="button"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#f5d9c8] text-sm font-semibold text-[#5c3d2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            aria-label="Account menu"
+          >
+            {userInitial}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-[10rem] p-1.5">
+            <DropdownMenuItem
+              className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
+              disabled={isLoggingOut}
+              onSelect={() => void handleLogout()}
+            >
+              {isLoggingOut ? "Signing out..." : "Log out"}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )
