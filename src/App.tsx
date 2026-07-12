@@ -11,6 +11,13 @@ import { OnboardingPage } from "./pages/auth/OnboardingPage"
 import { HomePage } from "./pages/HomePage"
 import { GettingStartedPage } from "./pages/dashboard/GettingStartedPage"
 import { EventsPage } from "./pages/dashboard/EventsPage"
+import { VolunteersPage } from "./pages/dashboard/VolunteersPage"
+import { VolunteerDetailPage } from "./pages/dashboard/VolunteerDetailPage"
+import { VerificationPage } from "./pages/dashboard/VerificationPage"
+import { MessagesPage } from "./pages/dashboard/MessagesPage"
+import { AnalyticsPage } from "./pages/dashboard/AnalyticsPage"
+import { DashboardPage } from "./pages/dashboard/DashboardPage"
+import { SettingsPage } from "./pages/dashboard/SettingsPage"
 import { EventDetailPage } from "./pages/dashboard/EventDetailPage"
 import { CreateEventPage } from "./pages/dashboard/CreateEventPage"
 
@@ -43,7 +50,14 @@ function App() {
       <Route path={`${AUTH_EMAIL_VERIFY_PATH}/:id/:hash`} element={<EmailVerifyPage />} />
       <Route path={AUTH_HOME_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
       <Route path={GETTING_STARTED_PATH} element={<GettingStartedPage />} />
+      <Route path={DASHBOARD_TAB_PATHS.dashboard} element={<DashboardPage />} />
+      <Route path={DASHBOARD_TAB_PATHS.settings} element={<SettingsPage />} />
+      <Route path={DASHBOARD_TAB_PATHS.analytics} element={<AnalyticsPage />} />
       <Route path={DASHBOARD_TAB_PATHS.events} element={<EventsPage />} />
+      <Route path={DASHBOARD_TAB_PATHS.volunteers} element={<VolunteersPage />} />
+      <Route path="/volunteers/:volunteerId" element={<VolunteerDetailPage />} />
+      <Route path={DASHBOARD_TAB_PATHS.verification} element={<VerificationPage />} />
+      <Route path={DASHBOARD_TAB_PATHS.messages} element={<MessagesPage />} />
       <Route path="/events/create" element={<CreateEventPage />} />
       <Route path={EVENT_DETAIL_PATH} element={<EventDetailPage />} />
       <Route path={GETTING_STARTED_LEGACY_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />

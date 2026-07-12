@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { HelpCircle, LogOut, User } from "lucide-react"
 import { BayanaLogo } from "../brand/BayanaLogo"
 import {
   DropdownMenu,
@@ -8,7 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import { performLogout } from "../../lib/auth/logout"
-import { BellIcon, ChevronUpDownIcon, LightbulbIcon, SearchIcon } from "./icons"
+import { toast } from "../../hooks/use-toast"
+import { ChevronUpDownIcon, LightbulbIcon } from "./icons"
+import { HeaderSearch } from "./HeaderSearch"
+import { HeaderNotifications } from "./HeaderNotifications"
 
 type DashboardHeaderProps = {
   organizationName?: string
@@ -58,18 +62,7 @@ export function DashboardHeader({
       </div>
 
       <div className="flex w-full justify-center lg:col-start-2">
-        <label className="relative flex w-full max-w-[480px] items-center">
-          <span className="sr-only">Search</span>
-          <SearchIcon className="pointer-events-none absolute left-3 text-text-on-solid-bg/70" />
-          <input
-            type="search"
-            placeholder="Search.."
-            className="h-10 w-full rounded-xl border-0 bg-bg-on-nav/70 py-0 pl-9 pr-14 text-sm text-text-on-solid-bg placeholder:text-text-on-solid-bg/50 shadow-none outline-none ring-0 focus-visible:ring-2 focus-visible:ring-white/25"
-          />
-          <kbd className="pointer-events-none absolute right-3 hidden rounded-md bg-bg-on-on-nav/60 px-1.5 py-0.5 text-[10px] font-medium text-text-on-solid-bg/80 sm:inline">
-            ⌘+K
-          </kbd>
-        </label>
+        <HeaderSearch />
       </div>
 
       <div className="flex shrink-0 items-center gap-3 justify-self-end sm:gap-4 lg:col-start-3">
@@ -81,14 +74,7 @@ export function DashboardHeader({
           Upgrade
         </button>
 
-        <button
-          type="button"
-          className="relative inline-flex size-9 cursor-pointer items-center justify-center rounded-lg text-text-on-solid-bg transition-colors hover:bg-bg-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-          aria-label="Notifications"
-        >
-          <BellIcon />
-          <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-button-negative" aria-hidden />
-        </button>
+        <HeaderNotifications />
 
         <span className="hidden h-6 w-px bg-bg-on-on-nav/80 sm:block" aria-hidden />
 
@@ -100,13 +86,38 @@ export function DashboardHeader({
           >
             {userInitial}
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[10rem] p-1.5">
+          <DropdownMenuContent align="end" className="min-w-[15rem] p-1.5">
+            <div className="flex items-center gap-2.5 px-2.5 py-2">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f5d9c8] text-sm font-semibold text-[#5c3d2e]">
+                {userInitial}
+              </span>
+              <div className="flex min-w-0 flex-col">
+                <span className="truncate text-sm font-semibold text-text-events-strong">Daniel Osonuga</span>
+                <span className="text-xs text-text-table-header">Administrator</span>
+              </div>
+            </div>
+            <div className="my-1 border-t border-border-default-100" />
             <DropdownMenuItem
               className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
+              onSelect={() => navigate("/settings")}
+            >
+              <User className="size-4 text-icon-neutral" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
+              onSelect={() => toast({ title: "Coming soon", description: "Help & support will be available soon." })}
+            >
+              <HelpCircle className="size-4 text-icon-neutral" />
+              Help &amp; support
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer rounded-lg px-2.5 py-2 text-sm text-text-negative focus:bg-bg-negative-soft"
               disabled={isLoggingOut}
               onSelect={() => void handleLogout()}
             >
-              {isLoggingOut ? "Signing out..." : "Log out"}
+              <LogOut className="size-4 text-icon-negative" />
+              {isLoggingOut ? "Signing out..." : "Sign out"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, X } from "lucide-react"
 import type { DateRange } from "react-day-picker"
 import { cn } from "../../lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
@@ -76,13 +76,41 @@ export function DateRangeFilter({
     >
       <PopoverTrigger
         className={cn(
-          "type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2",
+          "type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 data-[state=open]:border-border-input-active",
           isActive ? "border-border-input-active" : "border-border-input-default-200",
           className,
         )}
       >
         <span className="max-w-[160px] truncate">{displayValue}</span>
-        <ChevronDown className="size-4 shrink-0 text-icon-neutral" />
+        {isActive ? (
+          <span
+            role="button"
+            tabIndex={0}
+            aria-label={`Clear ${label}`}
+            className="inline-flex shrink-0 items-center justify-center rounded-full p-0.5 text-icon-neutral transition-colors hover:bg-bg-default-100 hover:text-text-events-strong"
+            onPointerDown={(event) => {
+              event.stopPropagation()
+              event.preventDefault()
+            }}
+            onClick={(event) => {
+              event.stopPropagation()
+              event.preventDefault()
+              setRange(undefined)
+              onChange(anyOption, null)
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault()
+                setRange(undefined)
+                onChange(anyOption, null)
+              }
+            }}
+          >
+            <X className="size-3.5" />
+          </span>
+        ) : (
+          <ChevronDown className="size-4 shrink-0 text-icon-neutral" />
+        )}
       </PopoverTrigger>
       <PopoverContent
         align="start"

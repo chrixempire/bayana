@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { cn } from "../../../lib/utils"
 import type { PersonAvatarTone } from "../../../pages/dashboard/event-detail-types"
 
@@ -22,12 +23,14 @@ export function PersonAvatar({
   className?: string
 }) {
   const initial = name.trim().charAt(0).toUpperCase()
+  const [imgFailed, setImgFailed] = useState(false)
 
-  if (imageUrl) {
+  if (imageUrl && !imgFailed) {
     return (
       <img
         src={imageUrl}
         alt={name}
+        onError={() => setImgFailed(true)}
         style={{ width: size, height: size }}
         className={cn("shrink-0 rounded-full object-cover", className)}
       />
