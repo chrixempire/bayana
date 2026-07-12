@@ -38,6 +38,43 @@ export function isCreateEventStepValid(
     return words > 0 && words <= CREATE_EVENT_TITLE_MAX_WORDS && form.images.length > 0
   }
 
+  if (stepId === "needs-basics") {
+    const words = countWords(form.title)
+    const titleOk = words > 0 && words <= CREATE_EVENT_TITLE_MAX_WORDS
+    return (
+      titleOk &&
+      form.description.trim().length > 0 &&
+      form.categories.length > 0 &&
+      form.images.length > 0
+    )
+  }
+
+  if (stepId === "needs-config") {
+    const financialOk =
+      !form.financialDonations ||
+      (form.donationAmount > 0 && !getDonationAmountError(form.donationAmount, isPremium))
+    const inKindOk =
+      !form.inKindDonations ||
+      (form.inKindItems.length > 0 &&
+        (form.deliveryByDelivery || form.deliveryByPickup) &&
+        (!form.deliveryByDelivery || form.deliveryAddress.trim().length > 0) &&
+        (!form.deliveryByPickup || form.pickupAddress.trim().length > 0))
+    const donationTypeSelected = form.financialDonations || form.inKindDonations
+    const datesOk = Boolean(form.dateStart && form.dateEnd)
+    const organizerOk = form.organizer.trim().length > 0
+    const passcodeOk = form.visibility !== "private" || form.eventPasscode.trim().length > 0
+    const ngoOk = !form.ngoCollaboration || form.ngoOrganization.trim().length > 0
+    return (
+      donationTypeSelected &&
+      financialOk &&
+      inKindOk &&
+      datesOk &&
+      organizerOk &&
+      passcodeOk &&
+      ngoOk
+    )
+  }
+
   if (stepId === "about") {
     return (
       form.description.trim().length > 0 &&

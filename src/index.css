@@ -77,6 +77,7 @@
   --color-bg-overlay: rgb(48 54 61 / 60%);
   --color-bg-accent: #ff7a1a;
   --color-bg-accent-soft: #f9ecdf;
+  --color-bg-detail-header: #f7f0ff;
   --color-bg-nav-tab-active: #fff1e8;
   --color-text-nav-tab-active: #ff7415;
   --color-bg-dropdown-modal: #ffffff;
@@ -160,6 +161,7 @@
   --color-bg-overlay: rgb(48 54 61 / 60%);
   --color-bg-accent: #ff7a1a;
   --color-bg-accent-soft: #f9ecdf;
+  --color-bg-detail-header: #f7f0ff;
   --color-bg-nav-tab-active: #fff1e8;
   --color-text-nav-tab-active: #ff7415;
   --color-bg-dropdown-modal: #ffffff;

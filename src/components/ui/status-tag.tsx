@@ -5,14 +5,17 @@ import { cn } from "../../lib/utils"
 
 /** Figma: Type=Tags, Size=Medium, Colour=Default, State=Outline */
 const statusTagVariants = cva(
-  "inline-flex max-w-full shrink-0 items-center truncate rounded-lg border border-border-default-100 bg-[#EDF0F2] font-[510] text-text-events-strong",
+  "inline-flex max-w-full shrink-0 items-center truncate rounded-lg font-[510]",
   {
     variants: {
       size: {
         medium: "h-6 gap-1 px-2 py-1 text-xs leading-4",
+        small: "h-5 gap-1 rounded-md px-1.5 text-[11px] leading-4",
       },
       color: {
-        default: "",
+        default: "border border-border-default-100 bg-[#EDF0F2] text-text-events-strong",
+        accent: "border-0 bg-bg-accent text-text-on-solid-bg",
+        dark: "border-0 bg-text-events-strong text-text-on-solid-bg",
       },
     },
     defaultVariants: {

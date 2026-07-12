@@ -11,6 +11,7 @@ import { OnboardingPage } from "./pages/auth/OnboardingPage"
 import { HomePage } from "./pages/HomePage"
 import { GettingStartedPage } from "./pages/dashboard/GettingStartedPage"
 import { EventsPage } from "./pages/dashboard/EventsPage"
+import { EventDetailPage } from "./pages/dashboard/EventDetailPage"
 import { CreateEventPage } from "./pages/dashboard/CreateEventPage"
 
 import {
@@ -26,6 +27,7 @@ import {
   GETTING_STARTED_PATH,
 } from "./lib/auth-paths"
 import { DASHBOARD_TAB_PATHS, GETTING_STARTED_LEGACY_PATH } from "./lib/dashboard-paths"
+import { EVENT_DETAIL_PATH } from "./lib/event-detail-paths"
 
 function App() {
   return (
@@ -43,6 +45,7 @@ function App() {
       <Route path={GETTING_STARTED_PATH} element={<GettingStartedPage />} />
       <Route path={DASHBOARD_TAB_PATHS.events} element={<EventsPage />} />
       <Route path="/events/create" element={<CreateEventPage />} />
+      <Route path={EVENT_DETAIL_PATH} element={<EventDetailPage />} />
       <Route path={GETTING_STARTED_LEGACY_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
       <Route path="/home/legacy" element={<HomePage />} />
       <Route path="/auth/onboarding/choose-plan" element={<Navigate to={`${AUTH_ONBOARDING_PATH}/review?plan=open`} replace />} />

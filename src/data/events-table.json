@@ -22,72 +22,302 @@
         "label": "Collaborations",
         "searchPlaceholder": "Search collaborations",
         "progressLabel": "collaborations",
-        "progressLimit": 3
+        "progressLimit": 3,
+        "columns": [
+          {
+            "id": "select",
+            "label": "",
+            "type": "checkbox"
+          },
+          {
+            "id": "cause",
+            "label": "Event",
+            "type": "cause"
+          },
+          {
+            "id": "collaborator",
+            "label": "Collaborator",
+            "type": "collaborator"
+          },
+          {
+            "id": "eventType",
+            "label": "Event type",
+            "type": "eventType"
+          },
+          {
+            "id": "visibility",
+            "label": "Visibility",
+            "type": "visibility"
+          },
+          {
+            "id": "category",
+            "label": "Category",
+            "type": "category"
+          },
+          {
+            "id": "date",
+            "label": "Date",
+            "type": "date"
+          },
+          {
+            "id": "actions",
+            "label": "",
+            "type": "actions"
+          }
+        ],
+        "filters": [
+          {
+            "id": "category",
+            "label": "Category",
+            "multi": true,
+            "options": [
+              "Youth Development",
+              "Education",
+              "Health & Wellness",
+              "Environment",
+              "Food Security",
+              "Humanitarian"
+            ]
+          },
+          {
+            "id": "eventType",
+            "label": "Event type",
+            "multi": true,
+            "options": [
+              "Cause",
+              "Need"
+            ]
+          },
+          {
+            "id": "visibility",
+            "label": "Visibility",
+            "multi": true,
+            "options": [
+              "Public",
+              "Private"
+            ]
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "multi": true,
+            "options": [
+              "New request",
+              "Pending",
+              "Accepted"
+            ]
+          },
+          {
+            "id": "startDate",
+            "label": "Start date",
+            "options": [
+              "Any start date",
+              "Today",
+              "This week",
+              "This month",
+              "Custom range"
+            ]
+          },
+          {
+            "id": "endDate",
+            "label": "End date",
+            "options": [
+              "Any end date",
+              "Today",
+              "This week",
+              "This month",
+              "Custom range"
+            ]
+          }
+        ],
+        "rowActions": [
+          {
+            "id": "view-details",
+            "label": "View details",
+            "icon": "eye"
+          }
+        ],
+        "emptyState": {
+          "title": "No event yet",
+          "description": "Once you create a need, it would appear here"
+        },
+        "showCount": true
       }
     ],
     "filters": [
       {
         "id": "category",
         "label": "Category",
-        "options": ["All categories", "Youth Development", "Education", "Health & Wellness", "Environment", "Food Security", "Humanitarian"]
+        "options": [
+          "All categories",
+          "Youth Development",
+          "Education",
+          "Health & Wellness",
+          "Environment",
+          "Food Security",
+          "Humanitarian"
+        ]
       },
       {
         "id": "volunteeringType",
         "label": "Volunteering type",
-        "options": ["All types", "In-person", "Virtual", "Hybrid"]
+        "options": [
+          "All types",
+          "In-person",
+          "Virtual",
+          "Hybrid"
+        ]
       },
       {
         "id": "visibility",
         "label": "Visibility",
-        "options": ["All visibility", "Public", "Private", "Drafts"]
+        "options": [
+          "All visibility",
+          "Public",
+          "Private",
+          "Drafts"
+        ]
       },
       {
         "id": "status",
         "label": "Status",
-        "options": ["All status", "Upcoming", "Active", "Completed"]
+        "options": [
+          "All status",
+          "Upcoming",
+          "Active",
+          "Completed"
+        ]
       },
       {
         "id": "startDate",
         "label": "Start date",
-        "options": ["Any start date", "Today", "This week", "This month", "Custom range"]
+        "options": [
+          "Any start date",
+          "Today",
+          "This week",
+          "This month",
+          "Custom range"
+        ]
       },
       {
         "id": "endDate",
         "label": "End date",
-        "options": ["Any end date", "Today", "This week", "This month", "Custom range"]
+        "options": [
+          "Any end date",
+          "Today",
+          "This week",
+          "This month",
+          "Custom range"
+        ]
       }
     ],
     "columns": [
-      { "id": "select", "label": "", "type": "checkbox" },
-      { "id": "cause", "label": "Cause", "type": "cause" },
-      { "id": "visibility", "label": "Visibility", "type": "visibility" },
-      { "id": "category", "label": "Category", "type": "category" },
-      { "id": "volunteerType", "label": "Volunteer type", "type": "volunteerType" },
-      { "id": "date", "label": "Date", "type": "date" },
-      { "id": "volunteers", "label": "Volunteers", "type": "volunteers" },
-      { "id": "actions", "label": "", "type": "actions" }
+      {
+        "id": "select",
+        "label": "",
+        "type": "checkbox"
+      },
+      {
+        "id": "cause",
+        "label": "Cause",
+        "type": "cause"
+      },
+      {
+        "id": "visibility",
+        "label": "Visibility",
+        "type": "visibility"
+      },
+      {
+        "id": "category",
+        "label": "Category",
+        "type": "category"
+      },
+      {
+        "id": "volunteerType",
+        "label": "Volunteer type",
+        "type": "volunteerType"
+      },
+      {
+        "id": "date",
+        "label": "Date",
+        "type": "date"
+      },
+      {
+        "id": "volunteers",
+        "label": "Volunteers",
+        "type": "volunteers"
+      },
+      {
+        "id": "actions",
+        "label": "",
+        "type": "actions"
+      }
     ],
     "rowActions": [
-      { "id": "view-details", "label": "View details", "icon": "eye" },
-      { "id": "edit-event", "label": "Edit event", "icon": "pencil" },
-      { "id": "view-volunteers", "label": "View volunteers", "icon": "user" },
-      { "id": "post-updates", "label": "Post updates", "icon": "megaphone" },
-      { "id": "share-link", "label": "Get shareable link", "icon": "share" },
-      { "id": "delete-event", "label": "Delete event", "icon": "trash", "destructive": true }
+      {
+        "id": "view-details",
+        "label": "View details",
+        "icon": "eye"
+      },
+      {
+        "id": "edit-event",
+        "label": "Edit event",
+        "icon": "pencil"
+      },
+      {
+        "id": "view-volunteers",
+        "label": "View volunteers",
+        "icon": "user"
+      },
+      {
+        "id": "post-updates",
+        "label": "Post updates",
+        "icon": "megaphone"
+      },
+      {
+        "id": "share-link",
+        "label": "Get shareable link",
+        "icon": "share"
+      },
+      {
+        "id": "delete-event",
+        "label": "Delete event",
+        "icon": "trash",
+        "destructive": true
+      }
     ],
     "emptyState": {
       "title": "No event yet",
       "description": "Once you create a need, cause or campaign, it would appear here"
     },
     "pagination": {
-      "pageSizeOptions": [10, 25, 50],
+      "pageSizeOptions": [
+        10,
+        25,
+        50
+      ],
       "defaultPageSize": 10
-    }
+    },
+    "draftRowActions": [
+      {
+        "id": "continue-draft",
+        "label": "Continue",
+        "icon": "pencil"
+      },
+      {
+        "id": "delete-draft",
+        "label": "Delete draft",
+        "icon": "trash"
+      }
+    ]
   },
   "scenarios": {
     "empty": {
       "activeTab": "causes",
-      "progress": { "current": 0, "total": 3 },
+      "progress": {
+        "current": 0,
+        "total": 3
+      },
       "rows": [],
       "pagination": {
         "from": 0,
@@ -100,7 +330,10 @@
     },
     "filled": {
       "activeTab": "causes",
-      "progress": { "current": 3, "total": 3 },
+      "progress": {
+        "current": 3,
+        "total": 3
+      },
       "rows": [
         {
           "id": "evt-001",
@@ -114,7 +347,9 @@
             "lifecycleStatus": "upcoming"
           },
           "category": {
-            "tags": ["Youth Development"],
+            "tags": [
+              "Youth Development"
+            ],
             "extraCount": 1
           },
           "volunteerType": {
@@ -123,10 +358,16 @@
           },
           "date": {
             "range": "6 Dec - 12 Dec 2025",
-            "time": "8:00 AM - 5:00 PM"
+            "time": "8:00 AM - 5:00 PM",
+            "startDate": "2025-12-06",
+            "endDate": "2025-12-12"
           },
-          "volunteers": { "current": 0, "max": 30 },
-          "shareUrl": "https://bayana.com/events/weekend-teaching-program"
+          "volunteers": {
+            "current": 0,
+            "max": 30
+          },
+          "shareUrl": "https://bayana.com/events/weekend-teaching-program",
+          "kind": "cause"
         },
         {
           "id": "evt-002",
@@ -140,7 +381,9 @@
             "lifecycleStatus": "active"
           },
           "category": {
-            "tags": ["Health & Wellness"],
+            "tags": [
+              "Health & Wellness"
+            ],
             "extraCount": 1
           },
           "volunteerType": {
@@ -149,10 +392,16 @@
           },
           "date": {
             "range": "6 Dec 2025",
-            "time": "9:00 AM - 2:00 PM"
+            "time": "8:00 AM - 5:00 PM",
+            "startDate": "2025-12-06",
+            "endDate": "2025-12-06"
           },
-          "volunteers": { "current": 4, "max": 30 },
-          "shareUrl": "https://bayana.com/events/community-health-outreach"
+          "volunteers": {
+            "current": 4,
+            "max": 30
+          },
+          "shareUrl": "https://bayana.com/events/community-health-outreach",
+          "kind": "cause"
         },
         {
           "id": "evt-003",
@@ -166,13 +415,24 @@
             "lifecycleStatus": null
           },
           "category": {
-            "tags": ["Food Security"],
+            "tags": [
+              "Food Security"
+            ],
             "extraCount": 0
           },
-          "volunteerType": { "type": null, "detail": null },
-          "date": { "range": null, "time": null },
+          "volunteerType": {
+            "type": null,
+            "detail": null
+          },
+          "date": {
+            "range": null,
+            "time": null,
+            "startDate": null,
+            "endDate": null
+          },
           "volunteers": null,
-          "shareUrl": null
+          "shareUrl": null,
+          "kind": "cause"
         },
         {
           "id": "evt-004",
@@ -186,7 +446,9 @@
             "lifecycleStatus": "completed"
           },
           "category": {
-            "tags": ["Environment"],
+            "tags": [
+              "Environment"
+            ],
             "extraCount": 1
           },
           "volunteerType": {
@@ -194,11 +456,17 @@
             "detail": "Elegushi beach, lekki, lagos"
           },
           "date": {
-            "range": "6 Dec - 12 Dec 2025",
-            "time": "8:00 AM - 5:00 PM"
+            "range": "13 Dec - 19 Dec 2025",
+            "time": "8:00 AM - 5:00 PM",
+            "startDate": "2025-12-13",
+            "endDate": "2025-12-19"
           },
-          "volunteers": { "current": 30, "max": 30 },
-          "shareUrl": "https://bayana.com/events/beach-cleanup"
+          "volunteers": {
+            "current": 30,
+            "max": 30
+          },
+          "shareUrl": "https://bayana.com/events/beach-cleanup",
+          "kind": "needs"
         },
         {
           "id": "evt-005",
@@ -212,7 +480,9 @@
             "lifecycleStatus": "completed"
           },
           "category": {
-            "tags": ["Youth Development"],
+            "tags": [
+              "Youth Development"
+            ],
             "extraCount": 1
           },
           "volunteerType": {
@@ -220,11 +490,17 @@
             "detail": "meet.google.com/abc-defg-hij"
           },
           "date": {
-            "range": "6 Dec 2025",
-            "time": "6:00 PM - 8:00 PM"
+            "range": "20 Dec 2025",
+            "time": "8:00 AM - 5:00 PM",
+            "startDate": "2025-12-20",
+            "endDate": "2025-12-20"
           },
-          "volunteers": { "current": 30, "max": 30 },
-          "shareUrl": "https://bayana.com/events/mentorship-circle"
+          "volunteers": {
+            "current": 30,
+            "max": 30
+          },
+          "shareUrl": "https://bayana.com/events/mentorship-circle",
+          "kind": "cause"
         },
         {
           "id": "evt-006",
@@ -238,7 +514,9 @@
             "lifecycleStatus": "completed"
           },
           "category": {
-            "tags": ["Education"],
+            "tags": [
+              "Education"
+            ],
             "extraCount": 1
           },
           "volunteerType": {
@@ -246,11 +524,17 @@
             "detail": "45 community centre road, surulere, lagos"
           },
           "date": {
-            "range": "6 Dec - 12 Dec 2025",
-            "time": "8:00 AM - 5:00 PM"
+            "range": "5 Jan - 11 Jan 2026",
+            "time": "8:00 AM - 5:00 PM",
+            "startDate": "2026-01-05",
+            "endDate": "2026-01-11"
           },
-          "volunteers": { "current": 30, "max": 30 },
-          "shareUrl": "https://bayana.com/events/literacy-workshop"
+          "volunteers": {
+            "current": 30,
+            "max": 30
+          },
+          "shareUrl": "https://bayana.com/events/literacy-workshop",
+          "kind": "needs"
         },
         {
           "id": "evt-007",
@@ -264,7 +548,9 @@
             "lifecycleStatus": "completed"
           },
           "category": {
-            "tags": ["Health & Wellness"],
+            "tags": [
+              "Health & Wellness"
+            ],
             "extraCount": 1
           },
           "volunteerType": {
@@ -272,63 +558,17 @@
             "detail": "12 palm grove estate, yaba, lagos"
           },
           "date": {
-            "range": "6 Dec 2025",
-            "time": "10:00 AM - 1:00 PM"
+            "range": "6 Jan 2026",
+            "time": "8:00 AM - 5:00 PM",
+            "startDate": "2026-01-06",
+            "endDate": "2026-01-06"
           },
-          "volunteers": { "current": 30, "max": 30 },
-          "shareUrl": "https://bayana.com/events/senior-wellness-checkin"
-        },
-        {
-          "id": "evt-008",
-          "cause": {
-            "thumbnailUrl": "/placeholders/event-thumb-8.jpg",
-            "title": "Coding bootcamp for girls in STEM",
-            "description": "Introductory programming sessions over two weekends."
+          "volunteers": {
+            "current": 30,
+            "max": 30
           },
-          "visibility": {
-            "type": "public",
-            "lifecycleStatus": "completed"
-          },
-          "category": {
-            "tags": ["Youth Development"],
-            "extraCount": 1
-          },
-          "volunteerType": {
-            "type": "virtual",
-            "detail": "meet.google.com/xyz-uvwx-rst"
-          },
-          "date": {
-            "range": "6 Dec - 12 Dec 2025",
-            "time": "8:00 AM - 5:00 PM"
-          },
-          "volunteers": { "current": 30, "max": 30 },
-          "shareUrl": "https://bayana.com/events/coding-bootcamp-girls"
-        },
-        {
-          "id": "evt-009",
-          "cause": {
-            "thumbnailUrl": "/placeholders/event-thumb-9.jpg",
-            "title": "Neighbourhood tree planting initiative",
-            "description": "Plant and maintain saplings across three local wards."
-          },
-          "visibility": {
-            "type": "public",
-            "lifecycleStatus": "completed"
-          },
-          "category": {
-            "tags": ["Environment"],
-            "extraCount": 1
-          },
-          "volunteerType": {
-            "type": "in-person",
-            "detail": "Ward 4 open field, abuja"
-          },
-          "date": {
-            "range": "6 Dec 2025",
-            "time": "7:00 AM - 11:00 AM"
-          },
-          "volunteers": { "current": 30, "max": 30 },
-          "shareUrl": "https://bayana.com/events/tree-planting"
+          "shareUrl": "https://bayana.com/events/senior-wellness-checkin",
+          "kind": "needs"
         },
         {
           "id": "evt-010",
@@ -342,7 +582,9 @@
             "lifecycleStatus": "completed"
           },
           "category": {
-            "tags": ["Humanitarian"],
+            "tags": [
+              "Humanitarian"
+            ],
             "extraCount": 1
           },
           "volunteerType": {
@@ -350,11 +592,211 @@
             "detail": "Bayana warehouse, ikeja, lagos"
           },
           "date": {
-            "range": "6 Dec - 12 Dec 2025",
-            "time": "8:00 AM - 5:00 PM"
+            "range": "10 Feb - 16 Feb 2026",
+            "time": "8:00 AM - 5:00 PM",
+            "startDate": "2026-02-10",
+            "endDate": "2026-02-16"
           },
-          "volunteers": { "current": 30, "max": 30 },
-          "shareUrl": "https://bayana.com/events/refugee-kit-packing"
+          "volunteers": {
+            "current": 30,
+            "max": 30
+          },
+          "shareUrl": "https://bayana.com/events/refugee-kit-packing",
+          "kind": "cause"
+        },
+        {
+          "id": "col-1",
+          "kind": "collaboration",
+          "requestBadges": [
+            "new-request"
+          ],
+          "eventType": "cause",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-1.jpg",
+            "title": "₦500,000 for flood relief food item",
+            "description": "Weekend teaching program at Makoko community"
+          },
+          "collaborator": {
+            "name": "Acme Incorporation",
+            "tone": "orange"
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "upcoming"
+          },
+          "category": {
+            "tags": [
+              "Youth Development"
+            ],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": null,
+            "detail": null
+          },
+          "date": {
+            "range": "22 Jan - 31 Jan 2025",
+            "time": null,
+            "startDate": "2025-01-22",
+            "endDate": "2025-01-31"
+          },
+          "volunteers": null,
+          "shareUrl": "https://bayana.com/collaborations/col-1"
+        },
+        {
+          "id": "col-2",
+          "kind": "collaboration",
+          "requestBadges": [
+            "new-request"
+          ],
+          "eventType": "needs",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-2.jpg",
+            "title": "₦500,000 for flood relief food item",
+            "description": "We want to help people affected by flood in makoko community"
+          },
+          "collaborator": {
+            "name": "Acme Incorporation",
+            "tone": "orange"
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "upcoming"
+          },
+          "category": {
+            "tags": [
+              "Relief"
+            ],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": null,
+            "detail": null
+          },
+          "date": {
+            "range": "22 Jan - 31 Jan 2025",
+            "time": null,
+            "startDate": "2025-01-22",
+            "endDate": "2025-01-31"
+          },
+          "volunteers": null,
+          "shareUrl": "https://bayana.com/collaborations/col-2"
+        },
+        {
+          "id": "col-3",
+          "kind": "collaboration",
+          "requestBadges": [
+            "organizer",
+            "pending"
+          ],
+          "eventType": "needs",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-3.jpg",
+            "title": "₦500,000 for flood relief food item",
+            "description": "We want to help people affected by flood in makoko community"
+          },
+          "collaborator": {
+            "name": "Acme Incorporation",
+            "tone": "orange"
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "upcoming"
+          },
+          "category": {
+            "tags": [
+              "Relief"
+            ],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": null,
+            "detail": null
+          },
+          "date": {
+            "range": "22 Jan - 31 Jan 2025",
+            "time": null,
+            "startDate": "2025-01-22",
+            "endDate": "2025-01-31"
+          },
+          "volunteers": null,
+          "shareUrl": "https://bayana.com/collaborations/col-3"
+        },
+        {
+          "id": "col-4",
+          "kind": "collaboration",
+          "requestBadges": [],
+          "eventType": "cause",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-4.jpg",
+            "title": "Weekend teaching program at Makoko community",
+            "description": "Join us in providing quality education to children"
+          },
+          "collaborator": {
+            "name": "Acme Incorporation",
+            "tone": "green"
+          },
+          "visibility": {
+            "type": "private",
+            "lifecycleStatus": "active"
+          },
+          "category": {
+            "tags": [
+              "Youth Development"
+            ],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": null,
+            "detail": null
+          },
+          "date": {
+            "range": "22 Jan - 31 Jan 2025",
+            "time": null,
+            "startDate": "2025-01-22",
+            "endDate": "2025-01-31"
+          },
+          "volunteers": null,
+          "shareUrl": "https://bayana.com/collaborations/col-4"
+        },
+        {
+          "id": "col-5",
+          "kind": "collaboration",
+          "requestBadges": [
+            "organizer"
+          ],
+          "eventType": "needs",
+          "cause": {
+            "thumbnailUrl": "/placeholders/event-thumb-5.jpg",
+            "title": "₦500,000 for flood relief food item",
+            "description": "We want to help people affected by flood in makoko community"
+          },
+          "collaborator": {
+            "name": "Acme Incorporation",
+            "tone": "orange"
+          },
+          "visibility": {
+            "type": "public",
+            "lifecycleStatus": "completed"
+          },
+          "category": {
+            "tags": [
+              "Relief"
+            ],
+            "extraCount": 1
+          },
+          "volunteerType": {
+            "type": null,
+            "detail": null
+          },
+          "date": {
+            "range": "22 Jan - 31 Jan 2025",
+            "time": null,
+            "startDate": "2025-01-22",
+            "endDate": "2025-01-31"
+          },
+          "volunteers": null,
+          "shareUrl": "https://bayana.com/collaborations/col-5"
         }
       ],
       "pagination": {

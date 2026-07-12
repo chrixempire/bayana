@@ -7,6 +7,8 @@ import { CreateEventSummary } from "../../components/create-event/CreateEventSum
 import { CreateEventStepSidebar } from "../../components/create-event/CreateEventStepSidebar"
 import { CreateEventStepAbout } from "../../components/create-event/steps/CreateEventStepAbout"
 import { CreateEventStepBasics } from "../../components/create-event/steps/CreateEventStepBasics"
+import { CreateEventNeedsStepBasics } from "../../components/create-event/steps/CreateEventNeedsStepBasics"
+import { CreateEventNeedsStepConfig } from "../../components/create-event/steps/CreateEventNeedsStepConfig"
 import { CreateEventUpgradeModal } from "../../components/create-event/CreateEventUpgradeModal"
 import { CreateEventStepSettings } from "../../components/create-event/steps/CreateEventStepSettings"
 import { DashboardLayout } from "../../components/dashboard/DashboardLayout"
@@ -21,7 +23,6 @@ import {
   createEventPath,
   parseCreateEventStep,
   parseCreateEventType,
-  type CreateEventType,
 } from "../../lib/create-event-paths"
 import { isCreateEventStepValid } from "../../lib/create-event-validation"
 import {
@@ -52,14 +53,15 @@ export function CreateEventPage() {
     navigate(createEventPath(eventType, nextStep.id), { replace: true })
   }
   const isLastStep = activeStepIndex === steps.length - 1
+  const lastStepId = steps[steps.length - 1].id
   const canContinue = isCreateEventStepValid(activeStep.id, form, isPremium)
-  const canCreate = isCreateEventStepValid("settings", form, isPremium)
+  const canCreate = isCreateEventStepValid(lastStepId, form, isPremium)
 
   const patchForm = (patch: Partial<CreateEventFormState>) => {
     setForm((prev) => ({ ...prev, ...patch }))
   }
 
-  const handleTypeChange = (_type: CreateEventType) => {
+  const handleTypeChange = () => {
     setForm(createInitialFormState())
   }
 
@@ -100,8 +102,8 @@ export function CreateEventPage() {
         <CreateEventHeader
           eventType={eventType}
           onTypeChange={(type) => {
-            handleTypeChange(type)
-            navigate(createEventPath(type, "basics"), { replace: true })
+            handleTypeChange()
+            navigate(createEventPath(type), { replace: true })
           }}
         />
       }
@@ -140,12 +142,25 @@ export function CreateEventPage() {
                   onRequestUpgrade={() => setUpgradeModalOpen(true)}
                 />
               ) : null}
+              {activeStep.id === "needs-basics" ? (
+                <CreateEventNeedsStepBasics form={form} onChange={patchForm} />
+              ) : null}
+              {activeStep.id === "needs-config" ? (
+                <CreateEventNeedsStepConfig
+                  form={form}
+                  onChange={patchForm}
+                  onBack={handleBack}
+                  isPremium={isPremium}
+                  onRequestUpgrade={() => setUpgradeModalOpen(true)}
+                />
+              ) : null}
 
               {!isLastStep ? (
                 <CreateEventFormActions
                   canContinue={canContinue}
                   onContinue={handleContinue}
                   onSaveDraft={handleSaveDraft}
+                  showSaveDraft={eventType !== "needs"}
                 />
               ) : null}
             </CreateEventFormColumn>
@@ -155,6 +170,7 @@ export function CreateEventPage() {
                 form={form}
                 canCreate={canCreate}
                 isPremium={isPremium}
+                eventType={eventType}
                 onCreate={handleCreate}
               />
             ) : null}

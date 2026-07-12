@@ -71,7 +71,7 @@ export function CreateEventHeader({
                   onClick={() => {
                     if (option.id !== eventType) {
                       onTypeChange(option.id)
-                      navigate(createEventPath(option.id, "basics"), { replace: true })
+                      navigate(createEventPath(option.id), { replace: true })
                     }
                   }}
                 >

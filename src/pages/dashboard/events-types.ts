@@ -6,8 +6,12 @@ export type EventLifecycleStatus = "upcoming" | "active" | "completed"
 
 export type EventVolunteerFormat = "in-person" | "virtual"
 
+export type EventKind = "cause" | "needs" | "collaboration"
+
 export type EventTableRow = {
   id: string
+  /** Which sub-tab (Causes / Needs / Collaborations) the row belongs to. */
+  kind?: EventKind
   cause: {
     thumbnailUrl: string
     title: string
@@ -28,12 +32,26 @@ export type EventTableRow = {
   date: {
     range: string | null
     time: string | null
+    /** ISO (YYYY-MM-DD) for filtering; null for drafts. */
+    startDate?: string | null
+    endDate?: string | null
   }
   volunteers: {
     current: number
     max: number
   } | null
   shareUrl: string | null
+  /** Collaboration-only: the inviting/collaborating organisation. */
+  collaborator?: {
+    name: string
+    /** Square logo tint when no image is supplied. */
+    tone?: "orange" | "purple" | "blue" | "green"
+    logoUrl?: string
+  } | null
+  /** Collaboration-only: the underlying event type the collaboration is attached to. */
+  eventType?: "cause" | "needs" | null
+  /** Collaboration-only: request-status badges rendered over the Event cell. */
+  requestBadges?: Array<"new-request" | "organizer" | "pending">
 }
 
 export type EventsPagination = {
@@ -54,6 +72,22 @@ export type EventsScenarioData = {
 
 export type EventsTableScenario = "empty" | "filled"
 
+export type EventsColumnDef = { id: string; label: string; type: string }
+export type EventsFilterDef = {
+  id: string
+  label: string
+  options: string[]
+  /** Multi-select checkbox dropdown (collaboration filters). */
+  multi?: boolean
+}
+export type EventsRowActionDef = {
+  id: string
+  label: string
+  icon?: string
+  destructive?: boolean
+}
+export type EventsEmptyState = { title: string; description: string }
+
 export type EventsPageConfig = {
   title: string
   createButtonLabel: string
@@ -63,19 +97,20 @@ export type EventsPageConfig = {
     searchPlaceholder: string
     progressLabel: string
     progressLimit: number
+    /** Optional per-tab overrides — fall back to the page-level defaults. */
+    columns?: EventsColumnDef[]
+    filters?: EventsFilterDef[]
+    rowActions?: EventsRowActionDef[]
+    emptyState?: EventsEmptyState
+    /** When set, renders a count badge next to the tab label. */
+    showCount?: boolean
   }>
-  filters: Array<{ id: string; label: string; options: string[] }>
-  columns: Array<{ id: string; label: string; type: string }>
-  rowActions: Array<{
-    id: string
-    label: string
-    icon?: string
-    destructive?: boolean
-  }>
-  emptyState: {
-    title: string
-    description: string
-  }
+  filters: EventsFilterDef[]
+  columns: EventsColumnDef[]
+  rowActions: EventsRowActionDef[]
+  /** Row menu shown for draft rows (Continue / Delete draft). */
+  draftRowActions?: EventsRowActionDef[]
+  emptyState: EventsEmptyState
   pagination: {
     pageSizeOptions: number[]
     defaultPageSize: number

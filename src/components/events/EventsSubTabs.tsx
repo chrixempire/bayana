@@ -5,6 +5,8 @@ import type { EventsTabId } from "../../pages/dashboard/events-types"
 export type EventsSubTab = {
   id: EventsTabId
   label: string
+  /** Optional count badge rendered next to the label. */
+  count?: number
 }
 
 type TabIndicator = {
@@ -69,12 +71,17 @@ export function EventsSubTabs({ tabs, activeTab, onTabChange, className }: Event
             role="tab"
             aria-selected={isActive}
             className={cn(
-              "type-events-tab relative z-10 cursor-pointer pb-3 transition-colors",
+              "type-events-tab relative z-10 flex cursor-pointer items-center gap-1.5 pb-3 transition-colors",
               !isActive && "hover:text-text-neutral-400",
             )}
             onClick={() => onTabChange(tab.id)}
           >
             {tab.label}
+            {typeof tab.count === "number" ? (
+              <span className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-bg-accent px-1 text-[11px] font-semibold leading-none text-text-on-solid-bg">
+                {tab.count}
+              </span>
+            ) : null}
           </button>
         )
       })}

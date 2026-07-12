@@ -50,6 +50,36 @@ export function formatDurationMessage(start: string, end: string, timeStart: str
   return `This cause will run from ${datePart}, from ${formatTime12h(timeStart)} to ${formatTime12h(timeEnd)}`
 }
 
+function ordinalSuffix(day: number) {
+  const remainder = day % 100
+  if (remainder >= 11 && remainder <= 13) return "th"
+  switch (day % 10) {
+    case 1:
+      return "st"
+    case 2:
+      return "nd"
+    case 3:
+      return "rd"
+    default:
+      return "th"
+  }
+}
+
+function formatOrdinalDate(value: string) {
+  const date = parseDate(value)
+  if (!date) return ""
+  const day = date.getDate()
+  const monthYear = date.toLocaleDateString("en-GB", { month: "short", year: "numeric" })
+  return `${day}${ordinalSuffix(day)} ${monthYear}`
+}
+
+/** Needs summary date range, e.g. "22nd Jan 2025 to 31st Jan 2025". */
+export function formatNeedsSummaryDateRange(start: string, end: string) {
+  if (!start && !end) return "--"
+  if (start && end) return `${formatOrdinalDate(start)} to ${formatOrdinalDate(end)}`
+  return formatOrdinalDate(start || end)
+}
+
 export function formatSummaryDateTime(start: string, _end: string, timeStart: string, timeEnd: string) {
   const startDate = parseDate(start)
   if (!startDate || !timeStart || !timeEnd) return "—"

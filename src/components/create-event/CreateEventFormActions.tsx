@@ -6,11 +6,13 @@ export function CreateEventFormActions({
   onContinue,
   onSaveDraft,
   continueLabel = "Continue",
+  showSaveDraft = true,
 }: {
   canContinue: boolean
   onContinue: () => void
   onSaveDraft: () => void
   continueLabel?: string
+  showSaveDraft?: boolean
 }) {
   return (
     <div className="flex w-full flex-col gap-3 pt-2">
@@ -25,9 +27,11 @@ export function CreateEventFormActions({
       >
         {continueLabel}
       </Button>
-      <Button type="button" variant="neutral" block onClick={onSaveDraft} className="rounded-xl">
-        Save as draft
-      </Button>
+      {showSaveDraft ? (
+        <Button type="button" variant="neutral" block onClick={onSaveDraft} className="rounded-xl">
+          Save as draft
+        </Button>
+      ) : null}
     </div>
   )
 }

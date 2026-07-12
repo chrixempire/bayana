@@ -11,6 +11,14 @@ export type VolunteeringType = "in-person" | "virtual"
 export type EventVisibility = "public" | "private"
 export type CertificateAccess = "all" | "automated" | "manual"
 
+export type InKindItem = {
+  id: string
+  name: string
+  description: string
+  quantity: number
+  imageUrl: string | null
+}
+
 export type CreateEventFormState = {
   title: string
   images: CreateEventImage[]
@@ -42,9 +50,25 @@ export type CreateEventFormState = {
   ngoCollaboration: boolean
   ngoOrganization: string
   moreSettingsOpen: boolean
+  // Needs-specific
+  financialDonations: boolean
+  allowOverfunding: boolean
+  inKindDonations: boolean
+  inKindItems: InKindItem[]
+  deliveryByDelivery: boolean
+  deliveryByPickup: boolean
+  deliveryAddress: string
+  deliveryInstructions: string
+  pickupAddress: string
+  pickupInstructions: string
 }
 
-export type CreateEventStepId = "basics" | "about" | "settings"
+export type CreateEventStepId =
+  | "basics"
+  | "about"
+  | "settings"
+  | "needs-basics"
+  | "needs-config"
 
 export type CreateEventStepConfig = {
   id: CreateEventStepId
@@ -52,12 +76,17 @@ export type CreateEventStepConfig = {
 }
 
 export function getCreateEventSteps(type: CreateEventType): CreateEventStepConfig[] {
-  const noun = type === "needs" ? "need" : "cause"
+  if (type === "needs") {
+    return [
+      { id: "needs-basics", label: "Basic information" },
+      { id: "needs-config", label: "Need type config" },
+    ]
+  }
 
   return [
     { id: "basics", label: "First of all..." },
-    { id: "about", label: `About this ${noun}` },
-    { id: "settings", label: `${type === "needs" ? "Need" : "Cause"} settings` },
+    { id: "about", label: "About this cause" },
+    { id: "settings", label: "Cause settings" },
   ]
 }
 
@@ -97,5 +126,15 @@ export function createInitialFormState(): CreateEventFormState {
     ngoCollaboration: false,
     ngoOrganization: "",
     moreSettingsOpen: false,
+    financialDonations: true,
+    allowOverfunding: false,
+    inKindDonations: false,
+    inKindItems: [],
+    deliveryByDelivery: true,
+    deliveryByPickup: false,
+    deliveryAddress: "",
+    deliveryInstructions: "",
+    pickupAddress: "",
+    pickupInstructions: "",
   }
 }

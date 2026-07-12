@@ -1,0 +1,505 @@
+{
+  "event": {
+    "id": "weekend-teaching-program",
+    "kind": "cause",
+    "status": "active",
+    "statusLabel": "Active",
+    "breadcrumb": [
+      "Events",
+      "Causes",
+      "Weekend teaching program at Makoko community"
+    ],
+    "title": "Weekend teaching program at Makoko community",
+    "coverImages": [],
+    "meta": [
+      {
+        "id": "date",
+        "icon": "calendar",
+        "label": "Date",
+        "value": "6th Dec 2025, 8AM to 5PM"
+      },
+      {
+        "id": "volunteers",
+        "icon": "volunteers",
+        "label": "Volunteers (joined)",
+        "value": "10 volunteers (0 joined)"
+      },
+      {
+        "id": "visibility",
+        "icon": "visibility",
+        "label": "Visibility",
+        "value": "Public"
+      },
+      {
+        "id": "type",
+        "icon": "type",
+        "label": "Volunteering type",
+        "value": "In person"
+      },
+      {
+        "id": "contact",
+        "icon": "contact",
+        "label": "Contact",
+        "value": "Daniel Osonuga"
+      },
+      {
+        "id": "updated",
+        "icon": "updated",
+        "label": "Last updated",
+        "value": "4th December 2025, 08:30 PM",
+        "avatarInitial": "A"
+      }
+    ],
+    "about": {
+      "label": "About this cause",
+      "description": "Join us in providing quality education to children in the Makoko waterfront community. We need passionate volunteers to teach basic literacy and numeracy skills to children aged 6-12.",
+      "categories": [
+        "Youth Development",
+        "Children's Welfare"
+      ],
+      "requirements": [
+        "Teaching experience preferred",
+        "Patience with children",
+        "Available on weekends",
+        "Bring teaching materials if possible"
+      ],
+      "skills": [
+        "IT Training",
+        "Teaching",
+        "Youth Mentoring",
+        "Public Speaking",
+        "Counselling/Mentoring"
+      ]
+    },
+    "certificate": {
+      "kindLabel": "CAUSE",
+      "heading": "Certificate of Participation",
+      "presentedTo": "THIS CERTIFICATE IS PRESENTED TO",
+      "recipientName": "Volunteer's name",
+      "body": "For successfully volunteering as [skill name] to [Event name] on the [date of event]",
+      "signatureName": "Name",
+      "signatureRole": "Position, Company"
+    },
+    "stats": {
+      "volunteers": {
+        "current": 5,
+        "max": 10
+      },
+      "donations": {
+        "current": "₦40,000",
+        "max": "400,000"
+      },
+      "sessions": {
+        "current": 1,
+        "max": 5
+      },
+      "attendance": "100%"
+    },
+    "sessionsTotal": 5,
+    "sessions": [
+      {
+        "id": "s1",
+        "month": "DEC",
+        "day": "6",
+        "time": "8AM - 5PM",
+        "title": "Day 2 - Weekend teaching program at makoko",
+        "location": "123 acme road, ikeja, lagos",
+        "happening": true,
+        "attendees": {
+          "avatars": [
+            {
+              "initial": "A",
+              "tone": "purple"
+            },
+            {
+              "initial": "D",
+              "tone": "blue"
+            },
+            {
+              "initial": "B",
+              "tone": "blue"
+            }
+          ],
+          "summary": "Abimbola and 3 others is at the event"
+        }
+      },
+      {
+        "id": "s2",
+        "month": "DEC",
+        "day": "7",
+        "time": "8AM - 5PM",
+        "title": "Day 2 - Weekend teaching program at makoko",
+        "location": "123 acme road, ikeja, lagos"
+      },
+      {
+        "id": "s3",
+        "month": "DEC",
+        "day": "8",
+        "time": "8AM - 5PM",
+        "title": "Day 3 - Weekend teaching program at makoko",
+        "location": "123 acme road, ikeja, lagos"
+      },
+      {
+        "id": "s4",
+        "month": "DEC",
+        "day": "9",
+        "time": "8AM - 5PM",
+        "title": "Day 4 - Weekend teaching program at makoko",
+        "location": "123 acme road, ikeja, lagos"
+      },
+      {
+        "id": "s5",
+        "month": "DEC",
+        "day": "10",
+        "time": "8AM - 5PM",
+        "title": "Day 5 - Weekend teaching program at makoko",
+        "location": "123 acme road, ikeja, lagos"
+      }
+    ],
+    "volunteers": {
+      "totals": {
+        "volunteers": {
+          "current": 5,
+          "max": 10
+        },
+        "spotsLeft": 5,
+        "pending": 4,
+        "waitlists": 1
+      },
+      "capacity": [
+        {
+          "skill": "Counselling/Mentoring",
+          "filled": 1,
+          "total": 2
+        },
+        {
+          "skill": "IT Training",
+          "filled": 1,
+          "total": 2
+        },
+        {
+          "skill": "Public Speaking",
+          "filled": 1,
+          "total": 2
+        },
+        {
+          "skill": "Teaching",
+          "filled": 0,
+          "total": 2
+        },
+        {
+          "skill": "Youth Mentoring",
+          "filled": 2,
+          "total": 2
+        }
+      ],
+      "rows": [
+        {
+          "id": "v1",
+          "name": "Abimbola Malik",
+          "handle": "abimbola_malik",
+          "email": "abimbola.malik@email.com",
+          "phone": "+234 701 234 5678",
+          "avatarTone": "orange",
+          "isNew": true,
+          "skills": [
+            "IT Training",
+            "Counselling/Mentoring"
+          ],
+          "reason": "I have always wanted to volunteer to help children in under-represented communities",
+          "status": "pending",
+          "dateApplied": "Just now",
+          "dateJoined": "23 December 2025",
+          "reliability": 87
+        },
+        {
+          "id": "v2",
+          "name": "Boluwatife Jubu",
+          "handle": "boluwatife_jubu",
+          "email": "boluwatife.jubu@email.com",
+          "phone": "+234 702 111 2222",
+          "avatarTone": "orange",
+          "skills": [
+            "Counselling/Mentoring"
+          ],
+          "reason": null,
+          "status": "pending",
+          "dateApplied": "2 mins ago",
+          "dateJoined": "20 December 2025",
+          "reliability": 75
+        },
+        {
+          "id": "v3",
+          "name": "David Bamidele",
+          "handle": "david_bamidele",
+          "email": "david.bamidele@email.com",
+          "phone": "+234 703 333 4444",
+          "avatarTone": "orange",
+          "isNew": true,
+          "skills": [
+            "Public Speaking"
+          ],
+          "reason": null,
+          "status": "pending",
+          "dateApplied": "7 Jan 12:20 PM",
+          "dateJoined": "18 December 2025",
+          "reliability": 60
+        },
+        {
+          "id": "v4",
+          "name": "Daniel Osonuga",
+          "handle": "daniel_osonuga",
+          "email": "daniel.osonuga@email.com",
+          "phone": "+234 704 555 6666",
+          "avatarTone": "blue",
+          "avatarImage": "",
+          "skills": [
+            "Teaching"
+          ],
+          "reason": null,
+          "status": "pending",
+          "dateApplied": "7 Jan 11:40 AM",
+          "dateJoined": "12 December 2025",
+          "reliability": 35
+        },
+        {
+          "id": "v5",
+          "name": "Chidera Okafor",
+          "handle": "chidera_okafor",
+          "email": "chidera.okafor@email.com",
+          "phone": "+234 705 777 8888",
+          "avatarTone": "orange",
+          "skills": [
+            "Youth Mentoring"
+          ],
+          "reason": "teach coding to young girls",
+          "status": "accepted",
+          "dateApplied": "7 Jan 11:30 AM",
+          "dateJoined": "10 December 2025",
+          "reliability": 92
+        },
+        {
+          "id": "v6",
+          "name": "David Liu",
+          "handle": "david_liu",
+          "email": "david.liu@email.com",
+          "phone": "+234 706 999 0000",
+          "avatarTone": "orange",
+          "skills": [
+            "Counselling/Mentoring"
+          ],
+          "reason": "help build a local school",
+          "status": "accepted",
+          "dateApplied": "7 Jan 11:00 AM",
+          "dateJoined": "9 December 2025",
+          "reliability": 68
+        },
+        {
+          "id": "v7",
+          "name": "Emily Smith",
+          "handle": "emily_smith",
+          "email": "emily.smith@email.com",
+          "phone": "+234 707 121 3141",
+          "avatarTone": "orange",
+          "skills": [
+            "Teaching"
+          ],
+          "reason": "mentor kids in foster care",
+          "status": "accepted",
+          "dateApplied": "7 Jan 11:00 AM",
+          "dateJoined": "8 December 2025",
+          "reliability": 81
+        },
+        {
+          "id": "v8",
+          "name": "Frank Thomas",
+          "handle": "frank_thomas",
+          "email": "frank.thomas@email.com",
+          "phone": "+234 708 151 6171",
+          "avatarTone": "orange",
+          "skills": [
+            "Public Speaking"
+          ],
+          "reason": null,
+          "status": "accepted",
+          "dateApplied": "7 Jan 11:00 AM",
+          "dateJoined": "7 December 2025",
+          "reliability": 54
+        },
+        {
+          "id": "v9",
+          "name": "Grace Chen",
+          "handle": "grace_chen",
+          "email": "grace.chen@email.com",
+          "phone": "+234 709 181 9202",
+          "avatarTone": "orange",
+          "skills": [
+            "IT Training"
+          ],
+          "reason": "offer free tech support to schools",
+          "status": "waitlist",
+          "dateApplied": "7 Jan 11:00 AM",
+          "dateJoined": "6 December 2025",
+          "reliability": 45
+        }
+      ]
+    },
+    "donations": {
+      "goal": "₦400,000",
+      "availableForWithdrawal": "₦200,000.00",
+      "amountWithdrawn": "₦0.00",
+      "rows": [
+        {
+          "id": "#100132",
+          "donor": "Barry Allen",
+          "avatarTone": "purple",
+          "channel": "card",
+          "amount": "₦8,750.00",
+          "date": "21st Jan, 9:00 AM"
+        },
+        {
+          "id": "#100131",
+          "donor": "Caitlin Snow",
+          "avatarTone": "orange",
+          "channel": "bank-transfer",
+          "amount": "₦12,500.00",
+          "date": "20th Jan, 11:15 AM"
+        },
+        {
+          "id": "#100130",
+          "donor": "Oliver Queen",
+          "avatarTone": "green",
+          "channel": "card",
+          "amount": "₦25,000.00",
+          "date": "19th Jan, 3:45 PM"
+        },
+        {
+          "id": "#100129",
+          "donor": "Iris West",
+          "avatarTone": "blue",
+          "channel": "card",
+          "amount": "₦5,000.00",
+          "date": "18th Jan, 8:30 AM"
+        },
+        {
+          "id": "#100128",
+          "donor": "Cisco Ramon",
+          "avatarTone": "purple",
+          "channel": "bank-transfer",
+          "amount": "₦40,000.00",
+          "date": "17th Jan, 1:10 PM"
+        },
+        {
+          "id": "#100127",
+          "donor": "Felicity Smoak",
+          "avatarTone": "orange",
+          "channel": "card",
+          "amount": "₦10,000.00",
+          "date": "16th Jan, 6:20 PM"
+        }
+      ],
+      "raised": "₦200,000.00",
+      "raisedValue": 200000,
+      "goalValue": 400000
+    },
+    "reviews": {
+      "averageRating": 4.8,
+      "totalReviews": 24,
+      "rows": [
+        {
+          "id": "r1",
+          "name": "Chidera Okafor",
+          "avatarTone": "orange",
+          "rating": 5,
+          "date": "7 Jan 2025",
+          "comment": "An incredibly well organised program. The children were engaged and the coordinators were supportive throughout the day."
+        },
+        {
+          "id": "r2",
+          "name": "David Liu",
+          "avatarTone": "orange",
+          "rating": 5,
+          "date": "6 Jan 2025",
+          "comment": "Loved every bit of it. Would definitely volunteer again."
+        },
+        {
+          "id": "r3",
+          "name": "Emily Smith",
+          "avatarTone": "orange",
+          "rating": 4,
+          "date": "5 Jan 2025",
+          "comment": "Great experience overall, though the venue could be a little more accessible."
+        },
+        {
+          "id": "r4",
+          "name": "Frank Thomas",
+          "avatarTone": "orange",
+          "rating": 5,
+          "date": "4 Jan 2025",
+          "comment": "The impact on the community was clear. Proud to have been a part of this."
+        }
+      ]
+    },
+    "updates": {
+      "rows": [
+        {
+          "id": "u1",
+          "author": "Acme Incorporation",
+          "avatarTone": "orange",
+          "timeAgo": "2 hours ago",
+          "body": "Day 2 went great! The children made huge progress in their reading exercises. Thank you to all the volunteers who showed up today. 🎉",
+          "likes": 24,
+          "comments": 3,
+          "commentList": [
+            {
+              "id": "c1",
+              "author": "Abimbola Malik",
+              "avatarTone": "orange",
+              "date": "5 Jan 15:45",
+              "text": "Thank you for the update!"
+            },
+            {
+              "id": "c2",
+              "author": "Boluwatife Jubu",
+              "avatarTone": "orange",
+              "date": "5 Jan 15:45",
+              "text": "Such a rewarding day, thanks for organising."
+            },
+            {
+              "id": "c3",
+              "author": "Acme admin",
+              "avatarTone": "orange",
+              "date": "5 Jan 15:45",
+              "text": "See everyone next weekend!"
+            }
+          ]
+        },
+        {
+          "id": "u2",
+          "author": "Acme Incorporation",
+          "avatarTone": "orange",
+          "timeAgo": "1 day ago",
+          "body": "Reminder: We start at 8AM sharp tomorrow. Please bring your teaching materials and arrive 15 minutes early for the briefing.",
+          "likes": 12,
+          "comments": 2,
+          "commentList": [
+            {
+              "id": "c4",
+              "author": "Emily Smith",
+              "avatarTone": "orange",
+              "date": "4 Jan 09:12",
+              "text": "Noted, thank you!"
+            },
+            {
+              "id": "c5",
+              "author": "Frank Thomas",
+              "avatarTone": "orange",
+              "date": "4 Jan 09:30",
+              "text": "Will be there early."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
