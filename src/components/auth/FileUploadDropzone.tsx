@@ -27,19 +27,22 @@ export function FileUploadDropzone({
   const [progress, setProgress] = useState(value ? 100 : 0)
   const [fileSize, setFileSize] = useState<string>(value ? formatFileSize(value.size) : "")
 
-  useEffect(() => {
+  // Sync internal upload state when the controlled `value` changes from outside
+  // (e.g. the parent form clears or presets the file). Adjusting during render is
+  // the recommended alternative to a prop-syncing effect.
+  const [prevValue, setPrevValue] = useState(value)
+  if (value !== prevValue) {
+    setPrevValue(value)
     if (value && status === "idle") {
       setStatus("uploaded")
       setProgress(100)
       setFileSize(formatFileSize(value.size))
-    }
-
-    if (!value && status !== "idle") {
+    } else if (!value && status !== "idle") {
       setStatus("idle")
       setProgress(0)
       setFileSize("")
     }
-  }, [status, value])
+  }
 
   useEffect(() => {
     if (status !== "uploading") return

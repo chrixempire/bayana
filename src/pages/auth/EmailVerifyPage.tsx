@@ -21,21 +21,22 @@ export function EmailVerifyPage() {
 
   const expires = searchParams.get("expires")?.replace(/\.$/, "") ?? ""
   const signature = searchParams.get("signature")?.replace(/\.$/, "") ?? ""
+  const linkComplete = Boolean(id && hash && expires && signature)
 
-  const [state, setState] = useState<VerifyState>(() => (getAuthToken() ? "loading" : "missing-session"))
-  const [errorMessage, setErrorMessage] = useState("")
+  const [state, setState] = useState<VerifyState>(() => {
+    if (!getAuthToken()) return "missing-session"
+    return linkComplete ? "loading" : "error"
+  })
+  const [errorMessage, setErrorMessage] = useState(() =>
+    getAuthToken() && !linkComplete ? "This verification link is incomplete or invalid." : "",
+  )
 
   useEffect(() => {
     if (hasStarted.current) return
     hasStarted.current = true
 
     if (!getAuthToken()) return
-
-    if (!id || !hash || !expires || !signature) {
-      setState("error")
-      setErrorMessage("This verification link is incomplete or invalid.")
-      return
-    }
+    if (!id || !hash || !expires || !signature) return
 
     void verifyEmail(id, hash, expires, signature)
       .then((response) => {

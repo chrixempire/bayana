@@ -118,7 +118,6 @@ export function CreateEventDateRangeField({
               onSelect={handleSelect}
               defaultMonth={draft?.from ?? new Date()}
               captionLayout="dropdown"
-              navLayout="after"
               startMonth={new Date(2020, 0)}
               endMonth={new Date(2036, 11)}
               weekStartsOn={0}

@@ -26,7 +26,7 @@ function RadioDot({ className }: { className?: string }) {
   return <span className={cn("rounded-full bg-white", className)} aria-hidden="true" />
 }
 
-export interface RadioGroupProps extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> {}
+export type RadioGroupProps = React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 
 export function RadioGroup({ className, ...props }: RadioGroupProps) {
   return <RadioGroupPrimitive.Root className={cn("grid gap-3", className)} {...props} />

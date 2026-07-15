@@ -6,25 +6,32 @@ import "react-day-picker/style.css"
 
 export type CalendarProps = DayPickerProps
 
-export function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+export function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  navLayout = "around",
+  ...props
+}: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      navLayout={navLayout}
       className={cn("event-calendar p-0", className)}
       classNames={{
         months: "flex flex-row gap-6",
-        month: "flex flex-col gap-3",
-        month_caption: "relative flex h-9 items-center justify-center",
+        month: "relative flex flex-col gap-3",
+        month_caption: "relative flex h-9 items-center justify-center px-9",
         caption_label: "sr-only",
         dropdowns: "flex items-center gap-2",
         dropdown:
           "h-8 appearance-none rounded-lg border border-border-input-default-200 bg-input-surface px-2 pr-7 text-sm font-medium leading-[22px] text-text-events-strong outline-none focus-visible:border-border-input-active",
         dropdown_root: "relative inline-flex",
-        nav: "absolute inset-x-0 top-0 flex items-center justify-between",
+        nav: "flex items-center gap-1",
         button_previous:
-          "inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-icon-neutral hover:bg-bg-default-100",
+          "absolute left-0 top-0.5 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-icon-neutral transition-colors hover:bg-bg-default-100 disabled:pointer-events-none disabled:opacity-40 aria-disabled:pointer-events-none aria-disabled:opacity-40",
         button_next:
-          "inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-icon-neutral hover:bg-bg-default-100",
+          "absolute right-0 top-0.5 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-icon-neutral transition-colors hover:bg-bg-default-100 disabled:pointer-events-none disabled:opacity-40 aria-disabled:pointer-events-none aria-disabled:opacity-40",
         month_grid: "w-full border-collapse",
         weekdays: "flex",
         weekday:
@@ -50,7 +57,7 @@ export function Calendar({ className, classNames, showOutsideDays = true, ...pro
       components={{
         Chevron: ({ orientation, className: chevronClassName, ...chevronProps }) => {
           const Icon = orientation === "left" ? ChevronLeft : ChevronRight
-          return <Icon className={cn("size-4", chevronClassName)} {...chevronProps} />
+          return <Icon className={cn("size-4 fill-none", chevronClassName)} {...chevronProps} />
         },
       }}
       {...props}

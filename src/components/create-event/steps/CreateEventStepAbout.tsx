@@ -41,14 +41,21 @@ export function CreateEventStepAbout({
     return pool.filter((skill) => skill.toLowerCase().includes(query))
   }, [form.skills, skillInput])
 
+  const resetSkillHighlight = () => {
+    setHighlightedSkillIndex(-1)
+    skillOptionRefs.current = []
+  }
+
   const addSkill = (skill: string) => {
     if (form.skills.includes(skill) || form.skills.length >= 10) return
     onChange({ skills: [...form.skills, skill] })
     setSkillInput("")
+    resetSkillHighlight()
   }
 
   const removeSkill = (skill: string) => {
     onChange({ skills: form.skills.filter((item) => item !== skill) })
+    resetSkillHighlight()
   }
 
   const commitSkillInput = () => {
@@ -107,11 +114,6 @@ export function CreateEventStepAbout({
       closeSkillsList()
     }
   }
-
-  useEffect(() => {
-    setHighlightedSkillIndex(-1)
-    skillOptionRefs.current = []
-  }, [skillInput, skillSuggestions.length])
 
   useEffect(() => {
     if (highlightedSkillIndex < 0) return
@@ -182,7 +184,10 @@ export function CreateEventStepAbout({
                 density="compact"
                 value={skillInput}
                 onFocus={() => setSkillsFocused(true)}
-                onChange={(event) => setSkillInput(event.target.value)}
+                onChange={(event) => {
+                  setSkillInput(event.target.value)
+                  resetSkillHighlight()
+                }}
                 onKeyDown={handleSkillsKeyDown}
                 placeholder="Type skills"
                 role="combobox"

@@ -29,7 +29,6 @@ export function NgoProfileStep({
   onSkip: () => void
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string>("")
   const [logoError, setLogoError] = useState("")
   const [causeAreas, setCauseAreas] = useState<CauseAreaSelection[]>([])
   const [isLoadingCauses, setIsLoadingCauses] = useState(true)
@@ -59,17 +58,15 @@ export function NgoProfileStep({
     }
   }, [])
 
+  const logoPreviewUrl = useMemo(
+    () => (data.logo ? URL.createObjectURL(data.logo) : ""),
+    [data.logo],
+  )
+
   useEffect(() => {
-    if (!data.logo) {
-      setLogoPreviewUrl("")
-      return
-    }
-
-    const nextUrl = URL.createObjectURL(data.logo)
-    setLogoPreviewUrl(nextUrl)
-
-    return () => URL.revokeObjectURL(nextUrl)
-  }, [data.logo])
+    if (!logoPreviewUrl) return
+    return () => URL.revokeObjectURL(logoPreviewUrl)
+  }, [logoPreviewUrl])
 
   const handleLogoChange = (file?: File) => {
     if (!file) return

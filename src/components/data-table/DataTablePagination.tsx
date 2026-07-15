@@ -25,7 +25,7 @@ export type DataTablePaginationProps = {
 }
 
 /** e.g. page 1 → 1, 2, 3, …, last — page 3 → 1, …, 3, 4, …, last */
-export function buildPageItems(current: number, totalPages: number): (number | "ellipsis")[] {
+function buildPageItems(current: number, totalPages: number): (number | "ellipsis")[] {
   if (totalPages <= 0) return []
   if (totalPages <= 3) {
     return Array.from({ length: totalPages }, (_, index) => index + 1)

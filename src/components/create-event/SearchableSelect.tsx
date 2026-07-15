@@ -49,10 +49,16 @@ export function SearchableSelect({
 
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen)
+    setHighlightedIndex(-1)
     if (!nextOpen) {
       setQuery("")
-      setHighlightedIndex(-1)
     }
+  }
+
+  const handleQueryChange = (next: string) => {
+    setQuery(next)
+    setHighlightedIndex(-1)
+    optionRefs.current = []
   }
 
   const selectOption = useCallback(
@@ -97,17 +103,6 @@ export function SearchableSelect({
       close()
     }
   }
-
-  useEffect(() => {
-    if (!open) return
-    setHighlightedIndex(-1)
-    searchRef.current?.focus()
-  }, [open])
-
-  useEffect(() => {
-    setHighlightedIndex(-1)
-    optionRefs.current = []
-  }, [query])
 
   useEffect(() => {
     if (highlightedIndex < 0) return
@@ -171,7 +166,7 @@ export function SearchableSelect({
             aria-activedescendant={activeOptionId}
             autoComplete="off"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => handleQueryChange(event.target.value)}
             placeholder={searchPlaceholder}
             className="min-w-0 flex-1 bg-transparent text-sm font-normal leading-[22px] tracking-[-0.1px] text-text-events-strong outline-none placeholder:text-[#A0ACB6]"
           />

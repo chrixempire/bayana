@@ -1,7 +1,7 @@
 import { cn } from "../../lib/utils"
 
 /** Copy aligned with Figma “Changes are automatically saved” card. */
-export const autosaveCalloutCopy = {
+const autosaveCalloutCopy = {
   title: "Changes are automatically saved",
   description:
     "Don't worry about manually saving the changes you've made by clicking a button. We've taken care of that for you",
