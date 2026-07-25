@@ -1,35 +1,53 @@
 import { useMemo, useState } from "react"
-import { ChevronRight, Search, Star } from "lucide-react"
 import { DataTableEmptyState, DataTablePagination, FilterDropdown } from "../data-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 import { Checkbox } from "../ui/checkbox"
 import { Input } from "../ui/input"
 import { PersonAvatar } from "../events/detail/PersonAvatar"
+import { elevatedCardSurfaceClassName } from "../events/detail/detail-primitives"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { ReviewDetailsModal } from "./ReviewDetailsModal"
 import { cn } from "../../lib/utils"
 import { REVIEW_ROWS, REVIEW_TOTALS, type ReviewRow } from "../../pages/dashboard/reviews-data"
 
-function Stars({ rating }: { rating: number }) {
+function StarRating({ rating }: { rating: number }) {
   return (
-    <span className="inline-flex items-center gap-0.5">
+    <span className="inline-flex items-center gap-1">
       {Array.from({ length: 5 }, (_, i) => (
-        <Star
+        <EventIcon
           key={i}
-          className={cn("size-4", i < rating ? "fill-[#f79e19] text-[#f79e19]" : "fill-bg-default-100 text-bg-default-100")}
+          name={i < rating ? "star-fill-accent" : "star-fill"}
+          size={16}
+          className="shrink-0"
         />
       ))}
     </span>
   )
 }
 
-function StatCard({ label, value, star }: { label: string; value: string | number; star?: boolean }) {
+function ReviewsStatCard({
+  label,
+  value,
+  star,
+}: {
+  label: string
+  value: string | number
+  star?: boolean
+}) {
   return (
-    <div className="flex flex-1 flex-col gap-2 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-      <span className="text-sm leading-[22px] text-text-table-header">{label}</span>
-      <span className="flex items-center gap-1.5 font-display text-2xl font-semibold leading-8 text-text-events-strong">
-        {value}
-        {star ? <Star className="size-5 fill-[#f79e19] text-[#f79e19]" /> : null}
-      </span>
+    <div className={cn(elevatedCardSurfaceClassName, "flex min-w-0 flex-1 flex-col gap-3 p-4")}>
+      <span className="truncate text-sm font-[510] leading-[22px] text-text-table-header">{label}</span>
+      <div className="flex items-center gap-1">
+        <span className="font-display text-xl font-semibold leading-7 text-text-events-strong">{value}</span>
+        {star ? (
+          <EventIcon
+            name={value === "0.0" || value === 0 ? "star-fill" : "star-fill-accent"}
+            size={16}
+            className="shrink-0"
+          />
+        ) : null}
+      </div>
     </div>
   )
 }
@@ -83,20 +101,30 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
     setSelectedIds(next)
   }
 
+  const clearFilters = () => {
+    setRatingFilter("All ratings")
+    setQuery("")
+    setPage(1)
+  }
+
   const emptyState = filtersActive
     ? { title: "No result found", description: "We couldn't find any result based on the filter" }
-    : { title: "No reviews yet", description: "Reviews left by volunteers will appear here" }
+    : {
+        title: "No review yet",
+        description: "Once a volunteer drops a review, it would appear here",
+      }
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <StatCard label="Average ratings" value={totals.average} star />
-        <StatCard label="Total reviews" value={totals.total} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <ReviewsStatCard label="Average ratings" value={totals.average} star />
+        <ReviewsStatCard label="Total reviews" value={totals.total} />
       </div>
 
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex flex-wrap items-center gap-2">
           <FilterDropdown
+            appearance="events"
             label="Ratings"
             options={RATING_OPTIONS}
             value={ratingFilter}
@@ -105,9 +133,24 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
               setPage(1)
             }}
           />
-          <FilterDropdown label="Date" options={DATE_OPTIONS} value={dateSort} onValueChange={setDateSort} />
+          <FilterDropdown
+            appearance="events"
+            label="Date"
+            options={DATE_OPTIONS}
+            value={dateSort}
+            onValueChange={setDateSort}
+          />
+          {filtersActive ? (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="type-events-filter cursor-pointer px-1 font-medium text-text-nav-tab-active transition-colors hover:text-bg-accent"
+            >
+              Clear filters
+            </button>
+          ) : null}
         </div>
-        <div className="w-full xl:max-w-[300px]">
+        <div className="w-full xl:w-[400px]">
           <Input
             density="compact"
             value={query}
@@ -116,25 +159,26 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
               setPage(1)
             }}
             placeholder="Search volunteers"
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label="Search reviews"
+            className="h-8 min-h-8 rounded-[10px] border-0 bg-bg-default-100 px-3 shadow-none"
           />
         </div>
       </div>
 
-      <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+      <div className={cn(elevatedCardSurfaceClassName, "overflow-hidden")}>
         <Table contained={false} className="w-full table-fixed">
           <colgroup>
-            <col style={{ width: "3rem" }} />
-            <col style={{ width: "26%" }} />
-            <col style={{ width: "18%" }} />
-            <col style={{ width: "auto" }} />
-            <col style={{ width: "18%" }} />
-            <col style={{ width: "3rem" }} />
+            <col style={{ width: "48px" }} />
+            <col style={{ width: "300px" }} />
+            <col style={{ width: "200px" }} />
+            <col />
+            <col style={{ width: "160px" }} />
+            <col style={{ width: "48px" }} />
           </colgroup>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10">
+              <TableHead className="w-12">
                 <Checkbox
                   size="sm"
                   checked={allPagedSelected ? true : pagedSelected > 0 ? "indeterminate" : false}
@@ -159,7 +203,11 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
               </TableRow>
             ) : (
               paged.map((row) => (
-                <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelectedReview(row)}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  onClick={() => setSelectedReview(row)}
+                >
                   <TableCell onClick={(event) => event.stopPropagation()}>
                     <Checkbox
                       size="sm"
@@ -178,7 +226,7 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Stars rating={row.rating} />
+                    <StarRating rating={row.rating} />
                   </TableCell>
                   <TableCell>
                     <span className="type-table-cell-secondary line-clamp-1">
@@ -186,8 +234,15 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
                     </span>
                   </TableCell>
                   <TableCell className="type-table-cell-primary">{row.date}</TableCell>
-                  <TableCell className="text-right">
-                    <ChevronRight className="ml-auto size-4 text-icon-neutral" />
+                  <TableCell className="text-right" onClick={(event) => event.stopPropagation()}>
+                    <button
+                      type="button"
+                      aria-label={`Open review from ${row.name}`}
+                      onClick={() => setSelectedReview(row)}
+                      className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-icon-neutral outline-none transition-colors hover:bg-bg-default-100 focus-visible:ring-2 focus-visible:ring-border-input-active"
+                    >
+                      <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
+                    </button>
                   </TableCell>
                 </TableRow>
               ))

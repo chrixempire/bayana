@@ -1,5 +1,16 @@
 import * as React from "react"
 
+import {
+  tableCellActionsClassName,
+  tableCellClassName,
+  tableCellSelectClassName,
+  tableHeadActionsClassName,
+  tableHeadCellClassName,
+  tableHeadSelectClassName,
+  tableHeaderRowClassName,
+  tableRowClassName,
+  tableSelectControlClassName,
+} from "../../lib/table-styles"
 import { cn } from "../../lib/utils"
 
 type TableProps = React.ComponentProps<"table"> & {
@@ -11,7 +22,7 @@ function Table({ className, contained = true, ...props }: TableProps) {
   const table = (
     <table
       data-slot="table"
-      className={cn("w-full border-separate border-spacing-0 caption-bottom text-sm", className)}
+      className={cn("w-full border-collapse caption-bottom text-sm", className)}
       {...props}
     />
   )
@@ -26,17 +37,17 @@ function Table({ className, contained = true, ...props }: TableProps) {
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-  return <thead data-slot="table-header" className={cn("[&_tr]:border-b", className)} {...props} />
-}
-
-function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   return (
-    <tbody
-      data-slot="table-body"
-      className={cn("[&_tr:last-child]:border-0", className)}
+    <thead
+      data-slot="table-header"
+      className={cn("bg-bg-table-header", className)}
       {...props}
     />
   )
+}
+
+function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+  return <tbody data-slot="table-body" className={className} {...props} />
 }
 
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
@@ -50,16 +61,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
-  return (
-    <tr
-      data-slot="table-row"
-      className={cn(
-        "border-b border-border-default-100 transition-colors hover:bg-bg-on-canvas data-[state=selected]:bg-bg-accent-soft/40",
-        className,
-      )}
-      {...props}
-    />
-  )
+  return <tr data-slot="table-row" className={cn(tableRowClassName, className)} {...props} />
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
@@ -67,7 +69,8 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-10 whitespace-nowrap bg-bg-on-canvas px-3 text-left align-middle text-xs font-medium leading-[18px] text-text-neutral-400 [&:has([role=checkbox])]:pr-0",
+        tableHeadCellClassName,
+        "whitespace-nowrap text-left",
         className,
       )}
       {...props}
@@ -79,10 +82,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   return (
     <td
       data-slot="table-cell"
-      className={cn(
-        "px-3 py-3 align-middle text-sm leading-[22px] text-text-default-500 [&:has([role=checkbox])]:pr-0",
-        className,
-      )}
+      className={cn(tableCellClassName, className)}
       {...props}
     />
   )
@@ -98,4 +98,19 @@ function TableCaption({ className, ...props }: React.ComponentProps<"caption">) 
   )
 }
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption }
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+  tableHeadSelectClassName,
+  tableHeadActionsClassName,
+  tableCellSelectClassName,
+  tableCellActionsClassName,
+  tableHeaderRowClassName,
+  tableSelectControlClassName,
+}

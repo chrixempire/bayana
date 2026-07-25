@@ -1,30 +1,19 @@
 import { useState } from "react"
-import {
-  Banknote,
-  Bell,
-  CheckCircle2,
-  Clock,
-  Gift,
-  MessageSquare,
-  Settings,
-  Star,
-  Users,
-  UserPlus,
-  X,
-} from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { EventIcon, type EventIconName } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { cn } from "../../lib/utils"
 import { NOTIFICATIONS, type NotificationGroup, type NotificationIcon } from "./header-data"
 
-const ICON_MAP: Record<NotificationIcon, { Icon: typeof Bell; tone: string }> = {
-  "event-complete": { Icon: CheckCircle2, tone: "bg-bg-success-soft text-text-success" },
-  reminder: { Icon: Clock, tone: "bg-bg-accent-soft text-bg-accent" },
-  donation: { Icon: Gift, tone: "bg-bg-success-soft text-text-success" },
-  volunteer: { Icon: UserPlus, tone: "bg-bg-info-soft text-text-info" },
-  collaboration: { Icon: Users, tone: "bg-bg-accent-soft text-bg-accent" },
-  message: { Icon: MessageSquare, tone: "bg-bg-info-soft text-text-info" },
-  payout: { Icon: Banknote, tone: "bg-bg-success-soft text-text-success" },
-  ratings: { Icon: Star, tone: "bg-bg-warning-soft text-text-warning" },
+const ICON_MAP: Record<NotificationIcon, { icon: EventIconName; tone: string }> = {
+  "event-complete": { icon: "check-circle-fill", tone: "bg-bg-success-soft text-text-success" },
+  reminder: { icon: "time-fill", tone: "bg-bg-accent-soft text-bg-accent" },
+  donation: { icon: "wallet-2-fill", tone: "bg-bg-success-soft text-text-success" },
+  volunteer: { icon: "user-add-fill", tone: "bg-bg-info-soft text-text-info" },
+  collaboration: { icon: "group-fill", tone: "bg-bg-accent-soft text-bg-accent" },
+  message: { icon: "inbox-fill", tone: "bg-bg-info-soft text-text-info" },
+  payout: { icon: "bank-fill", tone: "bg-bg-success-soft text-text-success" },
+  ratings: { icon: "star-fill-accent", tone: "bg-bg-warning-soft text-text-warning" },
 }
 
 const GROUPS: NotificationGroup[] = ["Today", "Yesterday", "Older"]
@@ -43,7 +32,7 @@ export function HeaderNotifications() {
         aria-label="Notifications"
         className="relative inline-flex size-9 cursor-pointer items-center justify-center rounded-lg text-text-on-solid-bg transition-colors hover:bg-bg-on-nav outline-none focus-visible:ring-2 focus-visible:ring-white/30"
       >
-        <Bell className="size-5" />
+        <EventIcon name="notification-fill" size={EVENT_ICON_SIZE.meta} inverted />
         {unreadCount > 0 ? (
           <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-button-negative" aria-hidden />
         ) : null}
@@ -61,7 +50,7 @@ export function HeaderNotifications() {
             onClick={() => setOpen(false)}
             className="inline-flex size-7 items-center justify-center rounded-full bg-bg-default-100 text-icon-neutral transition-colors hover:bg-bg-active-200"
           >
-            <X className="size-4" />
+            <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
         </div>
 
@@ -102,7 +91,7 @@ export function HeaderNotifications() {
             aria-label="Notification settings"
             className="inline-flex size-7 items-center justify-center rounded-lg text-icon-neutral transition-colors hover:bg-bg-default-100"
           >
-            <Settings className="size-4" />
+            <EventIcon name="settings-3-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
         </div>
 
@@ -114,7 +103,7 @@ export function HeaderNotifications() {
               <div key={group}>
                 <p className="px-4 pb-1 pt-3 text-xs font-medium text-text-table-header">{group}</p>
                 {items.map((item) => {
-                  const { Icon, tone } = ICON_MAP[item.icon]
+                  const { icon, tone } = ICON_MAP[item.icon]
                   return (
                     <button
                       key={item.id}
@@ -125,7 +114,7 @@ export function HeaderNotifications() {
                       )}
                     >
                       <span className={cn("inline-flex size-9 shrink-0 items-center justify-center rounded-full", tone)}>
-                        <Icon className="size-4" />
+                        <EventIcon name={icon} size={EVENT_ICON_SIZE.meta} />
                       </span>
                       <div className="flex min-w-0 flex-1 flex-col">
                         <div className="flex items-center justify-between gap-2">

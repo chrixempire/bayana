@@ -1,6 +1,7 @@
 import { useRef, useState } from "react"
-import { Award, Search } from "lucide-react"
 import { cn } from "../../../lib/utils"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Checkbox } from "../../ui/checkbox"
@@ -117,7 +118,7 @@ export function IssueCertificateModal({
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <span className="flex size-12 items-center justify-center rounded-xl bg-[#eaf6ff] text-button-primary">
-          <Award className="size-6" />
+          <EventIcon name="award-fill" size={24} />
         </span>
         <h2 className="font-display text-xl font-semibold leading-7 tracking-[-0.2px] text-text-events-strong">
           Issue certificate
@@ -134,7 +135,7 @@ export function IssueCertificateModal({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search volunteers"
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label="Search volunteers"
           />
         </div>

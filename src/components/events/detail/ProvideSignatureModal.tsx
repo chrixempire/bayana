@@ -1,9 +1,10 @@
 import { useRef, useState } from "react"
-import { Info, PenLine } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Modal } from "../../ui/modal"
 import { toast } from "../../../hooks/use-toast"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -85,7 +86,7 @@ function SignaturePad({ onDrawnChange }: { onDrawnChange: (hasInk: boolean) => v
       />
       {empty ? (
         <span className="pointer-events-none absolute inset-0 flex items-center justify-center gap-1.5 text-sm text-input-placeholder">
-          <PenLine className="size-4" />
+          <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.meta} />
           Start drawing...
         </span>
       ) : (
@@ -175,7 +176,7 @@ export function ProvideSignatureModal({
           </Field>
 
           <div className="flex items-start gap-2 rounded-xl bg-bg-on-canvas p-3">
-            <Info className="mt-0.5 size-4 shrink-0 text-icon-neutral" />
+            <EventIcon name="info-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0 text-icon-neutral" />
             <div className="flex flex-col">
               <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
                 Apply once, use everywhere

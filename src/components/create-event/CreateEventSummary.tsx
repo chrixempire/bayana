@@ -1,4 +1,5 @@
-import { Calendar, Coins, HandCoins, Handshake, MapPin, Package, Users } from "lucide-react"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import {
   formatNaira,
   getDonationSummaryRows,
@@ -96,7 +97,7 @@ export function CreateEventSummary({
             <ul className="flex flex-col gap-3 text-xs leading-5 text-text-events-strong">
               <li className="flex min-w-0 items-center justify-between gap-2">
                 <span className="flex items-center gap-2 text-text-table-header">
-                  <Calendar className="size-4 shrink-0 text-icon-neutral" />
+                  <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
                   Date
                 </span>
                 <span className="text-right font-medium">
@@ -106,7 +107,7 @@ export function CreateEventSummary({
               {collaborator ? (
                 <li className="flex min-w-0 items-center justify-between gap-2">
                   <span className="flex items-center gap-2 text-text-table-header">
-                    <Handshake className="size-4 shrink-0 text-icon-neutral" />
+                    <EventIcon name="group-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
                     Collaborator
                   </span>
                   <span className="truncate text-right font-medium">{collaborator}</span>
@@ -116,7 +117,7 @@ export function CreateEventSummary({
                 <>
                   <li className="flex min-w-0 items-center justify-between gap-2">
                     <span className="flex items-center gap-2 text-text-table-header">
-                      <Package className="size-4 shrink-0 text-icon-neutral" />
+                      <EventIcon name="box-3-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
                       Items ({inKindItems.length})
                     </span>
                     {inKindItems.length > 0 ? (
@@ -132,7 +133,7 @@ export function CreateEventSummary({
                             {item.imageUrl ? (
                               <img src={item.imageUrl} alt="" className="size-full object-cover" />
                             ) : (
-                              <Package className="size-3" />
+                              <EventIcon name="box-3-fill" size={EVENT_ICON_SIZE.chip} />
                             )}
                           </span>
                         ))}
@@ -156,7 +157,7 @@ export function CreateEventSummary({
                 <>
                   <li className="flex min-w-0 items-center justify-between gap-2">
                     <span className="flex items-center gap-2 text-text-table-header">
-                      <Coins className="size-4 shrink-0 text-icon-neutral" />
+                      <EventIcon name="wallet-2-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
                       Target amount
                     </span>
                     <span className="text-right font-medium">{formatNaira(targetAmount)}</span>
@@ -177,21 +178,21 @@ export function CreateEventSummary({
           ) : (
             <ul className="flex flex-col gap-3 text-xs leading-5 text-text-events-strong">
               <li className="flex items-start gap-2">
-                <Calendar className="mt-0.5 size-4 shrink-0 text-icon-neutral" />
+                <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
                 <span>
                   <span className="text-text-table-header">Date — </span>
                   {formatSummaryDateTime(form.dateStart, form.dateEnd, form.timeStart, form.timeEnd)}
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-icon-neutral" />
+                <EventIcon name="location-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
                 <span>
                   <span className="text-text-table-header">Volunteering type — </span>
                   {form.volunteeringType === "in-person" ? "In-person" : "Virtual"}
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Users className="mt-0.5 size-4 shrink-0 text-icon-neutral" />
+                <EventIcon name="user-group-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
                 <span>
                   <span className="text-text-table-header">Volunteer capacity — </span>
                   {displayCapacity}
@@ -201,7 +202,7 @@ export function CreateEventSummary({
               {form.receiveDonations ? (
                 <>
                   <li className="flex items-start gap-2">
-                    <HandCoins className="mt-0.5 size-4 shrink-0 text-icon-neutral" />
+                    <EventIcon name="wallet-2-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
                     <span className="flex w-full min-w-0 justify-between gap-2">
                       <span className="text-text-table-header">Donations</span>
                       <span className="text-right font-medium">{donationRows.donations}</span>

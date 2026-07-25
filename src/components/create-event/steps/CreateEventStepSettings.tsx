@@ -1,4 +1,5 @@
-import { ChevronDown, Clock } from "lucide-react"
+import { EventIcon } from "../../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../events/icons/event-icon-sizes"
 import { RadioGroup } from "../../ui/radio-group"
 import { Input } from "../../ui/input"
 import { CreateEventDateRangeField } from "../CreateEventDateRangeField"
@@ -250,7 +251,7 @@ export function CreateEventStepSettings({
               onChange={(event) => onChange({ timeStart: event.target.value })}
               className="pr-10"
             />
-            <Clock className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-icon-neutral" />
+            <EventIcon name="time-fill" size={EVENT_ICON_SIZE.meta} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
           </div>
           <span className="shrink-0 text-sm leading-[22px] text-text-table-header">to</span>
           <div className="relative min-w-0 flex-1">
@@ -261,7 +262,7 @@ export function CreateEventStepSettings({
               onChange={(event) => onChange({ timeEnd: event.target.value })}
               className="pr-10"
             />
-            <Clock className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-icon-neutral" />
+            <EventIcon name="time-fill" size={EVENT_ICON_SIZE.meta} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
           </div>
         </div>
       </CreateEventFieldGroup>
@@ -284,11 +285,10 @@ export function CreateEventStepSettings({
           onClick={() => onChange({ moreSettingsOpen: !form.moreSettingsOpen })}
         >
           More settings
-          <ChevronDown
-            className={cn(
-              "size-4 text-icon-neutral transition-transform",
-              form.moreSettingsOpen && "rotate-180",
-            )}
+          <EventIcon
+            name="down-fill"
+            size={EVENT_ICON_SIZE.meta}
+            className={cn("transition-transform", form.moreSettingsOpen && "rotate-180")}
           />
         </button>
 

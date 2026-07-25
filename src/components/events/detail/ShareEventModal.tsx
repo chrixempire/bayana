@@ -1,7 +1,8 @@
 import type { ComponentType } from "react"
-import { ImageIcon, Link2, X } from "lucide-react"
 import { Modal } from "../../ui/modal"
 import { toast } from "../../../hooks/use-toast"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 
 type BrandIconProps = { className?: string }
 
@@ -45,8 +46,11 @@ export function ShareEventModal({
     toast({ variant: "success", title: "Link copied to clipboard" })
   }
 
-  const targets: Array<{ id: string; label: string; Icon: ComponentType<BrandIconProps>; className: string; onClick: () => void }> = [
-    { id: "copy", label: "Copy link", Icon: Link2, className: "bg-bg-default-100 text-text-events-strong", onClick: copyLink },
+  const targets: Array<
+    | { id: string; label: string; eventIcon: true; className: string; onClick: () => void }
+    | { id: string; label: string; Icon: ComponentType<BrandIconProps>; className: string; onClick: () => void }
+  > = [
+    { id: "copy", label: "Copy link", eventIcon: true, className: "bg-bg-default-100 text-text-events-strong", onClick: copyLink },
     { id: "facebook", label: "Facebook", Icon: FacebookIcon, className: "bg-[#1877f2] text-white", onClick: () => toast({ title: "Share to Facebook" }) },
     { id: "instagram", label: "Instagram", Icon: InstagramIcon, className: "bg-gradient-to-br from-[#feda75] via-[#d62976] to-[#4f5bd5] text-white", onClick: () => toast({ title: "Share to Instagram" }) },
     { id: "x", label: "X", Icon: XLogoIcon, className: "bg-[#1c1c1c] text-white", onClick: () => toast({ title: "Share to X" }) },
@@ -60,12 +64,12 @@ export function ShareEventModal({
         className="absolute right-4 top-4 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/85 text-text-table-header transition-colors hover:bg-white"
         aria-label="Close"
       >
-        <X className="size-4" />
+        <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
       </button>
 
       <div className="flex flex-col gap-5">
         <div className="relative flex aspect-[361/198] w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#e6d8ff] via-[#f2e7ff] to-[#ffe4cf]">
-          <ImageIcon className="size-9 text-white/70" aria-hidden />
+          <EventIcon name="pic-fill" size={36} className="opacity-70" />
         </div>
 
         <div className="flex flex-col items-center gap-2 text-center">
@@ -86,17 +90,21 @@ export function ShareEventModal({
         </button>
 
         <div className="grid grid-cols-4">
-          {targets.map(({ id, label, Icon, className, onClick }) => (
+          {targets.map((target) => (
             <button
-              key={id}
+              key={target.id}
               type="button"
-              onClick={onClick}
+              onClick={target.onClick}
               className="flex cursor-pointer flex-col items-center gap-2"
             >
-              <span className={`flex size-10 items-center justify-center rounded-full ${className}`}>
-                <Icon className="size-4" />
+              <span className={`flex size-10 items-center justify-center rounded-full ${target.className}`}>
+                {"eventIcon" in target ? (
+                  <EventIcon name="share-2-fill" size={EVENT_ICON_SIZE.meta} />
+                ) : (
+                  <target.Icon className="size-4" />
+                )}
               </span>
-              <span className="text-xs leading-5 text-text-table-header">{label}</span>
+              <span className="text-xs leading-5 text-text-table-header">{target.label}</span>
             </button>
           ))}
         </div>

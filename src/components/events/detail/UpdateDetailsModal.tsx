@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { ImageIcon, MoreHorizontal, Reply } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Modal } from "../../ui/modal"
 import { ConfirmModal } from "../../ui/confirm-modal"
@@ -10,6 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu"
 import { toast } from "../../../hooks/use-toast"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import type { UpdateComment, UpdatePost } from "../../../pages/dashboard/event-detail-types"
 import { PersonAvatar } from "./PersonAvatar"
 
@@ -50,7 +51,7 @@ export function UpdateDetailsModal({
             <img src={post.imageUrl} alt="" className="w-full rounded-xl object-cover" />
           ) : (
             <div className="flex aspect-video w-full items-center justify-center rounded-xl bg-gradient-to-br from-[#e6d8ff] via-[#f2e7ff] to-[#ffe4cf]">
-              <ImageIcon className="size-8 text-white/70" aria-hidden />
+              <EventIcon name="pic-fill" size={32} className="opacity-70" />
             </div>
           )}
           <p className="text-sm leading-[22px] text-text-events-strong">{post.body}</p>
@@ -110,7 +111,7 @@ export function UpdateDetailsModal({
                         className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-text-table-header outline-none hover:bg-bg-default-100 data-[state=open]:bg-bg-default-100"
                         aria-label="Comment actions"
                       >
-                        <MoreHorizontal className="size-4" />
+                        <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
@@ -131,7 +132,7 @@ export function UpdateDetailsModal({
                     }}
                     className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral px-2.5 py-1 text-xs font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
                   >
-                    <Reply className="size-3.5" />
+                    <EventIcon name="arrow-up-fill" size={EVENT_ICON_SIZE.fieldHint} />
                     Reply
                   </button>
 

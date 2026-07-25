@@ -4,6 +4,7 @@ import { FileUploadDropzone } from "../FileUploadDropzone"
 import { OnboardingStepShell } from "../OnboardingStepShell"
 import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
 import type { OnboardingData } from "../../../pages/auth/types"
+import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
 
 export function BusinessVerificationStep({
   data,
@@ -30,7 +31,7 @@ export function BusinessVerificationStep({
       titleBlock={
         <div className="flex flex-col gap-3 tracking-[-0.1px]">
           <h1 className="font-display text-2xl font-semibold leading-8 text-[#2c3237]">Verify your business information</h1>
-          <p className="text-sm font-normal leading-[22px] text-[#656f78]">
+          <p className={authBodyTextClassName}>
             Provide the necessary documents to verify your basic business information
           </p>
         </div>
@@ -69,7 +70,7 @@ export function BusinessVerificationStep({
 
         <div className="flex flex-col gap-3">
           <Button
-            className="h-10 min-h-10 gap-2 rounded-xl px-3.5 shadow-[inset_0_-2px_1px_0_rgb(25,89,140,0.5)]"
+            className={authOnboardingPrimaryButtonClassName}
             variant="primary"
             block
             rightIcon={<ContinueArrowIcon className="text-white" />}

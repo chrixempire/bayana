@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react"
-import { ChevronDown, ImageIcon, Pencil, Plus, Trash2 } from "lucide-react"
+import { EventIcon } from "../../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../events/icons/event-icon-sizes"
 import { Checkbox } from "../../ui/checkbox"
 import { Input } from "../../ui/input"
 import { RadioGroup } from "../../ui/radio-group"
@@ -86,7 +87,7 @@ function InKindItemRow({
         {item.imageUrl ? (
           <img src={item.imageUrl} alt="" className="size-full object-cover" />
         ) : (
-          <ImageIcon className="size-4" />
+          <EventIcon name="pic-fill" size={EVENT_ICON_SIZE.meta} />
         )}
       </div>
       <div className="min-w-0 flex-1">
@@ -108,7 +109,7 @@ function InKindItemRow({
           onClick={onEdit}
           className="inline-flex size-6 cursor-pointer items-center justify-center rounded-md text-icon-neutral transition-colors hover:bg-bg-default-100"
         >
-          <Pencil className="size-3.5" />
+          <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.fieldHint} />
         </button>
         <button
           type="button"
@@ -116,7 +117,7 @@ function InKindItemRow({
           onClick={onRemove}
           className="inline-flex size-6 cursor-pointer items-center justify-center rounded-md text-icon-neutral transition-colors hover:bg-bg-default-100"
         >
-          <Trash2 className="size-3.5" />
+          <EventIcon name="delete-fill" size={EVENT_ICON_SIZE.fieldHint} />
         </button>
       </div>
     </div>
@@ -268,7 +269,7 @@ export function CreateEventNeedsStepConfig({
                 onClick={openAddItem}
                 className="inline-flex h-9 w-fit cursor-pointer items-center gap-1.5 rounded-lg border border-border-default-100 bg-bg-canvas px-3 text-sm font-medium leading-[22px] text-text-events-strong shadow-input-default transition-colors hover:bg-bg-on-canvas focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-input-active"
               >
-                <Plus className="size-4 text-icon-neutral" />
+                <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.meta} />
                 Add item
               </button>
             </div>
@@ -377,11 +378,10 @@ export function CreateEventNeedsStepConfig({
           onClick={() => onChange({ moreSettingsOpen: !form.moreSettingsOpen })}
         >
           More settings
-          <ChevronDown
-            className={cn(
-              "size-4 text-icon-neutral transition-transform",
-              form.moreSettingsOpen && "rotate-180",
-            )}
+          <EventIcon
+            name="down-fill"
+            size={EVENT_ICON_SIZE.meta}
+            className={cn("transition-transform", form.moreSettingsOpen && "rotate-180")}
           />
         </button>
 

@@ -9,6 +9,12 @@ import { toast } from "../../hooks/use-toast"
 import { forgotPassword } from "../../lib/api/auth"
 import { ApiError } from "../../lib/api/types"
 import { AUTH_LOGIN_PATH } from "../../lib/auth-paths"
+import { cn } from "../../lib/utils"
+import {
+  authBodyTextClassName,
+  authFieldLabelClassName,
+  authPrimaryButtonClassName,
+} from "../../lib/auth-form-styles"
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
@@ -73,7 +79,7 @@ export function ForgotPasswordPage() {
               <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
                 Forgot your password?
               </h1>
-              <p className="text-sm leading-[22px] text-text-neutral-400">
+              <p className={authBodyTextClassName}>
                 {isSubmitted
                   ? "If an account exists for that email, we've sent a reset link. Check your inbox and follow the instructions."
                   : "Enter the email associated with your account and we'll send you a reset link."}
@@ -83,10 +89,11 @@ export function ForgotPasswordPage() {
             {!isSubmitted ? (
               <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="forgot-password-email" className="block text-sm font-medium leading-[22px] tracking-normal">
+                  <label htmlFor="forgot-password-email" className={cn("block", authFieldLabelClassName)}>
                     Email address
                   </label>
                   <Input
+                    density="compact"
                     id="forgot-password-email"
                     type="email"
                     name="email"
@@ -108,7 +115,7 @@ export function ForgotPasswordPage() {
                   variant="primary"
                   block
                   disabled={isSubmitting}
-                  className="h-11 rounded-[14px] text-base font-semibold"
+                  className={authPrimaryButtonClassName}
                   rightIcon={
                     isSubmitting ? (
                       <SpinnerIcon className="size-4 text-white" />
@@ -124,7 +131,7 @@ export function ForgotPasswordPage() {
 
             <Link
               to={AUTH_LOGIN_PATH}
-              className="text-center text-base font-semibold leading-6 text-text-default-500 underline-offset-2 hover:underline"
+              className="type-small-medium text-center text-text-default-500 underline-offset-2 hover:underline"
             >
               Back to login
             </Link>

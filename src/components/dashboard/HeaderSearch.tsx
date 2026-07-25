@@ -1,18 +1,54 @@
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { MessageSquarePlus, Plus, Search, Settings, UserPlus, X } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { PersonAvatar } from "../events/detail/PersonAvatar"
+import { EventIcon, type EventIconName } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
 import { toast } from "../../hooks/use-toast"
 import { cn } from "../../lib/utils"
 import { SEARCH_ENTITIES } from "./header-data"
+
+const quickActions: {
+  icon: EventIconName
+  label: string
+  shortcut?: string
+  run: () => void
+}[] = [
+  { icon: "add-circle-fill", label: "Create a cause", shortcut: "C", run: () => {} },
+  { icon: "add-circle-fill", label: "Create a need", shortcut: "N", run: () => {} },
+  { icon: "add-circle-fill", label: "Create a new message", shortcut: "M", run: () => {} },
+  { icon: "user-add-fill", label: "Invite a team member", run: () => {} },
+  { icon: "settings-3-fill", label: "Settings", shortcut: "S", run: () => {} },
+]
 
 export function HeaderSearch() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [recent, setRecent] = useState<string[]>(["David", "Weekend"])
+
+  const actions = useMemo(
+    () =>
+      quickActions.map((action) => ({
+        ...action,
+        run:
+          action.label === "Create a cause" || action.label === "Create a need"
+            ? () => navigate("/events/create")
+            : action.label === "Create a new message"
+              ? () => navigate(DASHBOARD_TAB_PATHS.messages)
+              : action.label === "Invite a team member"
+                ? () =>
+                    toast({
+                      title: "Coming soon",
+                      description: "Team invites will be available after API integration.",
+                    })
+                : action.label === "Settings"
+                  ? () => navigate(DASHBOARD_TAB_PATHS.settings)
+                  : action.run,
+      })),
+    [navigate],
+  )
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -36,14 +72,6 @@ export function HeaderSearch() {
   }, [q])
   const hasResults = results.Volunteer.length > 0 || results["Team members"].length > 0
 
-  const quickActions = [
-    { icon: Plus, label: "Create a cause", shortcut: "C", run: () => navigate("/events/create") },
-    { icon: Plus, label: "Create a need", shortcut: "N", run: () => navigate("/events/create") },
-    { icon: MessageSquarePlus, label: "Create a new message", shortcut: "M", run: () => navigate(DASHBOARD_TAB_PATHS.messages) },
-    { icon: UserPlus, label: "Invite a team member", run: () => toast({ title: "Coming soon", description: "Team invites will be available after API integration." }) },
-    { icon: Settings, label: "Settings", shortcut: "S", run: () => navigate(DASHBOARD_TAB_PATHS.settings) },
-  ]
-
   const runAction = (fn: () => void) => {
     setOpen(false)
     setQuery("")
@@ -61,11 +89,15 @@ export function HeaderSearch() {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="relative flex h-9 w-full max-w-[480px] items-center rounded-xl border-0 bg-bg-on-nav/70 pl-9 pr-14 text-left text-sm font-normal tracking-[-0.1px] text-text-on-solid-bg outline-none transition-colors hover:bg-bg-on-nav focus-visible:ring-2 focus-visible:ring-white/25"
+          className="relative flex h-9 w-full max-w-[480px] items-center rounded-lg border-0 bg-bg-on-nav pl-9 pr-14 text-left type-small-regular text-text-on-nav-search outline-none transition-colors hover:bg-bg-on-on-nav focus-visible:ring-2 focus-visible:ring-white/25"
         >
-          <Search className="pointer-events-none absolute left-3 size-4 text-text-on-solid-bg" />
+          <EventIcon
+            name="search-line"
+            size={EVENT_ICON_SIZE.search}
+            className="pointer-events-none absolute left-3 text-text-on-nav-search"
+          />
           Search..
-          <kbd className="pointer-events-none absolute right-3 hidden rounded-md bg-bg-on-on-nav/60 px-1.5 py-0.5 text-[10px] font-medium text-text-on-solid-bg/80 sm:inline">
+          <kbd className="pointer-events-none absolute right-3 hidden rounded-md bg-bg-on-on-nav/60 px-1.5 py-0.5 text-[10px] font-medium text-text-on-nav-search/80 sm:inline">
             ⌘+K
           </kbd>
         </button>
@@ -76,7 +108,11 @@ export function HeaderSearch() {
         className="w-[var(--radix-popover-trigger-width)] min-w-[420px] rounded-2xl border border-border-default-100 bg-bg-dropdown-modal p-2 text-text-default-500 shadow-[0_16px_48px_rgba(44,50,55,0.16)]"
       >
         <div className="relative mb-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-icon-neutral" />
+          <EventIcon
+            name="search-line"
+            size={EVENT_ICON_SIZE.search}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-icon-neutral"
+          />
           <input
             autoFocus
             value={query}
@@ -94,7 +130,7 @@ export function HeaderSearch() {
               onClick={() => setQuery("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-icon-neutral hover:text-text-events-strong"
             >
-              <X className="size-4" />
+              <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
             </button>
           ) : null}
         </div>
@@ -148,7 +184,7 @@ export function HeaderSearch() {
                       onClick={() => setRecent((prev) => prev.filter((t) => t !== term))}
                       className="text-icon-neutral hover:text-text-events-strong"
                     >
-                      <X className="size-4" />
+                      <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
                     </button>
                   </div>
                 ))}
@@ -156,27 +192,24 @@ export function HeaderSearch() {
             ) : null}
             <div className="flex flex-col">
               <p className="px-2 py-1.5 text-xs font-medium text-text-table-header">Quick actions</p>
-              {quickActions.map((action) => {
-                const Icon = action.icon
-                return (
-                  <button
-                    key={action.label}
-                    type="button"
-                    onClick={() => runAction(action.run)}
-                    className="flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-left text-sm text-text-events-strong transition-colors hover:bg-bg-default-100"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Icon className="size-4 text-icon-neutral" />
-                      {action.label}
+              {actions.map((action) => (
+                <button
+                  key={action.label}
+                  type="button"
+                  onClick={() => runAction(action.run)}
+                  className="flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-left text-sm text-text-events-strong transition-colors hover:bg-bg-default-100"
+                >
+                  <span className="flex items-center gap-2">
+                    <EventIcon name={action.icon} size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
+                    {action.label}
+                  </span>
+                  {action.shortcut ? (
+                    <span className="rounded-md border border-border-default-100 px-1.5 text-xs text-text-table-header">
+                      {action.shortcut}
                     </span>
-                    {action.shortcut ? (
-                      <span className="rounded-md border border-border-default-100 px-1.5 text-xs text-text-table-header">
-                        {action.shortcut}
-                      </span>
-                    ) : null}
-                  </button>
-                )
-              })}
+                  ) : null}
+                </button>
+              ))}
             </div>
           </>
         )}

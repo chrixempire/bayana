@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react"
-import { ChevronDown } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 
 type ListScrollFadeHintProps = {
   listRef: RefObject<HTMLElement | null>
@@ -105,7 +106,7 @@ export function ListScrollFadeHint({
           scrollListDown()
         }}
       >
-        <ChevronDown className="size-4" />
+        <EventIcon name="down-fill" size={EVENT_ICON_SIZE.meta} />
       </button>
     </div>
   )

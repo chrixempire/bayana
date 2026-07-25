@@ -1,4 +1,5 @@
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { useNavigate } from "react-router-dom"
 import {
   DropdownMenu,
@@ -36,13 +37,13 @@ export function CreateEventHeader({
         onClick={() => navigate(DASHBOARD_TAB_PATHS.events)}
         className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border border-border-default-100 bg-bg-canvas px-3 text-sm font-medium leading-[22px] text-text-events-strong shadow-[0_1px_2px_rgba(44,50,55,0.04)] transition-colors hover:bg-bg-on-canvas focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-input-active"
       >
-        <ChevronLeft className="size-4 text-icon-neutral" />
+        <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.nav} className="rotate-180" />
         Back
       </button>
 
       <nav className="flex min-w-0 flex-wrap items-center gap-2" aria-label="Create event breadcrumb">
         <span className="text-sm font-semibold leading-[22px] text-text-events-strong">Create event</span>
-        <ChevronRight className="size-4 shrink-0 text-icon-neutral" aria-hidden />
+        <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.nav} className="shrink-0" aria-hidden />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -52,7 +53,7 @@ export function CreateEventHeader({
             >
               <CreateEventTypeIcon type={active.id} />
               {active.label}
-              <ChevronDown className="size-4 text-icon-neutral" />
+              <EventIcon name="down-fill" size={EVENT_ICON_SIZE.nav} />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[172px] rounded-xl p-2">

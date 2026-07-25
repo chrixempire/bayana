@@ -1,15 +1,4 @@
 import { useMemo, useState } from "react"
-import {
-  Check,
-  CircleCheck,
-  Clock,
-  Eye,
-  Flag,
-  MessageSquare,
-  MoreHorizontal,
-  Search,
-  Truck,
-} from "lucide-react"
 import { DataTableEmptyState, DataTablePagination, FilterDropdown } from "../../data-table"
 import {
   DropdownMenu,
@@ -19,8 +8,11 @@ import {
 } from "../../ui/dropdown-menu"
 import { Input } from "../../ui/input"
 import { Button } from "../../ui/button"
+import { EventIcon, type EventIconName } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import { PersonAvatar } from "./PersonAvatar"
-import { TableCell, TableHead, TableRow } from "../../ui/table"
+import { TableCell, TableHead, TableRow, tableHeadActionsClassName, tableHeadSelectClassName, tableHeaderRowClassName } from "../../ui/table"
+import { tableHeadCellClassName, tableSurfaceClassName } from "../../../lib/table-styles"
 import { cn } from "../../../lib/utils"
 import type {
   InKindDonationRow,
@@ -30,16 +22,16 @@ import type {
 
 const STATUS_CONFIG: Record<
   InKindDonationStatus,
-  { label: string; icon: typeof Truck; className: string }
+  { label: string; icon: EventIconName; className: string }
 > = {
-  "in-transit": { label: "In transit", icon: Truck, className: "bg-bg-accent-soft text-[#b25e09]" },
-  pledged: { label: "Pledged", icon: Clock, className: "bg-bg-accent-soft text-[#b25e09]" },
-  confirmed: { label: "Confirmed", icon: CircleCheck, className: "bg-[#e7f7ed] text-[#2f9e57]" },
-  flagged: { label: "Flagged", icon: Flag, className: "bg-[#fdeaed] text-[#c8324b]" },
+  "in-transit": { label: "In transit", icon: "box-3-fill", className: "bg-bg-accent-soft text-[#b25e09]" },
+  pledged: { label: "Pledged", icon: "time-fill", className: "bg-bg-accent-soft text-[#b25e09]" },
+  confirmed: { label: "Confirmed", icon: "check-circle-fill", className: "bg-[#e7f7ed] text-[#2f9e57]" },
+  flagged: { label: "Flagged", icon: "flag-2-fill", className: "bg-[#fdeaed] text-[#c8324b]" },
 }
 
 export function InKindStatusTag({ status }: { status: InKindDonationStatus }) {
-  const { label, icon: Icon, className } = STATUS_CONFIG[status]
+  const { label, icon, className } = STATUS_CONFIG[status]
   return (
     <span
       className={cn(
@@ -47,7 +39,7 @@ export function InKindStatusTag({ status }: { status: InKindDonationStatus }) {
         className,
       )}
     >
-      <Icon className="size-3" />
+      <EventIcon name={icon} size={EVENT_ICON_SIZE.composeAction} />
       {label}
     </span>
   )
@@ -77,7 +69,7 @@ function StatCard({
   )
 }
 
-const HEADER_CELL = "h-11 border-b border-border-default-100 bg-bg-on-canvas py-0 type-events-table-head"
+const HEADER_CELL = tableHeadCellClassName
 const PAGE_SIZE = 10
 
 export function NeedsInKindDonationsTab({
@@ -158,34 +150,34 @@ export function NeedsInKindDonationsTab({
               setPage(1)
             }}
             placeholder="Search"
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label="Search donations"
           />
         </div>
       </div>
 
-      <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+      <div className={tableSurfaceClassName}>
         <div className="w-full overflow-x-auto">
           <div style={{ minWidth: 820 }}>
             <table className="w-full table-fixed border-separate border-spacing-0 caption-bottom text-sm">
               <colgroup>
-                <col style={{ width: "3rem" }} />
+                <col style={{ width: "48px" }} />
                 <col style={{ width: "16%" }} />
                 <col style={{ width: "24%" }} />
                 <col style={{ width: "16%" }} />
                 <col style={{ width: "16%" }} />
                 <col style={{ width: "20%" }} />
-                <col style={{ width: "3rem" }} />
+                <col style={{ width: "48px" }} />
               </colgroup>
-              <thead>
-                <tr>
-                  <TableHead className={cn("w-10", HEADER_CELL)} />
+              <thead className="bg-bg-table-header">
+                <tr className={tableHeaderRowClassName}>
+                  <TableHead className={cn(tableHeadCellClassName, tableHeadSelectClassName)} />
                   <TableHead className={HEADER_CELL}>Donation id</TableHead>
                   <TableHead className={HEADER_CELL}>Donor</TableHead>
                   <TableHead className={HEADER_CELL}>Number of items</TableHead>
                   <TableHead className={HEADER_CELL}>Status</TableHead>
                   <TableHead className={HEADER_CELL}>Date</TableHead>
-                  <TableHead className={cn("w-12", HEADER_CELL)} />
+                  <TableHead className={cn(tableHeadCellClassName, tableHeadActionsClassName)} />
                 </tr>
               </thead>
               <tbody>
@@ -226,20 +218,20 @@ export function NeedsInKindDonationsTab({
                               className="size-8 min-h-8 rounded-full border-0 bg-transparent p-0 shadow-none hover:bg-bg-default-100"
                               aria-label="Row actions"
                             >
-                              <MoreHorizontal className="size-4 text-icon-neutral" />
+                              <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} className="text-icon-neutral" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="min-w-[11rem]">
                             <DropdownMenuItem onSelect={() => onViewDetails(row)}>
-                              <Eye className="size-4 text-icon-neutral" />
+                              <EventIcon name="eye-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                               View details
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => onMessageDonor(row)}>
-                              <MessageSquare className="size-4 text-icon-neutral" />
+                              <EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                               Message donor
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => onConfirmReceipt(row)}>
-                              <Check className="size-4 text-icon-neutral" />
+                              <EventIcon name="check-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                               Confirm receipt
                             </DropdownMenuItem>
                           </DropdownMenuContent>

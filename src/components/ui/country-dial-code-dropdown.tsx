@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Check, Search } from "lucide-react"
 import {
   COUNTRY_DIAL_CODES,
   DEFAULT_COUNTRY_CODE,
@@ -8,6 +7,8 @@ import {
   type CountryDialCode,
 } from "../../lib/country-dial-codes"
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { ChevronDownIcon } from "../auth/icons/ChevronDownIcon"
 import {
   DropdownMenu,
@@ -76,7 +77,7 @@ export function CountryDialCodeDropdown({
           onKeyDown={(event) => event.stopPropagation()}
         >
           <div className="relative">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-text-neutral-400" />
+            <EventIcon name="search-line" size={EVENT_ICON_SIZE.search} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-text-neutral-400" />
             <input
               ref={searchRef}
               type="search"
@@ -110,7 +111,7 @@ export function CountryDialCodeDropdown({
                   onSelect={() => onValueChange(country)}
                 >
                   <span className="flex size-3.5 shrink-0 items-center justify-center">
-                    {isSelected ? <Check className="size-3.5" aria-hidden /> : null}
+                    {isSelected ? <EventIcon name="check-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" aria-hidden /> : null}
                   </span>
                   <span className="text-sm leading-none" aria-hidden>
                     {country.flag}

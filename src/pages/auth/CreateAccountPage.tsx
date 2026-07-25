@@ -14,6 +14,13 @@ import { ApiError } from "../../lib/api/types"
 import { redirectToGoogleAuth } from "../../lib/auth/google-oauth"
 import { invalidateEmailVerificationCache } from "../../lib/auth/email-verification-cache"
 import { setAuthSession } from "../../lib/auth/session"
+import { cn } from "../../lib/utils"
+import {
+  authBodyTextClassName,
+  authFieldLabelClassName,
+  authNeutralButtonClassName,
+  authPrimaryButtonClassName,
+} from "../../lib/auth-form-styles"
 import { AUTH_LOGIN_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import {
   mapRegistrationApiErrors,
@@ -104,9 +111,9 @@ export function CreateAccountPage() {
               <h6 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
                 Get started with Bayana
               </h6>
-              <p className="text-sm font-normal leading-[22px] tracking-[-0.1px] text-text-neutral-400">
+              <p className={authBodyTextClassName}>
                 Already have an account?{" "}
-                <Link to={AUTH_LOGIN_PATH} className="font-medium tracking-normal text-[#278cff] underline underline-offset-2">
+                <Link to={AUTH_LOGIN_PATH} className="type-small-medium text-[#278cff] underline underline-offset-2">
                   Sign in
                 </Link>
               </p>
@@ -123,11 +130,12 @@ export function CreateAccountPage() {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="create-account-email"
-                    className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
+                    className={cn("block", authFieldLabelClassName)}
                   >
                     Email address
                   </label>
                   <Input
+                    density="compact"
                     id="create-account-email"
                     type="email"
                     name="email"
@@ -147,11 +155,12 @@ export function CreateAccountPage() {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="create-account-password"
-                    className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
+                    className={cn("block", authFieldLabelClassName)}
                   >
                     Password
                   </label>
                   <Input
+                    density="compact"
                     id="create-account-password"
                     type={showPassword ? "text" : "password"}
                     name="password"
@@ -181,11 +190,12 @@ export function CreateAccountPage() {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="create-account-password-confirmation"
-                    className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
+                    className={cn("block", authFieldLabelClassName)}
                   >
                     Confirm password
                   </label>
                   <Input
+                    density="compact"
                     id="create-account-password-confirmation"
                     type={showPasswordConfirmation ? "text" : "password"}
                     name="password_confirmation"
@@ -220,7 +230,7 @@ export function CreateAccountPage() {
                 variant="primary"
                 block
                 disabled={isSubmitting}
-                className="h-11 rounded-[14px] text-base font-semibold"
+                className={authPrimaryButtonClassName}
                 rightIcon={
                   isSubmitting ? (
                     <SpinnerIcon className="size-4 text-white" />
@@ -243,7 +253,7 @@ export function CreateAccountPage() {
                 variant="neutral"
                 block
                 disabled={isSubmitting}
-                className="h-11 text-sm font-semibold leading-[22px]"
+                className={authNeutralButtonClassName}
                 leftIcon={<GoogleGIcon className="size-4" />}
                 onClick={() => {
                   try {

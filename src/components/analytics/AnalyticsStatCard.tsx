@@ -12,11 +12,14 @@ export function AnalyticsStatCard({
   card,
   empty,
   embedded = false,
+  joinedIndex,
 }: {
   card: MetricCard
   empty: boolean
   /** Render inside a parent card (no elevated surface). */
   embedded?: boolean
+  /** Index in a joined 2×2 grid — adds internal dividers. */
+  joinedIndex?: number
 }) {
   const displayValue = empty ? (card.emptyValue ?? (card.star ? "0.0" : "0")) : card.value
   const displayDelta = empty ? "0.0%" : card.delta
@@ -24,11 +27,14 @@ export function AnalyticsStatCard({
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-1 flex-col gap-3 p-4",
+        "flex h-32 min-w-0 flex-col gap-3 p-4",
         !embedded && elevatedCardSurfaceClassName,
+        joinedIndex != null && joinedIndex > 0 && "border-t border-border-default-100",
+        joinedIndex != null && joinedIndex % 2 === 1 && "sm:border-t-0 sm:border-l sm:border-border-default-100",
+        joinedIndex != null && joinedIndex >= 2 && "sm:border-t sm:border-border-default-100",
       )}
     >
-      <span className="truncate text-sm font-[510] leading-[22px] text-text-table-header">{card.label}</span>
+      <span className="truncate type-small-medium text-text-table-header">{card.label}</span>
       <div className="flex items-center gap-1">
         <span className="truncate font-display text-xl font-semibold leading-7 text-text-events-strong">
           {displayValue}

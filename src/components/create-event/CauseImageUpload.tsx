@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Eye, MoreHorizontal, Pencil, Trash2, Upload } from "lucide-react"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,17 +79,17 @@ function ImageSlot({ image, uploadProgress, onSetCover, onRemove, onReplace }: I
               className="absolute right-1.5 top-1.5 z-[2] inline-flex size-7 cursor-pointer items-center justify-center rounded-full bg-bg-canvas text-text-events-strong shadow-[0_2px_8px_rgba(44,50,55,0.12)] outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active"
               aria-label="Image options"
             >
-              <MoreHorizontal className="size-4" />
+              <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.meta} />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[168px] rounded-xl p-1.5">
             <DropdownMenuItem className="cursor-pointer gap-2.5 px-3 py-2" onClick={openReplacePicker}>
-              <Pencil className="size-4 shrink-0 text-icon-neutral" />
+              <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
               Change image
             </DropdownMenuItem>
             {!image.isCover ? (
               <DropdownMenuItem className="cursor-pointer gap-2.5 px-3 py-2" onClick={onSetCover}>
-                <Eye className="size-4 shrink-0 text-icon-neutral" />
+                <EventIcon name="eye-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
                 Set as cover
               </DropdownMenuItem>
             ) : null}
@@ -96,7 +97,7 @@ function ImageSlot({ image, uploadProgress, onSetCover, onRemove, onReplace }: I
               className="cursor-pointer gap-2.5 px-3 py-2 text-text-events-strong focus:text-text-events-strong"
               onClick={onRemove}
             >
-              <Trash2 className="size-4 shrink-0 text-icon-neutral" />
+              <EventIcon name="delete-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
               Delete image
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -243,8 +244,9 @@ export function CauseImageUpload({ images, onChange }: CauseImageUploadProps) {
         )}
         style={{ height: CREATE_EVENT_IMAGE_UPLOADER_HEIGHT_PX }}
       >
-        <span className="inline-flex size-8 items-center justify-center rounded-lg border border-border-default-100 bg-bg-canvas text-text-table-header">
-          <Upload className="size-4" />
+        <span className="inline-flex items-center justify-center gap-1 rounded-lg border border-border-default-100 bg-bg-canvas px-2 py-1.5 text-text-table-header">
+          <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.buttonLeading} />
+          <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
         </span>
         <span className="type-events-tab text-center">Drag & drop or choose image</span>
         <span className="type-create-event-caption text-center">

@@ -1,4 +1,5 @@
-import { X } from "lucide-react"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import type { CreateEventType } from "../../lib/create-event-paths"
 import { CREATE_EVENT_TYPE_OPTIONS } from "./create-event-type-options"
 import { CreateEventTypeIcon } from "./icons/CreateEventTypeIcon"
@@ -40,7 +41,7 @@ export function CreateEventTypeModal({ open, onClose, onSelect }: CreateEventTyp
             className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-bg-default-100 text-text-table-header transition-colors hover:bg-bg-active-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-input-active"
             aria-label="Close"
           >
-            <X className="size-4" />
+            <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
         </div>
 

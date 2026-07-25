@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
-import { Check } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,7 +81,7 @@ export function FormDropdown<T extends string>({
               onSelect={() => onValueChange(option.value)}
             >
               <span className="flex size-4 shrink-0 items-center justify-center">
-                {isSelected ? <Check className="size-4" aria-hidden /> : null}
+                {isSelected ? <EventIcon name="check-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" aria-hidden /> : null}
               </span>
               {option.leading}
               <span className="min-w-0 truncate">{option.label}</span>

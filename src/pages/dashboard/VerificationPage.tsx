@@ -156,7 +156,7 @@ export function VerificationPage() {
             </colgroup>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="w-10 pl-4">
+                <TableHead className="w-12 px-0 text-center">
                   <Checkbox
                     size="sm"
                     checked={allPagedSelected ? true : pagedSelected > 0 ? "indeterminate" : false}
@@ -168,7 +168,7 @@ export function VerificationPage() {
                 <TableHead className="min-w-[240px]">Verification</TableHead>
                 <TableHead className="min-w-[140px]">Status</TableHead>
                 <TableHead className="min-w-[160px]">Last updated</TableHead>
-                <TableHead className="w-12" />
+                <TableHead className="w-12 px-0 text-center" />
               </TableRow>
             </TableHeader>
             <TableBody>

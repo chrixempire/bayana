@@ -1,10 +1,10 @@
 import { Fragment, useState } from "react"
-import { Clock, MapPin } from "lucide-react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { EventIcon } from "../../components/events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { DashboardLayout } from "../../components/dashboard/DashboardLayout"
-import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+import { dashboardDetailContentClassName } from "../../lib/dashboard-layout"
+import { cn } from "../../lib/utils"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
 import { parseEventDetailTab } from "../../lib/event-detail-paths"
 import { EventDetailHeader } from "../../components/events/detail/EventDetailHeader"
@@ -201,11 +201,12 @@ function seedEvent(
   return event
 }
 
-const GUTTER = { paddingLeft: DASHBOARD_PAGE_GUTTER_PX, paddingRight: DASHBOARD_PAGE_GUTTER_PX }
-
 function Breadcrumb({ items, onHome }: { items: string[]; onHome: () => void }) {
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-text-table-header">
+    <nav
+      aria-label="Breadcrumb"
+      className="flex items-center gap-1.5 text-xs font-[510] leading-5 text-text-table-header"
+    >
       {items.map((item, index) => {
         const isLast = index === items.length - 1
         return (
@@ -363,7 +364,7 @@ export function EventDetailPage() {
     <DashboardLayout activeTab="events">
       <div className="flex flex-col">
         <div className="bg-bg-detail-header">
-          <div style={GUTTER} className="flex flex-col gap-4 pt-4 pb-6">
+          <div className={cn(dashboardDetailContentClassName, "flex flex-col gap-4 pt-4 pb-6")}>
             <Breadcrumb items={event.breadcrumb} onHome={goToEvents} />
             <EventDetailHeader
               event={event}
@@ -391,7 +392,7 @@ export function EventDetailPage() {
         </div>
 
         <div className="border-b border-border-default-100 bg-bg-canvas">
-          <div style={GUTTER}>
+          <div className={dashboardDetailContentClassName}>
             <EventDetailTabs
               tabs={isNeeds ? NEEDS_TABS : TABS}
               activeTab={activeTab}
@@ -400,7 +401,7 @@ export function EventDetailPage() {
           </div>
         </div>
 
-        <div style={GUTTER} className="py-6">
+        <div className={cn(dashboardDetailContentClassName, "py-6")}>
           {renderTab()}
         </div>
       </div>
@@ -559,14 +560,14 @@ export function EventDetailPage() {
               </div>
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex items-center gap-1 text-text-table-header">
-                  <Clock className="size-3 shrink-0" />
+                  <EventIcon name="time-fill" size={12} className="shrink-0" />
                   <span className="text-xs leading-5">{session.time}</span>
                 </div>
                 <p className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
                   {session.title}
                 </p>
                 <div className="flex items-center gap-1">
-                  <MapPin className="size-4 shrink-0 text-icon-negative" />
+                  <EventIcon name="location-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0 text-icon-negative" />
                   <span className="truncate text-xs leading-5 text-text-table-header">
                     {session.location}
                   </span>

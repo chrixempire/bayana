@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { HelpCircle, LogOut, User } from "lucide-react"
 import { BayanaLogo } from "../brand/BayanaLogo"
 import {
   DropdownMenu,
@@ -8,9 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { performLogout } from "../../lib/auth/logout"
+import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
 import { toast } from "../../hooks/use-toast"
-import { ChevronUpDownIcon, LightbulbIcon } from "./icons"
 import { HeaderSearch } from "./HeaderSearch"
 import { HeaderNotifications } from "./HeaderNotifications"
 
@@ -37,26 +38,31 @@ export function DashboardHeader({
   }
 
   return (
-    <header className="grid w-full grid-cols-1 items-center gap-4 px-4 py-3 text-text-on-solid-bg sm:px-6 sm:py-3.5 lg:grid-cols-[minmax(0,1fr)_minmax(240px,480px)_minmax(0,1fr)] lg:gap-6">
-      <div className="flex min-w-0 items-center gap-3 justify-self-start sm:gap-4">
-        <BayanaLogo className="h-9 w-9 shrink-0" />
+    <header
+      className="grid w-full grid-cols-1 items-center gap-4 py-4 text-text-on-solid-bg lg:grid-cols-[minmax(0,1fr)_minmax(240px,480px)_minmax(0,1fr)] lg:gap-6"
+      style={{ paddingLeft: DASHBOARD_PAGE_GUTTER_PX, paddingRight: DASHBOARD_PAGE_GUTTER_PX }}
+    >
+      <div className="flex min-w-0 items-center gap-2 justify-self-start">
+        <BayanaLogo className="h-9 w-[35px] shrink-0" />
+
+        <span className="mx-0.5 hidden h-3 w-px shrink-0 bg-bg-on-nav sm:block" aria-hidden />
 
         <button
           type="button"
-          className="inline-flex h-9 min-w-0 max-w-[220px] cursor-pointer items-center gap-2.5 rounded-xl bg-bg-on-nav/80 px-2.5 text-left transition-colors hover:bg-bg-on-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:max-w-none"
+          className="inline-flex h-9 min-w-0 max-w-[220px] cursor-pointer items-center gap-2 rounded-lg bg-bg-on-nav pl-1 pr-1.5 text-left transition-colors hover:bg-bg-on-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:max-w-none"
           aria-label="Switch organization"
         >
           <span
             aria-hidden
-            className="flex size-6 shrink-0 items-center justify-center rounded-md bg-bg-accent text-xs font-bold text-text-on-solid-bg"
+            className="flex size-6 shrink-0 items-center justify-center rounded bg-bg-accent text-[11px] font-bold leading-[18px] text-text-on-solid-bg"
           >
             {organizationInitial}
           </span>
-          <span className="truncate text-sm font-medium leading-[22px] tracking-normal">{organizationName}</span>
-          <ChevronUpDownIcon />
+          <span className="truncate type-small-medium text-text-on-solid-bg">{organizationName}</span>
+          <EventIcon name="selector-vertical-line" size={EVENT_ICON_SIZE.meta} className="shrink-0 opacity-90" />
         </button>
 
-        <span className="inline-flex shrink-0 items-center rounded-full bg-bg-accent px-2 py-0.5 text-[11px] font-semibold leading-4 text-text-on-solid-bg">
+        <span className="inline-flex h-[18px] shrink-0 items-center rounded bg-bg-accent px-1 py-0.5 text-[10px] font-[510] leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
           {planLabel}
         </span>
       </div>
@@ -65,30 +71,31 @@ export function DashboardHeader({
         <HeaderSearch />
       </div>
 
-      <div className="flex shrink-0 items-center gap-3 justify-self-end sm:gap-4 lg:col-start-3">
+      <div className="flex shrink-0 items-center gap-2 justify-self-end lg:col-start-3">
         <button
           type="button"
-          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl bg-bg-accent px-3 text-sm font-semibold tracking-normal text-text-on-solid-bg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-lg bg-bg-accent px-2.5 text-xs font-medium leading-5 text-text-on-solid-bg shadow-[inset_0px_-2px_1px_0px_rgba(140,64,12,0.5)] transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
         >
-          <LightbulbIcon />
+          <EventIcon name="award-fill-white" size={EVENT_ICON_SIZE.buttonLeading} />
           Upgrade
+          <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} inverted />
         </button>
 
         <HeaderNotifications />
 
-        <span className="hidden h-6 w-px bg-bg-on-on-nav/80 sm:block" aria-hidden />
+        <span className="hidden h-3 w-px shrink-0 bg-bg-on-nav sm:block" aria-hidden />
 
         <DropdownMenu>
           <DropdownMenuTrigger
             type="button"
-            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#f5d9c8] text-sm font-semibold tracking-normal text-[#5c3d2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-text-on-nav-search text-sm font-semibold leading-5 text-bg-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             aria-label="Account menu"
           >
             {userInitial}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[15rem] p-1.5">
             <div className="flex items-center gap-2.5 px-2.5 py-2">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f5d9c8] text-sm font-semibold text-[#5c3d2e]">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-bg-nav-tab-active text-sm font-semibold text-text-nav-tab-active">
                 {userInitial}
               </span>
               <div className="flex min-w-0 flex-col">
@@ -101,14 +108,14 @@ export function DashboardHeader({
               className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
               onSelect={() => navigate("/settings")}
             >
-              <User className="size-4 text-icon-neutral" />
+              <EventIcon name="user-3-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
               onSelect={() => toast({ title: "Coming soon", description: "Help & support will be available soon." })}
             >
-              <HelpCircle className="size-4 text-icon-neutral" />
+              <EventIcon name="information-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
               Help &amp; support
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -116,7 +123,7 @@ export function DashboardHeader({
               disabled={isLoggingOut}
               onSelect={() => void handleLogout()}
             >
-              <LogOut className="size-4 text-icon-negative" />
+              <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
               {isLoggingOut ? "Signing out..." : "Sign out"}
             </DropdownMenuItem>
           </DropdownMenuContent>

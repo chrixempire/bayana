@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { ImageIcon, MessageSquare, MoreHorizontal, Reply, Tag } from "lucide-react"
 import { Button } from "../../ui/button"
 import { ConfirmModal } from "../../ui/confirm-modal"
 import {
@@ -9,6 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu"
 import { toast } from "../../../hooks/use-toast"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import type { UpdatePost, UpdatesData } from "../../../pages/dashboard/event-detail-types"
 import { PersonAvatar } from "./PersonAvatar"
 import { UpdateDetailsModal } from "./UpdateDetailsModal"
@@ -41,10 +42,10 @@ function Composer({ onPost }: { onPost: (body: string) => void }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1 text-icon-neutral">
           <button type="button" className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg hover:bg-bg-default-100" aria-label="Add image">
-            <ImageIcon className="size-4" />
+            <EventIcon name="pic-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
           <button type="button" className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg hover:bg-bg-default-100" aria-label="Add tag">
-            <Tag className="size-4" />
+            <EventIcon name="flag-2-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
         </div>
         <Button variant="primary" size="sm" className="rounded-[10px]" disabled={!value.trim()} onClick={submit}>
@@ -90,7 +91,7 @@ function PostCard({
             className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-text-table-header outline-none hover:bg-bg-default-100 data-[state=open]:bg-bg-default-100"
             aria-label="Post actions"
           >
-            <MoreHorizontal className="size-4" />
+            <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
@@ -158,7 +159,7 @@ function PostCard({
           onClick={() => onOpenComments(post)}
           className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
         >
-          <Reply className="size-4" />
+          <EventIcon name="arrow-up-fill" size={EVENT_ICON_SIZE.meta} />
           Reply
         </button>
         <button
@@ -166,7 +167,7 @@ function PostCard({
           onClick={() => onOpenComments(post)}
           className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
         >
-          <MessageSquare className="size-4" />
+          <EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.meta} />
           Comments ({post.commentList.length})
         </button>
       </div>

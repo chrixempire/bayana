@@ -15,10 +15,10 @@ export function FormField({
 }) {
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-0.5 text-sm leading-[22px]">
-        <span className="font-medium tracking-normal text-text-default-500">{label}</span>
+      <div className="flex flex-wrap items-center gap-0.5 type-small-medium text-text-default-500">
+        <span>{label}</span>
         {optional ? (
-          <span className="font-normal tracking-[-0.1px] text-input-placeholder"> (optional)</span>
+          <span className="type-small-regular text-input-placeholder"> (optional)</span>
         ) : null}
       </div>
       {children}

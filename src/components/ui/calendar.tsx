@@ -1,6 +1,7 @@
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker, type DayPickerProps } from "react-day-picker"
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 
 import "react-day-picker/style.css"
 
@@ -55,10 +56,14 @@ export function Calendar({
         ...classNames,
       }}
       components={{
-        Chevron: ({ orientation, className: chevronClassName, ...chevronProps }) => {
-          const Icon = orientation === "left" ? ChevronLeft : ChevronRight
-          return <Icon className={cn("size-4 fill-none", chevronClassName)} {...chevronProps} />
-        },
+        Chevron: ({ orientation, className: chevronClassName, ...chevronProps }) => (
+          <EventIcon
+            name="arrow-right-fill"
+            size={EVENT_ICON_SIZE.meta}
+            className={cn(orientation === "left" && "rotate-180", chevronClassName)}
+            {...chevronProps}
+          />
+        ),
       }}
       {...props}
     />

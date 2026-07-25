@@ -16,7 +16,14 @@ import { invalidateEmailVerificationCache } from "../../lib/auth/email-verificat
 import { resolvePostAuthPath } from "../../lib/auth/post-auth-routing"
 import { setAuthSession } from "../../lib/auth/session"
 import { AUTH_CREATE_ACCOUNT_PATH, AUTH_FORGOT_PASSWORD_PATH } from "../../lib/auth-paths"
+import {
+  authBodyTextClassName,
+  authFieldLabelClassName,
+  authNeutralButtonClassName,
+  authPrimaryButtonClassName,
+} from "../../lib/auth-form-styles"
 import { mapLoginApiErrors, validateLogin, type LoginFieldErrors } from "./login-validation"
+import { cn } from "../../lib/utils"
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -112,9 +119,9 @@ export function LoginPage() {
               <h1 className="font-display text-[20px] font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
                 Log in to Bayana
               </h1>
-              <p className="text-sm font-normal leading-[22px] tracking-[-0.1px] text-text-neutral-400">
+              <p className={authBodyTextClassName}>
                 Don&apos;t have an account?{" "}
-                <Link to={AUTH_CREATE_ACCOUNT_PATH} className="font-medium tracking-normal text-[#278cff] underline underline-offset-2">
+                <Link to={AUTH_CREATE_ACCOUNT_PATH} className="type-small-medium text-[#278cff] underline underline-offset-2">
                   Sign up
                 </Link>
               </p>
@@ -123,10 +130,11 @@ export function LoginPage() {
             <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="login-email" className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500">
+                  <label htmlFor="login-email" className={cn("block", authFieldLabelClassName)}>
                     Email address
                   </label>
                   <Input
+                    density="compact"
                     id="login-email"
                     type="email"
                     name="email"
@@ -147,18 +155,19 @@ export function LoginPage() {
                   <div className="flex items-center justify-between gap-3">
                     <label
                       htmlFor="login-password"
-                      className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
+                      className={cn("block", authFieldLabelClassName)}
                     >
                       Password
                     </label>
                     <Link
                       to={AUTH_FORGOT_PASSWORD_PATH}
-                      className="text-sm font-medium leading-[22px] tracking-normal text-[#278cff] underline-offset-2 hover:underline"
+                      className="type-small-medium text-[#278cff] underline-offset-2 hover:underline"
                     >
                       Forgot password?
                     </Link>
                   </div>
                   <Input
+                    density="compact"
                     id="login-password"
                     type={showPassword ? "text" : "password"}
                     name="password"
@@ -191,7 +200,7 @@ export function LoginPage() {
                 variant="primary"
                 block
                 disabled={isSubmitting}
-                className="h-11 rounded-[14px] text-base font-semibold"
+                className={authPrimaryButtonClassName}
                 rightIcon={
                   isSubmitting ? (
                     <SpinnerIcon className="size-4 text-white" />
@@ -214,7 +223,7 @@ export function LoginPage() {
                 variant="neutral"
                 block
                 disabled={isSubmitting}
-                className="h-11 rounded-[14px] text-base font-semibold"
+                className={authNeutralButtonClassName}
                 leftIcon={<GoogleGIcon className="size-5" />}
                 onClick={handleGoogleSignIn}
               >

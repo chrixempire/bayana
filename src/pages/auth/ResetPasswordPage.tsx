@@ -12,6 +12,10 @@ import { toast } from "../../hooks/use-toast"
 import { resetPassword } from "../../lib/api/auth"
 import { ApiError } from "../../lib/api/types"
 import { AUTH_LOGIN_PATH } from "../../lib/auth-paths"
+import {
+  authFieldLabelClassName,
+  authPrimaryButtonClassName,
+} from "../../lib/auth-form-styles"
 import { cn } from "../../lib/utils"
 import {
   mapResetPasswordApiErrors,
@@ -131,10 +135,11 @@ export function ResetPasswordPage() {
               <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="reset-password" className="block text-sm font-medium leading-[22px] tracking-normal">
+                    <label htmlFor="reset-password" className={cn("block", authFieldLabelClassName)}>
                       New password
                     </label>
                     <Input
+                      density="compact"
                       id="reset-password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
@@ -163,10 +168,11 @@ export function ResetPasswordPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="reset-password-confirmation" className="block text-sm font-medium leading-[22px] tracking-normal">
+                    <label htmlFor="reset-password-confirmation" className={cn("block", authFieldLabelClassName)}>
                       Confirm password
                     </label>
                     <Input
+                      density="compact"
                       id="reset-password-confirmation"
                       type={showPasswordConfirmation ? "text" : "password"}
                       autoComplete="new-password"
@@ -200,7 +206,7 @@ export function ResetPasswordPage() {
                   variant="primary"
                   block
                   disabled={isSubmitting}
-                  className="h-11 rounded-[14px] text-base font-semibold"
+                  className={authPrimaryButtonClassName}
                   rightIcon={
                     isSubmitting ? (
                       <SpinnerIcon className="size-4 text-white" />
@@ -215,7 +221,7 @@ export function ResetPasswordPage() {
             ) : (
               <Link
                 to={AUTH_LOGIN_PATH}
-                className={cn(buttonVariants({ variant: "primary", block: true }), "h-11 rounded-[14px] text-base font-semibold")}
+                className={cn(buttonVariants({ variant: "primary", block: true }), authPrimaryButtonClassName)}
               >
                 Back to login
               </Link>
@@ -223,7 +229,7 @@ export function ResetPasswordPage() {
 
             <Link
               to={AUTH_LOGIN_PATH}
-              className="text-center text-base font-semibold leading-6 text-text-default-500 underline-offset-2 hover:underline"
+              className="type-small-medium text-center text-text-default-500 underline-offset-2 hover:underline"
             >
               Back to login
             </Link>

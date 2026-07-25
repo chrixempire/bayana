@@ -1,4 +1,3 @@
-import { Calendar, ChevronDown, Mail, Phone, Zap } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Modal } from "../../ui/modal"
 import {
@@ -7,6 +6,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import type { Volunteer } from "../../../pages/dashboard/event-detail-types"
 import { PersonAvatar } from "./PersonAvatar"
 import { NewVolunteerBadge, TableSkillTag } from "./detail-primitives"
@@ -60,7 +61,12 @@ export function VolunteerDetailsModal({
         <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="neutral" size="sm" className="rounded-[10px]" rightIcon={<ChevronDown className="size-4" />}>
+              <Button
+                variant="neutral"
+                size="sm"
+                className="rounded-[10px]"
+                rightIcon={<EventIcon name="down-fill" size={EVENT_ICON_SIZE.meta} />}
+              >
                 More actions
               </Button>
             </DropdownMenuTrigger>
@@ -103,14 +109,14 @@ export function VolunteerDetailsModal({
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1.5 text-text-table-header">
-                <Mail className="size-4" />
+                <EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.meta} />
                 <span className="text-xs font-normal leading-5">Email</span>
               </span>
               <p className="text-sm font-[510] leading-[22px] text-text-events-strong">{volunteer.email}</p>
             </div>
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1.5 text-text-table-header">
-                <Phone className="size-4" />
+                <EventIcon name="user-3-fill" size={EVENT_ICON_SIZE.meta} />
                 <span className="text-xs font-normal leading-5">Phone number</span>
               </span>
               <p className="text-sm font-[510] leading-[22px] text-text-events-strong">{volunteer.phone}</p>
@@ -125,7 +131,7 @@ export function VolunteerDetailsModal({
             </div>
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1.5 text-text-table-header">
-                <Calendar className="size-4" />
+                <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.meta} />
                 <span className="text-xs font-normal leading-5">Date joined</span>
               </span>
               <p className="text-sm font-[510] leading-[22px] text-text-events-strong">{volunteer.dateJoined}</p>
@@ -164,7 +170,7 @@ export function VolunteerDetailsModal({
 
           <PanelCard title="Activity">
             <div className="flex items-start gap-2">
-              <Zap className="mt-0.5 size-4 shrink-0 fill-bg-accent text-bg-accent" />
+              <EventIcon name="sparkles-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
               <div className="flex flex-col">
                 <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
                   Requested to join cause

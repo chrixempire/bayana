@@ -1,10 +1,25 @@
 import { useMemo } from "react"
 import { DataTableEmptyState, RowActionsDropdown, TableCellStack } from "../data-table"
 import { Checkbox } from "../ui/checkbox"
+import { SegmentedProgress } from "../ui/segmented-progress"
 import { Skeleton } from "../ui/skeleton"
 import { StatusTag } from "../ui/status-tag"
-import { TableCell, TableHead, TableRow } from "../ui/table"
+import {
+  TableCell,
+  TableHead,
+  TableRow,
+  tableCellActionsClassName,
+  tableCellSelectClassName,
+  tableHeadActionsClassName,
+  tableHeadSelectClassName,
+  tableHeaderRowClassName,
+  tableSelectControlClassName,
+} from "../ui/table"
 import { cn } from "../../lib/utils"
+import {
+  tableHeadCellClassName,
+  tableCellClassName,
+} from "../../lib/table-styles"
 import type {
   EventsColumnDef,
   EventTableRow,
@@ -18,14 +33,12 @@ import {
 } from "./icons/VisibilityIcons"
 
 const EMPTY_CELL = "—"
-const TABLE_CLASS = "w-full table-fixed border-separate border-spacing-0 caption-bottom text-sm"
+const TABLE_CLASS = "w-full table-fixed border-collapse caption-bottom text-sm"
 const TABLE_MIN_WIDTH_PX = 1024
-const HEADER_CELL_CLASS =
-  "h-11 border-b border-border-default-100 bg-bg-on-canvas py-0 type-events-table-head"
 
 /** Column width by type — table-fixed relies on these. */
 const COLUMN_WIDTHS: Record<string, string> = {
-  checkbox: "3rem",
+  checkbox: "48px",
   cause: "24%",
   collaborator: "16%",
   eventType: "10%",
@@ -34,7 +47,7 @@ const COLUMN_WIDTHS: Record<string, string> = {
   volunteerType: "16%",
   date: "14%",
   volunteers: "11%",
-  actions: "3rem",
+  actions: "48px",
 }
 
 const COLLABORATOR_TONE: Record<string, string> = {
@@ -82,8 +95,8 @@ function VisibilityCell({ row }: { row: EventTableRow }) {
 
   if (type === "drafts") {
     return (
-      <div className="flex items-start gap-2">
-        <DraftsVisibilityIcon className="mt-0.5 shrink-0" />
+      <div className="flex items-center gap-3">
+        <DraftsVisibilityIcon className="shrink-0" />
         <TableCellStack primary="Drafts" />
       </div>
     )
@@ -93,8 +106,8 @@ function VisibilityCell({ row }: { row: EventTableRow }) {
   const label = type === "private" ? "Private" : "Public"
 
   return (
-    <div className="flex items-start gap-2">
-      <Icon className="mt-0.5 shrink-0" />
+    <div className="flex items-center gap-3">
+      <Icon className="shrink-0" />
       <TableCellStack
         primary={label}
         secondary={lifecycleStatus ? formatLifecycleLabel(lifecycleStatus) : undefined}
@@ -109,18 +122,14 @@ function VolunteersCell({ row }: { row: EventTableRow }) {
   }
 
   const { current, max } = row.volunteers
-  const percent = max > 0 ? Math.min(100, Math.round((current / max) * 100)) : 0
 
   return (
     <div className="min-w-[88px]">
-      <p className="type-table-cell-primary">
+      <p className="type-table-cell-primary text-right">
         {current} of {max}
       </p>
-      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-bg-default-100">
-        <div
-          className={cn("h-full rounded-full transition-all", percent > 0 ? "bg-bg-accent" : "bg-transparent")}
-          style={{ width: `${percent}%` }}
-        />
+      <div className="mt-1 flex h-[22px] flex-col justify-center">
+        <SegmentedProgress value={current} max={max} />
       </div>
     </div>
   )
@@ -128,7 +137,7 @@ function VolunteersCell({ row }: { row: EventTableRow }) {
 
 function CauseThumbnail({ title, thumbnailUrl }: { title: string; thumbnailUrl: string }) {
   return (
-    <div className="size-10 shrink-0 overflow-hidden rounded-lg bg-bg-default-100">
+    <div className="h-12 w-[65px] shrink-0 overflow-hidden rounded-lg bg-bg-default-100">
       <img
         src={thumbnailUrl}
         alt=""
@@ -186,17 +195,19 @@ function renderCell(
   switch (column.type) {
     case "checkbox":
       return (
-        <Checkbox
-          size="sm"
-          checked={ctx.selectedIds.has(row.id)}
-          onCheckedChange={() => ctx.toggleRow(row.id)}
-          aria-label={`Select ${row.cause.title}`}
-        />
+        <div className={tableSelectControlClassName}>
+          <Checkbox
+            size="sm"
+            checked={ctx.selectedIds.has(row.id)}
+            onCheckedChange={() => ctx.toggleRow(row.id)}
+            aria-label={`Select ${row.cause.title}`}
+          />
+        </div>
       )
 
     case "cause":
       return (
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           <CauseThumbnail title={row.cause.title} thumbnailUrl={row.cause.thumbnailUrl} />
           <div className="flex min-w-0 flex-col gap-1">
             {row.requestBadges && row.requestBadges.length > 0 ? (
@@ -238,7 +249,7 @@ function renderCell(
       return row.visibility.type === "drafts" ? (
         <span className="type-table-cell-secondary">{EMPTY_CELL}</span>
       ) : (
-        <div className="flex flex-wrap items-center gap-1">
+        <div className="flex flex-wrap items-center gap-2">
           {row.category.tags.map((tag) => (
             <StatusTag key={tag}>{tag}</StatusTag>
           ))}
@@ -269,6 +280,7 @@ function renderCell(
     case "actions":
       return (
         <RowActionsDropdown
+          className="mx-auto"
           actions={
             row.visibility.type === "drafts" && ctx.draftRowActions
               ? ctx.draftRowActions
@@ -295,19 +307,21 @@ function EventsTableHeaderRow({
   selectAllDisabled?: boolean
 }) {
   return (
-    <thead>
-      <tr>
+    <thead className="bg-bg-table-header">
+      <tr className={tableHeaderRowClassName}>
         {columns.map((column) => {
           if (column.type === "checkbox") {
             return (
-              <TableHead key={column.id} className={cn("w-10", HEADER_CELL_CLASS)}>
-                <Checkbox
-                  size="sm"
-                  checked={headerCheckboxState}
-                  onCheckedChange={onToggleAll}
-                  disabled={selectAllDisabled}
-                  aria-label="Select all rows"
-                />
+              <TableHead key={column.id} className={cn(tableHeadCellClassName, tableHeadSelectClassName)}>
+                <div className={tableSelectControlClassName}>
+                  <Checkbox
+                    size="sm"
+                    checked={headerCheckboxState}
+                    onCheckedChange={onToggleAll}
+                    disabled={selectAllDisabled}
+                    aria-label="Select all rows"
+                  />
+                </div>
               </TableHead>
             )
           }
@@ -315,7 +329,11 @@ function EventsTableHeaderRow({
           return (
             <TableHead
               key={column.id}
-              className={cn(HEADER_CELL_CLASS, column.type === "actions" && "w-12")}
+              className={cn(
+                tableHeadCellClassName,
+                column.type === "actions" && tableHeadActionsClassName,
+                column.type === "volunteers" && "text-right",
+              )}
             >
               {column.label}
             </TableHead>
@@ -438,7 +456,11 @@ export function EventsTable({
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
-                      className={column.type === "actions" ? "text-right" : undefined}
+                      className={cn(
+                        tableCellClassName,
+                        column.type === "checkbox" && tableCellSelectClassName,
+                        column.type === "actions" && tableCellActionsClassName,
+                      )}
                     >
                       {renderCell(column, row, cellCtx)}
                     </TableCell>

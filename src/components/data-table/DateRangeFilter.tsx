@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { ChevronDown, X } from "lucide-react"
 import type { DateRange } from "react-day-picker"
 import { cn } from "../../lib/utils"
 import { EventIcon } from "../events/icons/EventIcon"
@@ -7,6 +6,10 @@ import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Calendar } from "../ui/calendar"
 import { Button } from "../ui/button"
+import {
+  dashboardNeutralDropdownTriggerClassName,
+  dropdownTriggerOpenClassName,
+} from "../../lib/dropdown-trigger-styles"
 import {
   formatDateRange,
   resolveDatePreset,
@@ -83,8 +86,11 @@ export function DateRangeFilter({
       <PopoverTrigger
         className={cn(
           isEvents
-            ? "inline-flex h-8 min-h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral outline-none hover:bg-button-neutral-hover focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 data-[state=open]:bg-button-neutral-clicked"
-            : "type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 data-[state=open]:border-border-input-active",
+            ? cn(dashboardNeutralDropdownTriggerClassName, dropdownTriggerOpenClassName)
+            : cn(
+                "type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2",
+                dropdownTriggerOpenClassName,
+              ),
           !isEvents && (isActive ? "border-border-input-active" : "border-border-input-default-200"),
           className,
         )}
@@ -117,11 +123,9 @@ export function DateRangeFilter({
                   }
                 }}
               >
-                <X className="size-3.5" />
+                <EventIcon name="close-fill" size={14} />
               </span>
-            ) : (
-              <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
-            )}
+            ) : null}
           </>
         ) : (
           <>
@@ -150,10 +154,10 @@ export function DateRangeFilter({
                   }
                 }}
               >
-                <X className="size-3.5" />
+                <EventIcon name="close-fill" size={14} />
               </span>
             ) : (
-              <ChevronDown className="size-4 shrink-0 text-icon-neutral" />
+              <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} className="shrink-0 text-icon-neutral" />
             )}
           </>
         )}

@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { MessageSquare, ShieldBan, ShieldCheck, Upload } from "lucide-react"
 import {
   DashboardFullBleed,
   DashboardLayout,
@@ -14,9 +13,9 @@ import {
   FilterDropdown,
   MultiSelectFilter,
 } from "../../components/data-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, tableCellSelectClassName, tableHeadActionsClassName, tableHeadSelectClassName, tableHeaderRowClassName, tableSelectControlClassName } from "../../components/ui/table"
+import { tableHeadCellClassName } from "../../lib/table-styles"
 import { Checkbox } from "../../components/ui/checkbox"
-import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { StatusTag } from "../../components/ui/status-tag"
 import {
@@ -169,11 +168,9 @@ export function VolunteersPage() {
           <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
             Volunteers
           </h1>
-          <Button
-            variant="neutral"
-            size="sm"
-            className="h-10 min-h-10 rounded-xl px-3.5"
-            leftIcon={<Upload className="size-4" />}
+          <button
+            type="button"
+            className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-hover"
             onClick={() => {
               if (activeTab === "reviews") {
                 downloadCsv(
@@ -188,8 +185,10 @@ export function VolunteersPage() {
               setExportOpen(true)
             }}
           >
+            <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.buttonLeading} />
             Export
-          </Button>
+            <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
+          </button>
         </div>
 
         {/* sub-tabs */}
@@ -288,19 +287,19 @@ export function VolunteersPage() {
             <div className={cn(elevatedCardSurfaceClassName, "overflow-hidden")}>
               <Table contained={false} className="w-full table-fixed">
                 <colgroup>
-                  <col style={{ width: "3rem" }} />
+                  <col style={{ width: "48px" }} />
                   <col style={{ width: "26%" }} />
                   <col style={{ width: "18%" }} />
                   <col style={{ width: "14%" }} />
                   <col style={{ width: "14%" }} />
                   <col style={{ width: "16%" }} />
-                  <col style={{ width: "3rem" }} />
+                  <col style={{ width: "48px" }} />
                 </colgroup>
 
                 {selectionCount > 0 ? (
                   <thead>
                     <tr>
-                      <th colSpan={7} className="border-b border-border-default-100 bg-bg-on-canvas p-0">
+                      <th colSpan={7} className="border-b border-border-default-100 bg-bg-table-header p-0">
                         <div className="flex h-12 items-center justify-between gap-3 px-4">
                           <div className="flex items-center gap-3">
                             <Checkbox
@@ -325,7 +324,7 @@ export function VolunteersPage() {
                                   setSelectedIds(new Set())
                                 }}
                               >
-                                <ShieldBan className="size-4 text-icon-neutral" />
+                                <EventIcon name="close-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                                 Add to blacklist
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -334,7 +333,7 @@ export function VolunteersPage() {
                                   setSelectedIds(new Set())
                                 }}
                               >
-                                <ShieldCheck className="size-4 text-icon-neutral" />
+                                <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                                 Remove from blacklist
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -343,7 +342,7 @@ export function VolunteersPage() {
                                   setExportOpen(true)
                                 }}
                               >
-                                <Upload className="size-4 text-icon-neutral" />
+                                <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.dropdownItem} />
                                 Export selected
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -354,22 +353,24 @@ export function VolunteersPage() {
                   </thead>
                 ) : (
                   <TableHeader>
-                    <TableRow className="hover:bg-transparent">
-                      <TableHead className="w-10">
-                        <Checkbox
-                          size="sm"
-                          checked={allPagedSelected ? true : pagedSelectedCount > 0 ? "indeterminate" : false}
-                          onCheckedChange={toggleAll}
-                          disabled={paged.length === 0}
-                          aria-label="Select all volunteers"
-                        />
+                    <TableRow className={tableHeaderRowClassName}>
+                      <TableHead className={cn(tableHeadCellClassName, tableHeadSelectClassName)}>
+                        <div className={tableSelectControlClassName}>
+                          <Checkbox
+                            size="sm"
+                            checked={allPagedSelected ? true : pagedSelectedCount > 0 ? "indeterminate" : false}
+                            onCheckedChange={toggleAll}
+                            disabled={paged.length === 0}
+                            aria-label="Select all volunteers"
+                          />
+                        </div>
                       </TableHead>
                       <TableHead>Volunteer</TableHead>
                       <TableHead>Skills</TableHead>
                       <TableHead>Activities</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Date joined</TableHead>
-                      <TableHead className="w-12" />
+                      <TableHead className={cn(tableHeadCellClassName, tableHeadActionsClassName)} />
                     </TableRow>
                   </TableHeader>
                 )}
@@ -389,13 +390,15 @@ export function VolunteersPage() {
                         className="cursor-pointer"
                         onClick={() => navigate(`/volunteers/${row.id}`)}
                       >
-                        <TableCell onClick={(event) => event.stopPropagation()}>
-                          <Checkbox
-                            size="sm"
-                            checked={selectedIds.has(row.id)}
-                            onCheckedChange={() => toggleOne(row.id)}
-                            aria-label={`Select ${row.name}`}
-                          />
+                        <TableCell className={tableCellSelectClassName} onClick={(event) => event.stopPropagation()}>
+                          <div className={tableSelectControlClassName}>
+                            <Checkbox
+                              size="sm"
+                              checked={selectedIds.has(row.id)}
+                              onCheckedChange={() => toggleOne(row.id)}
+                              aria-label={`Select ${row.name}`}
+                            />
+                          </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
@@ -448,7 +451,7 @@ export function VolunteersPage() {
                                   })
                                 }
                               >
-                                <MessageSquare className="size-4 text-icon-neutral" />
+                                <EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                                 Send message
                               </DropdownMenuItem>
                               {row.status === "blacklisted" ? (
@@ -456,7 +459,7 @@ export function VolunteersPage() {
                                   className="text-text-success focus:bg-bg-success-soft"
                                   onSelect={() => setBlacklist([row.id], false)}
                                 >
-                                  <ShieldCheck className="size-4 text-text-success" />
+                                  <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-text-success" />
                                   Remove from blacklist
                                 </DropdownMenuItem>
                               ) : (
@@ -464,7 +467,7 @@ export function VolunteersPage() {
                                   className="text-text-negative focus:bg-bg-negative-soft"
                                   onSelect={() => setBlacklist([row.id], true)}
                                 >
-                                  <ShieldBan className="size-4 text-icon-negative" />
+                                  <EventIcon name="close-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
                                   Add to blacklist
                                 </DropdownMenuItem>
                               )}

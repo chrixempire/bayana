@@ -9,7 +9,7 @@ const statusTagVariants = cva(
   {
     variants: {
       size: {
-        medium: "h-6 gap-1 px-2 py-1 text-xs leading-4",
+        medium: "h-6 gap-1 rounded-lg px-2 py-1 text-xs leading-5",
         small: "h-5 gap-1 rounded-md px-1.5 text-[11px] leading-4",
       },
       color: {

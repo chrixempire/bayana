@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom"
 import { GettingStartedIntroVideo } from "../../components/dashboard/GettingStartedIntroVideo"
 import { SetupTaskCard } from "../../components/dashboard/SetupTaskCard"
 import { DashboardContent, DashboardLayout } from "../../components/dashboard/DashboardLayout"
+import { authBodyTextClassName } from "../../lib/auth-form-styles"
 import {
   buildSetupTasks,
   parseGettingStartedScenario,
@@ -21,7 +22,7 @@ export function GettingStartedPage() {
           <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
             Setup your organization
           </h1>
-          <p className="text-sm leading-[22px] text-text-neutral-400">
+          <p className={authBodyTextClassName}>
             Get ready to start managing your Non-governmental organization with us. Here are some action your need to
             perform to get the most out of Bayana
           </p>

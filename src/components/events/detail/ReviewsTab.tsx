@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react"
-import { ChevronRight, Search, Star } from "lucide-react"
 import { cn } from "../../../lib/utils"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Modal } from "../../ui/modal"
@@ -22,12 +23,11 @@ function StarRating({ rating, className }: { rating: number; className?: string 
   return (
     <span className={cn("inline-flex items-center gap-0.5", className)} aria-label={`${rating} out of 5`}>
       {Array.from({ length: 5 }).map((_, index) => (
-        <Star
+        <EventIcon
           key={index}
-          className={cn(
-            "size-3.5",
-            index < rating ? "fill-[#ff9a1a] text-[#ff9a1a]" : "fill-bg-active-200 text-bg-active-200",
-          )}
+          name={index < rating ? "star-fill-accent" : "star-fill"}
+          size={14}
+          className="shrink-0"
         />
       ))}
     </span>
@@ -40,7 +40,7 @@ function StatCard({ label, value, star }: { label: string; value: string; star?:
       <span className="text-sm font-[510] leading-[22px] text-text-table-header">{label}</span>
       <span className="flex items-center gap-1.5 font-display text-2xl font-semibold leading-8 text-text-events-strong">
         {value}
-        {star ? <Star className="size-5 fill-[#ff9a1a] text-[#ff9a1a]" /> : null}
+        {star ? <EventIcon name="star-fill-accent" size={20} className="shrink-0" /> : null}
       </span>
     </div>
   )
@@ -130,7 +130,7 @@ export function ReviewsTab({ data }: { data: ReviewsData }) {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search reviews"
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label="Search reviews"
           />
         </div>
@@ -184,7 +184,7 @@ export function ReviewsTab({ data }: { data: ReviewsData }) {
                   </TableCell>
                   <TableCell className="text-text-table-header">{row.date}</TableCell>
                   <TableCell className="pr-4 text-right">
-                    <ChevronRight className="inline size-4 text-icon-neutral" />
+                    <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="inline text-icon-neutral" />
                   </TableCell>
                 </TableRow>
                 ))

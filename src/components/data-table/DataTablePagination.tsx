@@ -1,6 +1,8 @@
 import { useMemo } from "react"
-import { ChevronDown } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { tablePaginationClassName } from "../../lib/table-styles"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import {
   Pagination,
   PaginationContent,
@@ -63,17 +65,12 @@ export function DataTablePagination({
   if (total === 0) return null
 
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between",
-        className,
-      )}
-    >
-      <p className="type-table-cell-secondary text-left">
+    <div className={cn(tablePaginationClassName, className)}>
+      <p className="type-pagination text-left text-text-table-header">
         Showing {from} to {to} of {total}
       </p>
 
-      <div className="flex flex-wrap items-center gap-6">
+      <div className="flex flex-wrap items-center gap-2">
         {onPageSizeChange ? (
           <label className="inline-flex cursor-pointer items-center gap-1.5">
             <span className="sr-only">Rows per page</span>
@@ -89,7 +86,11 @@ export function DataTablePagination({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-0 size-4 text-icon-neutral" />
+              <EventIcon
+                name="down-fill"
+                size={EVENT_ICON_SIZE.meta}
+                className="pointer-events-none absolute right-0 text-icon-neutral"
+              />
             </span>
           </label>
         ) : null}

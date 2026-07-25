@@ -1,6 +1,7 @@
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { cn } from "../../../lib/utils"
+import { authBodyTextClassName, authPrimaryButtonClassName } from "../../../lib/auth-form-styles"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
 import { OnboardingStepShell } from "../OnboardingStepShell"
@@ -25,7 +26,7 @@ export function BasicInformationStep({
           <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
             Let&apos;s get to know your business
           </h1>
-          <p className="text-sm font-normal leading-[22px] text-text-neutral-400">
+          <p className={authBodyTextClassName}>
             Provide the basic information of your Non-governmental organization
           </p>
         </header>
@@ -84,7 +85,7 @@ export function BasicInformationStep({
         </div>
 
         <Button
-          className="h-11 min-h-11 rounded-xl text-base font-semibold"
+          className={cn("rounded-xl", authPrimaryButtonClassName)}
           variant="primary"
           block
           rightIcon={<ContinueArrowIcon className="size-4 text-white" />}

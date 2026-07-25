@@ -17,7 +17,7 @@ export function TableCellStack({
   secondaryClassName,
 }: TableCellStackProps) {
   return (
-    <div className={cn("min-w-0", className)}>
+    <div className={cn("flex min-w-0 flex-col gap-1", className)}>
       <p className={cn("type-table-cell-primary truncate", primaryClassName)}>{primary}</p>
       {secondary != null && secondary !== "" ? (
         <p className={cn("type-table-cell-secondary truncate", secondaryClassName)}>{secondary}</p>

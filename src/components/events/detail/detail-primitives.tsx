@@ -154,10 +154,8 @@ export function DetailCard({
 /** Read-only pill used for categories and skills. */
 export function DetailChip({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-bg-canvas px-2 text-sm font-[510] leading-[22px] text-text-events-strong shadow-[0px_2px_2px_-1px_rgba(44,50,55,0.04),0px_1px_1px_-0.5px_rgba(44,50,55,0.04),0px_0px_0px_1px_rgba(44,50,55,0.12)]">
-      <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.chip} />
-      <span className="px-0.5">{children}</span>
-      <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.chip} />
+    <span className="inline-flex h-7 shrink-0 items-center rounded-full bg-bg-canvas px-2.5 text-sm font-[510] leading-[22px] text-text-events-strong shadow-[0px_2px_2px_-1px_rgba(44,50,55,0.04),0px_1px_1px_-0.5px_rgba(44,50,55,0.04),0px_0px_0px_1px_rgba(44,50,55,0.12)]">
+      {children}
     </span>
   )
 }

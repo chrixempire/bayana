@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import { useAnchorWidth } from "../../hooks/use-anchor-width"
 import type { KeyboardEvent } from "react"
-import { ChevronDown, Search } from "lucide-react"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { ListScrollFadeHint } from "../ui/list-scroll-fade-hint"
 import { cn } from "../../lib/utils"
@@ -130,11 +131,10 @@ export function SearchableSelect({
           )}
         >
           <span className="min-w-0 truncate">{value || placeholder}</span>
-          <ChevronDown
-            className={cn(
-              "size-4 shrink-0 text-icon-neutral transition-transform",
-              open && "rotate-180",
-            )}
+          <EventIcon
+            name="down-fill"
+            size={EVENT_ICON_SIZE.meta}
+            className={cn("shrink-0 transition-transform", open && "rotate-180")}
             aria-hidden
           />
           </button>
@@ -156,7 +156,7 @@ export function SearchableSelect({
         onKeyDown={handleDropdownKeyDown}
       >
         <div className="flex h-8 w-full items-center gap-2 rounded-[10px] bg-[#EDF0F2] py-1 pr-3 pl-3">
-          <Search className="size-4 shrink-0 text-icon-neutral" aria-hidden />
+          <EventIcon name="search-line" size={EVENT_ICON_SIZE.search} className="shrink-0" aria-hidden />
           <input
             ref={searchRef}
             type="search"

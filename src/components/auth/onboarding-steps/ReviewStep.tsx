@@ -1,6 +1,7 @@
 import { Button } from "../../ui/button"
 import { SpinnerIcon } from "../icons/SpinnerIcon"
 import { OnboardingStepShell } from "../OnboardingStepShell"
+import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
 import type { OnboardingFlowStep } from "../../../pages/auth/types"
 
 const REVIEW_SECTIONS: { label: string; step: OnboardingFlowStep }[] = [
@@ -34,7 +35,7 @@ export function ReviewStep({
       titleBlock={
         <div className="flex max-w-[520px] flex-col gap-3 tracking-[-0.1px]">
           <h1 className="font-display text-2xl font-semibold leading-8 text-text-default-500">Review and submit</h1>
-          <p className="text-sm font-normal leading-[22px] text-text-neutral-400">
+          <p className={authBodyTextClassName}>
             Kindly review the information you provided before you submit your business information for our onboarding
             verification
           </p>
@@ -71,7 +72,7 @@ export function ReviewStep({
         </p>
 
         <Button
-          className="h-10 min-h-10 gap-2 rounded-xl px-3.5"
+          className={authOnboardingPrimaryButtonClassName}
           variant="primary"
           block
           disabled={isSubmitting}

@@ -1,7 +1,6 @@
-import { Star } from "lucide-react"
 import { Modal } from "../../ui/modal"
 import { Button } from "../../ui/button"
-import { cn } from "../../../lib/utils"
+import { EventIcon } from "../icons/EventIcon"
 
 export type ReviewDetail = {
   eventTitle: string
@@ -14,12 +13,11 @@ function Stars({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-1">
       {Array.from({ length: 5 }).map((_, index) => (
-        <Star
+        <EventIcon
           key={index}
-          className={cn(
-            "size-4",
-            index < rating ? "fill-bg-accent text-bg-accent" : "fill-bg-default-100 text-bg-default-100",
-          )}
+          name={index < rating ? "star-fill-accent" : "star-fill"}
+          size={16}
+          className="shrink-0"
         />
       ))}
     </div>

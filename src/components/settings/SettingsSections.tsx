@@ -1,21 +1,4 @@
 import { useRef, useState } from "react"
-import {
-  ChevronRight,
-  CreditCard,
-  Landmark,
-  Leaf,
-  MoreHorizontal,
-  Pencil,
-  Plus,
-  Rocket,
-  Search,
-  ShieldBan,
-  Star,
-  Trash2,
-  Upload,
-  UploadCloud,
-  X,
-} from "lucide-react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
@@ -33,6 +16,10 @@ import {
 import { Modal } from "../ui/modal"
 import { ConfirmModal } from "../ui/confirm-modal"
 import { PersonAvatar } from "../events/detail/PersonAvatar"
+import { elevatedCardSurfaceClassName } from "../events/detail/detail-primitives"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
+import { SettingsSearchIcon, SettingsUploadButton, settingsTableCardClassName } from "./settings-primitives"
 import { toast } from "../../hooks/use-toast"
 import { cn } from "../../lib/utils"
 import {
@@ -113,7 +100,7 @@ function CheckboxRow({
   )
 }
 
-const FORM_WIDTH = "w-full max-w-[592px]"
+const FORM_WIDTH = "w-full"
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 
@@ -167,16 +154,7 @@ export function ProfileSection() {
           <PersonAvatar name="Daniel Osonuga" tone="orange" size={64} />
         )}
         <div className="flex flex-col gap-1.5">
-          <Button
-            type="button"
-            variant="neutral"
-            size="sm"
-            className="w-fit rounded-lg"
-            leftIcon={<Upload className="size-4" />}
-            onClick={photo.open}
-          >
-            Upload photo
-          </Button>
+          <SettingsUploadButton onClick={photo.open}>Upload photo</SettingsUploadButton>
           {photo.input}
           <span className="text-xs text-text-table-header">JPG, PNG & GIF file up to 2MB at least 400px by 400px</span>
         </div>
@@ -209,7 +187,7 @@ export function ProfileSection() {
               }}
               className="pointer-events-auto cursor-pointer text-icon-neutral hover:text-text-events-strong"
             >
-              <Pencil className="size-4" />
+              <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.meta} />
             </button>
           }
         />
@@ -294,20 +272,11 @@ export function NgoProfileSection() {
             <img src={logo.preview} alt="Logo" className="size-16 shrink-0 rounded-xl object-cover" />
           ) : (
             <span className="flex size-16 items-center justify-center rounded-xl bg-bg-default-100 text-icon-neutral">
-              <UploadCloud className="size-6" />
+              <EventIcon name="pic-fill" size={24} />
             </span>
           )}
           <div className="flex flex-col gap-1.5">
-            <Button
-              type="button"
-              variant="neutral"
-              size="sm"
-              className="w-fit rounded-lg"
-              leftIcon={<Upload className="size-4" />}
-              onClick={logo.open}
-            >
-              Upload logo
-            </Button>
+            <SettingsUploadButton onClick={logo.open}>Upload logo</SettingsUploadButton>
             {logo.input}
             <span className="text-xs text-text-table-header">JPG, PNG & GIF file up to 5MB at least 400px by 400px</span>
           </div>
@@ -326,7 +295,7 @@ export function NgoProfileSection() {
           ) : (
             <>
               <span className="flex size-9 items-center justify-center rounded-lg bg-bg-default-100 text-icon-neutral">
-                <Upload className="size-4" />
+                <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.meta} />
               </span>
               <span className="text-sm font-[510] text-text-events-strong">Drag & drop or choose file</span>
               <span className="text-xs text-text-table-header">JPG, PNG, Max file size: 1MB at least 390px by 140px</span>
@@ -369,7 +338,7 @@ export function NgoProfileSection() {
 
       <div className="flex flex-col gap-2">
         <FieldLabel>Past activities</FieldLabel>
-        <div className="max-h-[140px] overflow-hidden rounded-xl border border-border-default-100 bg-bg-canvas p-4 text-sm leading-[22px] text-text-events-strong">
+        <div className={cn(elevatedCardSurfaceClassName, "max-h-[140px] overflow-hidden p-4 text-sm leading-[22px] text-text-events-strong")}>
           <p className="font-[510]">1. Job Readiness Workshops</p>
           <p className="mt-2 text-text-table-header">Hosted monthly training sessions covering:</p>
           <ul className="mt-1 list-disc pl-5 text-text-table-header">
@@ -499,37 +468,43 @@ export function TeamMembersSection() {
   const allSelected = filtered.length > 0 && filtered.every((r) => selected.has(r.id))
 
   return (
-    <div className="flex w-full max-w-[960px] flex-col gap-6">
+    <div className="flex w-full max-w-[968px] flex-col gap-6">
       <SectionHeader title="Team members" subtitle="Manage your team members and their roles" />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-full sm:w-[260px]">
+          <div className="w-full sm:w-[400px]">
             <Input
               density="compact"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search members"
-              leftIcon={<Search className="size-4" />}
+              leftIcon={<SettingsSearchIcon />}
             />
           </div>
-          <FilterDropdown label="All" options={["All", ...new Set(rows.map((r) => r.role))]} value={roleFilter} onValueChange={setRoleFilter} />
+          <FilterDropdown
+            appearance="events"
+            label="All"
+            options={["All", ...new Set(rows.map((r) => r.role))]}
+            value={roleFilter}
+            onValueChange={setRoleFilter}
+          />
         </div>
         <Button
           variant="primary"
           size="sm"
           className="rounded-lg"
-          leftIcon={<Plus className="size-4" />}
+          leftIcon={<EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />}
           onClick={() => setInviteOpen(true)}
         >
           Invite member
         </Button>
       </div>
 
-      <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+      <div className={settingsTableCardClassName}>
         <Table contained={false} className="w-full">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10">
+              <TableHead className="w-12 px-0 text-center">
                 <Checkbox
                   size="sm"
                   checked={allSelected ? true : selected.size > 0 ? "indeterminate" : false}
@@ -543,7 +518,7 @@ export function TeamMembersSection() {
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date joined</TableHead>
-              <TableHead className="w-12" />
+              <TableHead className="w-12 px-0 text-center" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -593,35 +568,35 @@ export function TeamMembersSection() {
                         aria-label={`Actions for ${row.name}`}
                         className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-icon-neutral transition-colors hover:bg-bg-default-100 data-[state=open]:border data-[state=open]:border-border-input-active"
                       >
-                        <MoreHorizontal className="size-4" />
+                        <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="min-w-[11rem]">
                       {row.status === "pending" ? (
                         <>
                           <DropdownMenuItem onSelect={() => setEditing(row)}>
-                            <Pencil className="size-4 text-icon-neutral" />
+                            <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                             Edit invite
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-text-negative focus:bg-bg-negative-soft"
                             onSelect={() => removeMember(row.id, "Invite revoked")}
                           >
-                            <X className="size-4 text-icon-negative" />
+                            <EventIcon name="close-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
                             Revoke invite
                           </DropdownMenuItem>
                         </>
                       ) : (
                         <>
                           <DropdownMenuItem onSelect={() => setEditing(row)}>
-                            <Pencil className="size-4 text-icon-neutral" />
+                            <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
                             Edit member
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-text-negative focus:bg-bg-negative-soft"
                             onSelect={() => removeMember(row.id, `${row.name} deactivated`)}
                           >
-                            <ShieldBan className="size-4 text-icon-negative" />
+                            <EventIcon name="close-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
                             Deactivate member
                           </DropdownMenuItem>
                         </>
@@ -703,35 +678,47 @@ export function AuditLogsSection() {
   })
 
   return (
-    <div className="flex w-full max-w-[960px] flex-col gap-6">
+    <div className="flex w-full max-w-[968px] flex-col gap-6">
       <SectionHeader title="Audit logs" subtitle="Manage and monitor team activity" />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <FilterDropdown label="Member" options={["Member", ...new Set(AUDIT_LOGS.map((l) => l.member))]} value={member} onValueChange={setMember} />
-          <FilterDropdown label="Date" options={["Date", "Today", "This week", "This month"]} value={dateFilter} onValueChange={setDateFilter} />
+          <FilterDropdown
+            appearance="events"
+            label="Member"
+            options={["Member", ...new Set(AUDIT_LOGS.map((l) => l.member))]}
+            value={member}
+            onValueChange={setMember}
+          />
+          <FilterDropdown
+            appearance="events"
+            label="Date"
+            options={["Date", "Today", "This week", "This month"]}
+            value={dateFilter}
+            onValueChange={setDateFilter}
+          />
         </div>
-        <div className="w-full sm:w-[260px]">
+        <div className="w-full sm:w-[400px]">
           <Input
             density="compact"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search logs"
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<SettingsSearchIcon />}
           />
         </div>
       </div>
 
-      <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+      <div className={settingsTableCardClassName}>
         <Table contained={false} className="w-full">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10">
+              <TableHead className="w-12 px-0 text-center">
                 <Checkbox size="sm" checked={false} aria-label="Select all" />
               </TableHead>
               <TableHead>Member</TableHead>
               <TableHead>Log</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="w-12" />
+              <TableHead className="w-12 px-0 text-center" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -749,7 +736,7 @@ export function AuditLogsSection() {
                 <TableCell className="type-table-cell-secondary">{log.log}</TableCell>
                 <TableCell className="type-table-cell-primary">{log.date}</TableCell>
                 <TableCell className="text-right">
-                  <ChevronRight className="ml-auto size-4 text-icon-neutral" />
+                  <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
                 </TableCell>
               </TableRow>
             ))}
@@ -786,7 +773,7 @@ export function PayoutsSection() {
   const history = PAYOUT_HISTORY.filter((p) => !query.trim() || p.title.toLowerCase().includes(query.trim().toLowerCase()))
 
   return (
-    <div className="flex w-full max-w-[960px] flex-col gap-6">
+    <div className="flex w-full max-w-[968px] flex-col gap-6">
       <SectionHeader title="Payouts & settlement" subtitle="Manage how you receive payout and settlement" />
 
       <div className="flex gap-6 border-b border-border-default-100">
@@ -810,9 +797,9 @@ export function PayoutsSection() {
       {subTab === "settings" ? (
         <>
           {accounts.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 rounded-xl border border-border-default-100 bg-bg-canvas px-4 py-12 text-center">
+            <div className={cn(elevatedCardSurfaceClassName, "flex flex-col items-center gap-3 px-4 py-12 text-center")}>
               <span className="flex size-11 items-center justify-center rounded-full bg-bg-default-100 text-icon-neutral">
-                <Landmark className="size-5" />
+                <EventIcon name="bank-fill" size={24} />
               </span>
               <div className="flex flex-col gap-1">
                 <p className="text-sm font-[510] text-text-events-strong">No payout account yet</p>
@@ -820,17 +807,23 @@ export function PayoutsSection() {
                   Add your bank account. Once your bank account is added, it will appear here
                 </p>
               </div>
-              <Button variant="primary" size="sm" className="rounded-lg" leftIcon={<Plus className="size-4" />} onClick={() => setAddOpen(true)}>
+              <Button
+                variant="primary"
+                size="sm"
+                className="rounded-lg"
+                leftIcon={<EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />}
+                onClick={() => setAddOpen(true)}
+              >
                 Add account
               </Button>
             </div>
           ) : (
-          <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+          <div className={settingsTableCardClassName}>
             {accounts.map((acc) => (
-              <div key={acc.id} className="flex items-center justify-between gap-3 border-b border-border-default-100 px-4 py-3">
+              <div key={acc.id} className="flex items-center justify-between gap-3 border-b border-border-default-100 px-4 py-3 last:border-b-0">
                 <div className="flex items-center gap-3">
                   <span className="flex size-9 items-center justify-center rounded-lg bg-bg-default-100 text-icon-neutral">
-                    <Landmark className="size-4" />
+                    <EventIcon name="bank-fill" size={EVENT_ICON_SIZE.meta} />
                   </span>
                   <div className="flex flex-col">
                     <span className="flex items-center gap-1.5 text-sm font-[510] text-text-events-strong">
@@ -852,7 +845,7 @@ export function PayoutsSection() {
                       variant="neutral"
                       size="sm"
                       className="rounded-lg"
-                      leftIcon={<Star className="size-4" />}
+                      leftIcon={<EventIcon name="star-fill-accent" size={EVENT_ICON_SIZE.buttonLeading} />}
                       onClick={() => {
                         setAccounts((prev) => prev.map((a) => ({ ...a, primary: a.id === acc.id })))
                         toast({ variant: "success", title: "Primary account updated" })
@@ -864,7 +857,7 @@ export function PayoutsSection() {
                       variant="neutral"
                       size="sm"
                       className="rounded-lg"
-                      leftIcon={<Trash2 className="size-4" />}
+                      leftIcon={<EventIcon name="delete-fill" size={EVENT_ICON_SIZE.buttonLeading} />}
                       onClick={() => setRemoveId(acc.id)}
                     >
                       Remove
@@ -878,7 +871,7 @@ export function PayoutsSection() {
               onClick={() => setAddOpen(true)}
               className="flex w-full items-center justify-center gap-1.5 px-4 py-3 text-sm font-[510] text-text-events-strong transition-colors hover:bg-bg-default-100/60"
             >
-              <Plus className="size-4 text-icon-neutral" />
+              <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" />
               Add account
             </button>
           </div>
@@ -900,20 +893,20 @@ export function PayoutsSection() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search payouts"
-              leftIcon={<Search className="size-4" />}
+              leftIcon={<SettingsSearchIcon />}
             />
           </div>
-          <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+          <div className={settingsTableCardClassName}>
             <Table contained={false} className="w-full">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-10">
+                  <TableHead className="w-12 px-0 text-center">
                     <Checkbox size="sm" checked={false} aria-label="Select all" />
                   </TableHead>
                   <TableHead>Payout</TableHead>
                   <TableHead>Amount</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="w-12" />
+                  <TableHead className="w-12 px-0 text-center" />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -935,7 +928,7 @@ export function PayoutsSection() {
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <ChevronRight className="ml-auto size-4 text-icon-neutral" />
+                      <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -1035,9 +1028,9 @@ function UpgradeModal({ open, onClose, onUpgrade }: { open: boolean; onClose: ()
             ))}
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-3 rounded-2xl border border-border-default-100 p-4">
+            <div className={cn(elevatedCardSurfaceClassName, "flex flex-col gap-3 p-4")}>
               <span className="flex items-center gap-1.5 text-sm font-[510] text-text-events-strong">
-                <Rocket className="size-4 text-icon-neutral" /> Free
+                <EventIcon name="rocket-2-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" /> Free
               </span>
               <span className="text-xs text-text-table-header">Enjoy our basic features</span>
               <span className="font-display text-2xl font-semibold text-text-events-strong">₦0</span>
@@ -1054,9 +1047,9 @@ function UpgradeModal({ open, onClose, onUpgrade }: { open: boolean; onClose: ()
                 ))}
               </ul>
             </div>
-            <div className="flex flex-col gap-3 rounded-2xl border border-border-input-active p-4">
+            <div className={cn(elevatedCardSurfaceClassName, "flex flex-col gap-3 border border-border-input-active p-4")}>
               <span className="flex items-center gap-1.5 text-sm font-[510] text-text-events-strong">
-                <Rocket className="size-4 text-bg-accent" /> Premium
+                <EventIcon name="rocket-2-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" /> Premium
               </span>
               <span className="text-xs text-text-table-header">Enjoy our full features</span>
               <span className="font-display text-2xl font-semibold text-text-events-strong">₦20,000</span>
@@ -1096,14 +1089,14 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
   const premium = plan === "premium"
 
   return (
-    <div className="flex w-full max-w-[1000px] flex-col gap-6">
+    <div className="flex w-full max-w-[968px] flex-col gap-6">
       <SectionHeader title="Billing & plans" subtitle="Manage your billing information and subscription" />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="flex flex-col gap-3 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
+        <div className={cn(elevatedCardSurfaceClassName, "flex min-h-[174px] flex-col gap-3 p-4")}>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-sm text-text-table-header">
-              <Rocket className="size-4 text-icon-neutral" /> Current plan
+              <EventIcon name="rocket-2-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" /> Current plan
             </span>
             <span className="text-xs text-text-table-header">
               {premium ? "Auto-renews on 17 May 2026" : "Renews on 17 May 2026"}
@@ -1134,12 +1127,12 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
             </Button>
           )}
         </div>
-        <div className="flex flex-col gap-3 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
+        <div className={cn(elevatedCardSurfaceClassName, "flex min-h-[174px] flex-col gap-3 p-4")}>
           <span className="text-sm text-text-table-header">Card information</span>
           {premium ? (
             <div className="flex items-center gap-3 rounded-xl border border-border-default-100 p-3">
               <span className="flex size-9 items-center justify-center rounded-lg bg-bg-default-100 text-icon-neutral">
-                <CreditCard className="size-4" />
+                <EventIcon name="bank-card-fill" size={EVENT_ICON_SIZE.meta} />
               </span>
               <div className="flex flex-col">
                 <span className="text-sm font-[510] text-text-events-strong">•••• •••• •••• 0977</span>
@@ -1164,13 +1157,23 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
+      <div className={cn(elevatedCardSurfaceClassName, "flex flex-col gap-4 p-4")}>
         <div className="flex flex-col gap-6 sm:flex-row sm:divide-x sm:divide-border-default-100">
           <div className="flex-1 sm:pr-6">
-            <UsageStat icon={<Star className="size-4 text-bg-accent" />} label="Active cause" value="0 / 3" left="3 left" />
+            <UsageStat
+              icon={<EventIcon name="flag-2-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" />}
+              label="Active cause"
+              value="0 / 3"
+              left="3 left"
+            />
           </div>
           <div className="flex-1 sm:px-6">
-            <UsageStat icon={<Leaf className="size-4 text-text-success" />} label="Active needs" value="0 / 1" left="1 left" />
+            <UsageStat
+              icon={<EventIcon name="award-fill" size={EVENT_ICON_SIZE.meta} className="text-text-success" />}
+              label="Active needs"
+              value="0 / 1"
+              left="1 left"
+            />
           </div>
           <div className="flex-1 sm:pl-6">
             <UsageStat icon={<span className="text-sm">₦</span>} label="Donations" value="₦0 / 500,000" left="₦ 500,000 left" />
@@ -1181,22 +1184,22 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
         </Button>
       </div>
 
-      <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+      <div className={settingsTableCardClassName}>
         <div className="flex items-center justify-between px-4 py-3">
-          <div className="w-full sm:w-[300px]">
-            <Input density="compact" placeholder="Search invoices" leftIcon={<Search className="size-4" />} disabled={!premium} />
+          <div className="w-full sm:w-[400px]">
+            <Input density="compact" placeholder="Search invoices" leftIcon={<SettingsSearchIcon />} disabled={!premium} />
           </div>
         </div>
         <Table contained={false} className="w-full">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10">
+              <TableHead className="w-12 px-0 text-center">
                 <Checkbox size="sm" checked={false} disabled={!premium} aria-label="Select all" />
               </TableHead>
               <TableHead>Invoice</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="w-12" />
+              <TableHead className="w-12 px-0 text-center" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -1224,7 +1227,7 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <ChevronRight className="ml-auto size-4 text-icon-neutral" />
+                    <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
                   </TableCell>
                 </TableRow>
               ))

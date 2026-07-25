@@ -317,7 +317,7 @@ export function VolunteersTab({
             {selectionCount === 0 ? (
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="w-10 pl-4">
+                <TableHead className="w-12 px-0 text-center">
                   <Checkbox
                     size="sm"
                     checked={allSelected ? true : someSelected ? "indeterminate" : false}
@@ -330,7 +330,7 @@ export function VolunteersTab({
                 <TableHead className="min-w-[180px]">Reason</TableHead>
                 <TableHead className="w-[120px]">Status</TableHead>
                 <TableHead className="w-[140px]">Date applied</TableHead>
-                <TableHead className="w-12" />
+                <TableHead className="w-12 px-0 text-center" />
               </TableRow>
             </TableHeader>
             ) : null}

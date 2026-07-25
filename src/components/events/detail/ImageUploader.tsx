@@ -1,6 +1,7 @@
 import { useRef, useState } from "react"
-import { MoreHorizontal, Upload } from "lucide-react"
 import { cn } from "../../../lib/utils"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,7 +78,7 @@ export function ImageUploader({
           remaining === 0 ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-border-input-active",
         )}
       >
-        <Upload className="size-5 text-icon-neutral" />
+        <EventIcon name="upload-2-fill" size={20} className="text-icon-neutral" />
         <p className="text-sm font-[510] text-text-events-strong">
           {remaining === 0 ? "Maximum of 4 images added" : "Drag & drop or choose image"}
         </p>
@@ -109,7 +110,7 @@ export function ImageUploader({
                   className="absolute right-1 top-1 inline-flex size-5 cursor-pointer items-center justify-center rounded-full bg-white/85 text-text-table-header outline-none hover:bg-white"
                   aria-label="Image options"
                 >
-                  <MoreHorizontal className="size-3" />
+                  <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.composeAction} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                   <DropdownMenuItem onSelect={() => onCoverChange(index)}>

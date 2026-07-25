@@ -4,6 +4,11 @@ import { BayanaLogo } from "../../brand/BayanaLogo"
 import { Button } from "../../ui/button"
 import { maskEmail } from "../../../lib/mask-email"
 import { openEmailInbox } from "../../../lib/open-email-inbox"
+import {
+  authBodyTextClassName,
+  authNeutralButtonClassName,
+  authPrimaryButtonClassName,
+} from "../../../lib/auth-form-styles"
 
 const DEMO_EMAIL_FALLBACK = "john.doe@bayana.com"
 const RESEND_COOLDOWN_SECONDS = 60
@@ -57,19 +62,20 @@ export function CheckEmailStep({
         <h6 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
           Check your email
         </h6>
-        <p className="text-sm leading-[22px] text-text-neutral-400">
+        <p className={authBodyTextClassName}>
           We have sent a confirmation link to <span className="text-text-default-500">{maskedDisplay}</span>,
           please click the link to confirm your account
         </p>
       </div>
       <div className="flex w-full flex-col gap-4">
-        <Button variant="primary" block onClick={() => openEmailInbox(email)}>
+        <Button variant="primary" block className={authPrimaryButtonClassName} onClick={() => openEmailInbox(email)}>
           Open email
         </Button>
         <Button
           variant="neutral"
           block
           disabled={isCheckingVerification}
+          className={authNeutralButtonClassName}
           onClick={() => void onContinue()}
         >
           {isCheckingVerification ? (
@@ -81,7 +87,13 @@ export function CheckEmailStep({
             "I've verified my email"
           )}
         </Button>
-        <Button variant="neutral" disabled={resendDisabled} block onClick={() => void handleResend()}>
+        <Button
+          variant="neutral"
+          disabled={resendDisabled}
+          block
+          className={authNeutralButtonClassName}
+          onClick={() => void handleResend()}
+        >
           {isResending ? (
             <span className="inline-flex items-center gap-2">
               <SpinnerIcon className="size-4" />
@@ -93,7 +105,7 @@ export function CheckEmailStep({
             "Resend confirmation email"
           )}
         </Button>
-        <Button variant="text" block onClick={onBackToSignup}>
+        <Button variant="text" block className="type-small-medium" onClick={onBackToSignup}>
           Back to sign up
         </Button>
       </div>

@@ -1,30 +1,9 @@
 import { useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import {
-  CalendarDays,
-  Cake,
-  ChevronRight,
-  Flag,
-  Heart,
-  Mail,
-  MessageSquare,
-  MoreHorizontal,
-  Phone,
-  Search,
-  ShieldBan,
-  ShieldCheck,
-  Sparkles,
-  Star,
-  User,
-  Users,
-  Eye,
-  Share2,
-  CircleCheck,
-  Truck,
-} from "lucide-react"
 import { DashboardLayout } from "../../components/dashboard/DashboardLayout"
-import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+import { DASHBOARD_DETAIL_MAX_WIDTH_PX } from "../../lib/dashboard-layout"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
+import { tableSurfaceClassName } from "../../lib/table-styles"
 import { DataTablePagination, FilterDropdown } from "../../components/data-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
 import { Button } from "../../components/ui/button"
@@ -37,6 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
 import { PersonAvatar } from "../../components/events/detail/PersonAvatar"
+import { EventIcon, type EventIconName } from "../../components/events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { PublicVisibilityIcon, PrivateVisibilityIcon } from "../../components/events/icons/VisibilityIcons"
 import { ConfirmModal } from "../../components/ui/confirm-modal"
 import {
@@ -79,11 +60,11 @@ function StatusPill({ status }: { status: VolunteerDetail["status"] }) {
   )
 }
 
-function InfoField({ icon: Icon, label, children }: { icon: typeof Mail; label: string; children: React.ReactNode }) {
+function InfoField({ icon, label, children }: { icon: EventIconName; label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <span className="flex items-center gap-1.5 text-xs leading-5 text-text-table-header">
-        <Icon className="size-3.5" />
+        <EventIcon name={icon} size={14} />
         {label}
       </span>
       {children}
@@ -122,25 +103,25 @@ function OverviewTab({ v }: { v: VolunteerDetail }) {
           <h2 className="font-display text-xl font-semibold leading-7 text-text-events-strong">
             About volunteer
           </h2>
-          <InfoField icon={User} label="Full name">
+          <InfoField icon="user-3-fill" label="Full name">
             <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.name}</span>
           </InfoField>
-          <InfoField icon={Mail} label="Email">
+          <InfoField icon="inbox-fill" label="Email">
             <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.email}</span>
           </InfoField>
-          <InfoField icon={Phone} label="Phone number">
+          <InfoField icon="user-3-fill" label="Phone number">
             <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.phone}</span>
           </InfoField>
-          <InfoField icon={Cake} label="Date of birth">
+          <InfoField icon="calendar-fill" label="Date of birth">
             <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.dateOfBirth}</span>
           </InfoField>
-          <InfoField icon={Sparkles} label="Skills">
+          <InfoField icon="sparkles-fill" label="Skills">
             <Chips items={v.skills} />
           </InfoField>
-          <InfoField icon={Heart} label="Interests">
+          <InfoField icon="award-fill" label="Interests">
             <Chips items={v.interests} />
           </InfoField>
-          <InfoField icon={CalendarDays} label="Account created">
+          <InfoField icon="calendar-fill" label="Account created">
             <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.accountCreated}</span>
           </InfoField>
         </section>
@@ -251,12 +232,12 @@ function TableShell({
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder={searchPlaceholder}
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label={searchPlaceholder}
           />
         </div>
       </div>
-      <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+      <div className={tableSurfaceClassName}>
         <div className="w-full overflow-x-auto">
           <div style={{ minWidth: 820 }}>
             <Table contained={false} className="w-full table-fixed">
@@ -318,13 +299,13 @@ function EventsTab({ v }: { v: VolunteerDetail }) {
           </colgroup>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10" />
+              <TableHead className="w-12 px-0 text-center" />
               <TableHead>Event</TableHead>
               <TableHead>Event type</TableHead>
               <TableHead>Visibility</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="w-12" />
+              <TableHead className="w-12 px-0 text-center" />
             </TableRow>
           </TableHeader>
         </>
@@ -373,9 +354,9 @@ function EventsTab({ v }: { v: VolunteerDetail }) {
             <TableCell className="text-right">
               <RowMenu
                 items={[
-                  { icon: Eye, label: "View details" },
-                  { icon: Users, label: "View volunteers" },
-                  { icon: Share2, label: "Get shareable link" },
+                  { icon: "eye-fill", label: "View details" },
+                  { icon: "user-group-fill", label: "View volunteers" },
+                  { icon: "share-2-fill", label: "Get shareable link" },
                 ]}
               />
             </TableCell>
@@ -389,11 +370,11 @@ function EventsTab({ v }: { v: VolunteerDetail }) {
 function DonationStatusTag({ status }: { status: "in-transit" | "completed" }) {
   return status === "completed" ? (
     <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-[#e7f7ed] px-2 text-xs font-[510] leading-4 text-[#2f9e57]">
-      <CircleCheck className="size-3" /> Completed
+      <EventIcon name="check-circle-fill" size={12} /> Completed
     </span>
   ) : (
     <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-bg-accent-soft px-2 text-xs font-[510] leading-4 text-[#b25e09]">
-      <Truck className="size-3" /> In transit
+      <EventIcon name="box-3-fill" size={12} /> In transit
     </span>
   )
 }
@@ -433,12 +414,12 @@ function DonationsTab({ v }: { v: VolunteerDetail }) {
           </colgroup>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10" />
+              <TableHead className="w-12 px-0 text-center" />
               <TableHead>Donation id</TableHead>
               <TableHead>Donation type</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="w-12" />
+              <TableHead className="w-12 px-0 text-center" />
             </TableRow>
           </TableHeader>
         </>
@@ -465,9 +446,9 @@ function DonationsTab({ v }: { v: VolunteerDetail }) {
           <TableCell className="text-right">
             <RowMenu
               items={[
-                { icon: Eye, label: "View details" },
-                { icon: CircleCheck, label: "Confirm receipt" },
-                { icon: Flag, label: "Flag issues" },
+                { icon: "eye-fill", label: "View details" },
+                { icon: "check-circle-fill", label: "Confirm receipt" },
+                { icon: "flag-2-fill", label: "Flag issues" },
               ]}
             />
           </TableCell>
@@ -481,12 +462,11 @@ function StarRating({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, index) => (
-        <Star
+        <EventIcon
           key={index}
-          className={cn(
-            "size-4",
-            index < rating ? "fill-bg-accent text-bg-accent" : "fill-bg-default-100 text-bg-default-100",
-          )}
+          name={index < rating ? "star-fill-accent" : "star-fill"}
+          size={EVENT_ICON_SIZE.meta}
+          className="shrink-0"
         />
       ))}
     </div>
@@ -523,12 +503,12 @@ function ReviewsTab({ v, onOpenReview }: { v: VolunteerDetail; onOpenReview: (re
           </colgroup>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10" />
+              <TableHead className="w-12 px-0 text-center" />
               <TableHead>Event</TableHead>
               <TableHead>Rating</TableHead>
               <TableHead>Review</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="w-12" />
+              <TableHead className="w-12 px-0 text-center" />
             </TableRow>
           </TableHeader>
         </>
@@ -567,7 +547,7 @@ function ReviewsTab({ v, onOpenReview }: { v: VolunteerDetail; onOpenReview: (re
           </TableCell>
           <TableCell className="type-table-cell-secondary">{row.date}</TableCell>
           <TableCell className="text-right">
-            <ChevronRight className="ml-auto size-4 text-icon-neutral" />
+            <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
           </TableCell>
         </TableRow>
       ))}
@@ -575,7 +555,7 @@ function ReviewsTab({ v, onOpenReview }: { v: VolunteerDetail; onOpenReview: (re
   )
 }
 
-function RowMenu({ items }: { items: { icon: typeof Eye; label: string }[] }) {
+function RowMenu({ items }: { items: { icon: EventIconName; label: string }[] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -585,7 +565,7 @@ function RowMenu({ items }: { items: { icon: typeof Eye; label: string }[] }) {
           className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-icon-neutral outline-none transition-colors hover:bg-bg-default-100 focus-visible:ring-2 focus-visible:ring-border-input-active"
           onClick={(event) => event.stopPropagation()}
         >
-          <MoreHorizontal className="size-4" />
+          <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[11rem]">
@@ -596,7 +576,7 @@ function RowMenu({ items }: { items: { icon: typeof Eye; label: string }[] }) {
               toast({ title: "Coming soon", description: `${item.label} will be available after API integration.` })
             }
           >
-            <item.icon className="size-4 text-icon-neutral" />
+            <EventIcon name={item.icon} size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
             {item.label}
           </DropdownMenuItem>
         ))}
@@ -636,11 +616,12 @@ export function VolunteerDetailPage() {
     }
   }, [tab, v])
 
-  const GUTTER = { paddingLeft: DASHBOARD_PAGE_GUTTER_PX, paddingRight: DASHBOARD_PAGE_GUTTER_PX }
+  const detailContentClass = "mx-auto w-full px-6 xl:px-0"
+  const detailContentStyle = { maxWidth: DASHBOARD_DETAIL_MAX_WIDTH_PX }
 
   return (
     <DashboardLayout activeTab="volunteers">
-      <div style={GUTTER} className="flex flex-col gap-5 py-5">
+      <div className={cn(detailContentClass, "flex flex-col gap-5 py-5")} style={detailContentStyle}>
         {/* breadcrumb */}
         <nav className="flex items-center gap-1.5 text-sm text-text-table-header">
           <button
@@ -650,7 +631,7 @@ export function VolunteerDetailPage() {
           >
             Volunteers
           </button>
-          <ChevronRight className="size-3 shrink-0" />
+          <EventIcon name="arrow-right-fill" size={12} className="shrink-0" />
           <span className="text-text-events-strong">{v.name}</span>
         </nav>
 
@@ -675,7 +656,7 @@ export function VolunteerDetailPage() {
               variant="neutral"
               size="sm"
               className="h-9 rounded-lg"
-              leftIcon={<MessageSquare className="size-4" />}
+              leftIcon={<EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.buttonLeading} />}
               onClick={() => toast({ title: "Coming soon", description: "Messaging will be available after API integration." })}
             >
               Send message
@@ -683,18 +664,18 @@ export function VolunteerDetailPage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="neutral" size="sm" className="size-9 rounded-lg px-0" aria-label="More actions">
-                  <MoreHorizontal className="size-4" />
+                  <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-[11rem]">
                 {v.status === "blacklisted" ? (
                   <DropdownMenuItem className="text-text-success focus:bg-bg-success-soft" onSelect={() => setBlacklistOpen(true)}>
-                    <ShieldCheck className="size-4 text-text-success" />
+                    <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-text-success" />
                     Remove from blacklist
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem className="text-text-negative focus:bg-bg-negative-soft" onSelect={() => setBlacklistOpen(true)}>
-                    <ShieldBan className="size-4 text-icon-negative" />
+                    <EventIcon name="close-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
                     Add to blacklist
                   </DropdownMenuItem>
                 )}

@@ -1,15 +1,16 @@
-import { CalendarDays, ImageIcon, Mail, MessageSquare, Phone, Zap } from "lucide-react"
 import { Modal } from "../../ui/modal"
 import { Button } from "../../ui/button"
+import { EventIcon, type EventIconName } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import { PersonAvatar } from "./PersonAvatar"
 import { InKindStatusTag } from "./NeedsInKindDonationsTab"
 import type { InKindDonationRow } from "../../../pages/dashboard/event-detail-types"
 
-function InfoRow({ icon: Icon, label, value }: { icon: typeof Mail; label: string; value: string }) {
+function InfoRow({ icon, label, value }: { icon: EventIconName; label: string; value: string }) {
   return (
     <div className="flex flex-col gap-1">
       <span className="flex items-center gap-1.5 text-xs leading-5 text-text-table-header">
-        <Icon className="size-3.5" />
+        <EventIcon name={icon} size={EVENT_ICON_SIZE.fieldHint} />
         {label}
       </span>
       <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{value}</span>
@@ -67,15 +68,15 @@ export function DonorDetailsModal({
               type="button"
               variant="neutral"
               className="h-9 w-fit rounded-lg"
-              leftIcon={<MessageSquare className="size-4" />}
+              leftIcon={<EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.meta} />}
               onClick={() => onMessage(donation)}
             >
               Send message
             </Button>
             <div className="flex flex-col gap-3">
-              <InfoRow icon={Mail} label="Email" value={donation.email} />
-              <InfoRow icon={Phone} label="Phone number" value={donation.phone} />
-              <InfoRow icon={CalendarDays} label="Date joined" value={donation.dateJoined} />
+              <InfoRow icon="inbox-fill" label="Email" value={donation.email} />
+              <InfoRow icon="user-3-fill" label="Phone number" value={donation.phone} />
+              <InfoRow icon="calendar-fill" label="Date joined" value={donation.dateJoined} />
             </div>
           </div>
 
@@ -97,7 +98,7 @@ export function DonorDetailsModal({
                         {item.imageUrl ? (
                           <img src={item.imageUrl} alt="" className="size-full object-cover" />
                         ) : (
-                          <ImageIcon className="size-4" />
+                          <EventIcon name="pic-fill" size={EVENT_ICON_SIZE.meta} />
                         )}
                       </span>
                       <span className="flex-1 truncate text-sm font-[510] text-text-events-strong">
@@ -137,7 +138,7 @@ export function DonorDetailsModal({
             <div className="flex flex-col gap-3 rounded-2xl border border-border-default-100 p-4">
               <p className="text-sm font-semibold leading-[22px] text-text-events-strong">Activity</p>
               <div className="flex items-start gap-2">
-                <Zap className="mt-0.5 size-4 shrink-0 text-bg-accent" />
+                <EventIcon name="sparkles-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
                 <div className="flex flex-col">
                   <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
                     Pledged {donation.itemsCount} items

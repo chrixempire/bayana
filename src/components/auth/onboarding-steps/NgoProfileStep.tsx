@@ -3,6 +3,7 @@ import { Button } from "../../ui/button"
 import { Textarea } from "../../ui/textarea"
 import { getCauseAreas } from "../../../lib/api/public"
 import { cn } from "../../../lib/utils"
+import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
 import type { CauseAreaSelection, OnboardingData } from "../../../pages/auth/types"
 import { validateLogoFileSize } from "../../../pages/auth/onboarding-validation"
 import { FormField } from "../FormField"
@@ -104,7 +105,7 @@ export function NgoProfileStep({
       titleBlock={
         <div className="flex flex-col gap-3 tracking-[-0.1px]">
           <h1 className="font-display text-2xl font-semibold leading-8 text-text-default-500">Setup your NGO profile</h1>
-          <p className="text-sm font-normal leading-[22px] text-text-neutral-400">
+          <p className={authBodyTextClassName}>
             Provide more information about your Non-governmental organisation for volunteers to see
           </p>
         </div>
@@ -223,7 +224,7 @@ export function NgoProfileStep({
 
         <div className="flex flex-col gap-3">
           <Button
-            className="h-10 min-h-10 gap-2 rounded-xl px-3.5 shadow-[inset_0_-2px_1px_0_rgb(25,89,140,0.5)]"
+            className={authOnboardingPrimaryButtonClassName}
             variant="primary"
             block
             rightIcon={<ContinueArrowIcon className="text-white" />}

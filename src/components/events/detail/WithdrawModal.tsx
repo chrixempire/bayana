@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { Plus, ReceiptText, X } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Modal } from "../../ui/modal"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import type { DonationsData } from "../../../pages/dashboard/event-detail-types"
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
@@ -32,12 +33,12 @@ export function WithdrawModal({
         className="absolute right-4 top-4 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-bg-default-100 text-text-table-header transition-colors hover:bg-bg-active-200"
         aria-label="Close"
       >
-        <X className="size-4" />
+        <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
       </button>
 
       <div className="flex flex-col items-center gap-2 text-center">
         <span className="flex size-12 items-center justify-center rounded-xl bg-bg-default-100 text-text-table-header">
-          <ReceiptText className="size-6" />
+          <EventIcon name="file-fill" size={24} />
         </span>
         <h2 className="font-display text-xl font-semibold leading-7 tracking-[-0.2px] text-text-events-strong">
           Withdraw
@@ -89,7 +90,7 @@ export function WithdrawModal({
           <span className="text-sm font-[510] leading-[22px] text-text-events-strong">Bank account</span>
           <div className="flex items-center gap-3 rounded-xl border border-border-default-100 p-3">
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-bg-default-100 text-text-table-header">
-              <ReceiptText className="size-4" />
+              <EventIcon name="file-fill" size={EVENT_ICON_SIZE.meta} />
             </span>
             <div className="flex min-w-0 flex-1 flex-col">
               <p className="text-sm font-[510] leading-[22px] text-text-events-strong">No account</p>
@@ -97,7 +98,12 @@ export function WithdrawModal({
                 Add your business bank account
               </p>
             </div>
-            <Button variant="neutral" size="sm" className="rounded-[10px]" leftIcon={<Plus className="size-3.5" />}>
+            <Button
+              variant="neutral"
+              size="sm"
+              className="rounded-[10px]"
+              leftIcon={<EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.fieldHint} />}
+            >
               Add
             </Button>
           </div>

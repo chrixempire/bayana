@@ -5,9 +5,10 @@ import { LineChart } from "../../components/analytics/charts"
 import { DashboardLayout, DashboardWideContent, DashboardFullBleed } from "../../components/dashboard/DashboardLayout"
 import { PersonAvatar } from "../../components/events/detail/PersonAvatar"
 import { elevatedCardSurfaceClassName } from "../../components/events/detail/detail-primitives"
-import { EventIcon, type EventIconName } from "../../components/events/icons/EventIcon"
+import { EventIcon } from "../../components/events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { VerificationStatusTag } from "../../components/verification/VerificationStatusTag"
+import { QuickActionMenu } from "../../components/dashboard/QuickActionMenu"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +16,11 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
+import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+import {
+  dashboardNeutralDropdownTriggerClassName,
+  dropdownTriggerOpenClassName,
+} from "../../lib/dropdown-trigger-styles"
 import { toast } from "../../hooks/use-toast"
 import { cn } from "../../lib/utils"
 import type { VerificationStatus } from "./verification-data"
@@ -54,12 +60,6 @@ const VERIFICATION_STATUS: Record<VerificationState, VerificationStatus> = {
   rejected: "rejected",
 }
 
-type QuickAction = {
-  icon: EventIconName
-  label: string
-  shortcut?: string
-  run: () => void
-}
 
 function SeeAllButton({ onClick }: { onClick: () => void }) {
   return (
@@ -70,16 +70,28 @@ function SeeAllButton({ onClick }: { onClick: () => void }) {
     >
       <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} />
       See all
-      <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
     </button>
   )
 }
 
-function ShortcutChip({ children }: { children: string }) {
+
+function VerificationStatCard({
+  verification,
+  empty,
+}: {
+  verification: VerificationState
+  empty: boolean
+}) {
+  const status = empty ? "incomplete" : verification
+
   return (
-    <span className="inline-flex h-4 items-center justify-center rounded bg-bg-default-100 px-1.5 text-[10px] font-semibold leading-[18px] tracking-[0.1px] text-text-events-strong">
-      {children}
-    </span>
+    <div className={cn(elevatedCardSurfaceClassName, "flex h-32 min-w-0 flex-col gap-3 p-4")}>
+      <span className="truncate type-small-medium text-text-table-header">Verification status</span>
+      <VerificationStatusTag status={VERIFICATION_STATUS[status]} />
+      <span className="truncate type-small-regular text-text-table-header">
+        {VERIFICATION_DESCRIPTION[status]}
+      </span>
+    </div>
   )
 }
 
@@ -141,28 +153,6 @@ function MessageAvatar({ message }: { message: UnreadMessage }) {
   )
 }
 
-function VerificationStatCard({
-  verification,
-  empty,
-}: {
-  verification: VerificationState
-  empty: boolean
-}) {
-  const status = empty ? "incomplete" : verification
-
-  return (
-    <div className={cn(elevatedCardSurfaceClassName, "flex min-w-0 flex-1 flex-col gap-3 p-4")}>
-      <span className="truncate text-sm font-[510] leading-[22px] text-text-table-header">
-        Verification status
-      </span>
-      <VerificationStatusTag status={VERIFICATION_STATUS[status]} />
-      <span className="text-sm leading-[22px] text-text-table-header">
-        {VERIFICATION_DESCRIPTION[status]}
-      </span>
-    </div>
-  )
-}
-
 function DashboardSectionCard({
   title,
   onSeeAll,
@@ -199,40 +189,16 @@ export function DashboardPage() {
         : "verified"
 
   const [dateLabel, setDateLabel] = useState("This month")
-  const [actionQuery, setActionQuery] = useState("")
-
-  const quickActions: QuickAction[] = [
-    { icon: "add-circle-fill", label: "Create a cause", shortcut: "C", run: () => navigate("/events/create") },
-    { icon: "add-circle-fill", label: "Create a need", shortcut: "N", run: () => navigate("/events/create") },
-    {
-      icon: "add-circle-fill",
-      label: "Create a new message",
-      shortcut: "M",
-      run: () => navigate(DASHBOARD_TAB_PATHS.messages),
-    },
-    {
-      icon: "user-add-fill",
-      label: "Invite a team member",
-      run: () =>
-        toast({ title: "Coming soon", description: "Team invites will be available after API integration." }),
-    },
-    {
-      icon: "settings-3-fill",
-      label: "Settings",
-      shortcut: "S",
-      run: () => toast({ title: "Coming soon", description: "Settings will be available soon." }),
-    },
-  ]
-  const filteredActions = quickActions.filter((action) =>
-    action.label.toLowerCase().includes(actionQuery.trim().toLowerCase()),
-  )
 
   return (
     <DashboardLayout activeTab="dashboard" showOnboardingBanner={isEmpty}>
       <DashboardWideContent flushBottom className="flex flex-col gap-6 pb-10">
         {verification === "rejected" ? (
           <DashboardFullBleed className="-mt-6 mb-0 sm:-mt-8">
-            <div className="flex items-center justify-between gap-3 bg-[#f3395e] px-10 py-3 text-sm font-medium text-text-on-solid-bg">
+            <div
+              className="flex items-center justify-between gap-3 bg-[#f3395e] py-3 type-small-medium text-text-on-solid-bg"
+              style={{ paddingLeft: DASHBOARD_PAGE_GUTTER_PX, paddingRight: DASHBOARD_PAGE_GUTTER_PX }}
+            >
               <span className="flex items-center gap-2">
                 <EventIcon name="info-fill" size={EVENT_ICON_SIZE.nav} inverted />
                 Your organization onboarding has been rejected. Please view details to understand why
@@ -260,7 +226,12 @@ export function DashboardPage() {
           </h1>
           <div className="flex items-center gap-3">
             <DropdownMenu>
-              <DropdownMenuTrigger className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral outline-none hover:bg-button-neutral-hover data-[state=open]:bg-button-neutral-clicked">
+              <DropdownMenuTrigger
+                className={cn(
+                  dashboardNeutralDropdownTriggerClassName,
+                  dropdownTriggerOpenClassName,
+                )}
+              >
                 <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.nav} />
                 <span>{dateLabel}</span>
               </DropdownMenuTrigger>
@@ -280,57 +251,7 @@ export function DashboardPage() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <DropdownMenu onOpenChange={(open) => !open && setActionQuery("")}>
-              <DropdownMenuTrigger
-                disabled={isEmpty}
-                className={cn(
-                  "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] px-3 text-sm font-semibold leading-[22px] transition-opacity disabled:cursor-not-allowed",
-                  isEmpty
-                    ? "bg-button-disabled text-text-disabled-300"
-                    : "bg-button-primary text-text-on-solid-bg shadow-button-primary hover:opacity-90",
-                )}
-              >
-                <EventIcon
-                  name="add-circle-fill"
-                  size={EVENT_ICON_SIZE.buttonLeading}
-                  inverted={!isEmpty}
-                />
-                Quick action
-                <EventIcon
-                  name="down-fill"
-                  size={EVENT_ICON_SIZE.buttonTrailing}
-                  inverted={!isEmpty}
-                />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[480px] p-1.5">
-                <div className="relative mb-1 px-0.5">
-                  <EventIcon
-                    name="search-line"
-                    size={EVENT_ICON_SIZE.search}
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
-                  />
-                  <input
-                    value={actionQuery}
-                    onChange={(event) => setActionQuery(event.target.value)}
-                    onKeyDown={(event) => event.stopPropagation()}
-                    placeholder="Type a command or search..."
-                    className="h-8 w-full rounded-lg border border-border-default-100 bg-bg-canvas pl-9 pr-3 text-sm font-[510] leading-[22px] text-text-events-strong outline-none placeholder:text-input-placeholder focus-visible:border-border-input-active"
-                  />
-                </div>
-                <p className="px-2 py-1 text-xs font-medium leading-5 text-text-table-header">Quick actions</p>
-                {filteredActions.map((action) => (
-                  <DropdownMenuItem
-                    key={action.label}
-                    className="h-8 cursor-pointer gap-1 rounded-lg p-2"
-                    onSelect={action.run}
-                  >
-                    <EventIcon name={action.icon} size={EVENT_ICON_SIZE.dropdownItem} />
-                    <span className="flex-1 px-1 text-sm font-[510] leading-[22px]">{action.label}</span>
-                    {action.shortcut ? <ShortcutChip>{action.shortcut}</ShortcutChip> : null}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <QuickActionMenu disabled={isEmpty} />
           </div>
         </div>
 
@@ -387,9 +308,11 @@ export function DashboardPage() {
                     <span>Date</span>
                   </div>
                   {RECENT_EVENTS.map((event, index) => (
-                    <div
+                    <button
                       key={index}
-                      className="grid grid-cols-[minmax(0,348fr)_minmax(0,148fr)_minmax(0,200fr)_minmax(0,240fr)] items-center gap-3 border-b border-border-default-100 px-4 py-3 last:border-0"
+                      type="button"
+                      onClick={() => navigate(DASHBOARD_TAB_PATHS.events)}
+                      className="grid w-full grid-cols-[minmax(0,348fr)_minmax(0,148fr)_minmax(0,200fr)_minmax(0,240fr)] items-center gap-3 border-b border-border-default-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bg-default-100/60"
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <Thumb src={event.thumb} />
@@ -419,7 +342,7 @@ export function DashboardPage() {
                         <span className="text-sm leading-[22px] text-text-events-strong">{event.dateRange}</span>
                         <span className="text-xs leading-5 text-text-table-header">{event.time}</span>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}
@@ -443,9 +366,11 @@ export function DashboardPage() {
                 ) : (
                   <div className="flex flex-col">
                     {RECENT_REVIEWS.map((review) => (
-                      <div
+                      <button
                         key={review.id}
-                        className="flex items-start gap-3 border-b border-border-default-100 py-3 last:border-0"
+                        type="button"
+                        onClick={() => navigate(`${DASHBOARD_TAB_PATHS.volunteers}?tab=reviews`)}
+                        className="flex w-full items-start gap-3 border-b border-border-default-100 py-3 text-left transition-colors last:border-0 hover:bg-bg-default-100/60"
                       >
                         <PersonAvatar name={review.name} tone={review.avatarTone} size={36} />
                         <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -459,7 +384,7 @@ export function DashboardPage() {
                             &ldquo;{review.text}&rdquo;
                           </span>
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}

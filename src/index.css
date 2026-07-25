@@ -71,7 +71,9 @@
   --color-text-on-solid-bg: #ffffff;
 
   --color-bg-canvas: #ffffff;
-  --color-bg-on-canvas: #fbfbfb;
+  --color-bg-on-canvas: #ffffff;
+  --color-bg-table-header: #f9fafa;
+  --color-text-on-nav-search: #ebd9ff;
   --color-bg-default-100: #f2f4f7;
   --color-bg-active-200: #dde2e8;
   --color-bg-overlay: rgb(48 54 61 / 60%);
@@ -85,7 +87,7 @@
   --color-bg-success-soft: #ddf2e5;
   --color-bg-warning-soft: #f8f0e2;
   --color-bg-info-soft: #dde5ff;
-  --color-bg-nav: #24104a;
+  --color-bg-nav: #1a0b35;
   --color-bg-on-nav: #5d467d;
   --color-bg-on-on-nav: #755d95;
 
@@ -161,7 +163,9 @@
   --color-text-on-solid-bg: #ffffff;
 
   --color-bg-canvas: #ffffff;
-  --color-bg-on-canvas: #fbfbfb;
+  --color-bg-on-canvas: #ffffff;
+  --color-bg-table-header: #f9fafa;
+  --color-text-on-nav-search: #ebd9ff;
   --color-bg-default-100: #f2f4f7;
   --color-bg-active-200: #dde2e8;
   --color-bg-overlay: rgb(48 54 61 / 60%);
@@ -175,7 +179,7 @@
   --color-bg-success-soft: #ddf2e5;
   --color-bg-warning-soft: #f8f0e2;
   --color-bg-info-soft: #dde5ff;
-  --color-bg-nav: #24104a;
+  --color-bg-nav: #1a0b35;
   --color-bg-on-nav: #5d467d;
   --color-bg-on-on-nav: #755d95;
 
@@ -282,6 +286,47 @@ input:-webkit-autofill:active {
 
 .font-display {
   font-family: "Clash Display", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Shared text styles (Figma Small / Button tokens) */
+@utility type-small-regular {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: -0.1px;
+}
+
+@utility type-small-medium {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 510;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+@utility type-small-semibold {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 590;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+@utility type-small-bold {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+@utility type-button-large {
+  font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0;
 }
 
 /* Events page typography (SF Pro) */

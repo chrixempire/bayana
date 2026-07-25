@@ -1,7 +1,8 @@
 import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -67,7 +68,7 @@ function PaginationPrevious({ className, disabled, ...props }: React.ComponentPr
       )}
       {...props}
     >
-      <ChevronLeft className="size-4" />
+      <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="rotate-180" />
     </button>
   )
 }
@@ -86,7 +87,7 @@ function PaginationNext({ className, disabled, ...props }: React.ComponentProps<
       )}
       {...props}
     >
-      <ChevronRight className="size-4" />
+      <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} />
     </button>
   )
 }

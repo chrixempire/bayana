@@ -28,6 +28,10 @@ import { downloadImpactReport } from "../../lib/impact-report"
 import { toast } from "../../hooks/use-toast"
 import { cn } from "../../lib/utils"
 import {
+  dashboardNeutralDropdownTriggerClassName,
+  dropdownTriggerOpenClassName,
+} from "../../lib/dropdown-trigger-styles"
+import {
   AGE_RANGE,
   CHART_BLUE,
   CHART_ORANGE,
@@ -127,7 +131,9 @@ export function AnalyticsPage() {
           </h1>
           <div className="flex items-center gap-3">
             <DropdownMenu>
-              <DropdownMenuTrigger className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral outline-none hover:bg-button-neutral-hover data-[state=open]:bg-button-neutral-clicked">
+              <DropdownMenuTrigger
+                className={cn(dashboardNeutralDropdownTriggerClassName, dropdownTriggerOpenClassName)}
+              >
                 <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.nav} />
                 <span>{dateLabel}</span>
               </DropdownMenuTrigger>

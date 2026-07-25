@@ -4,6 +4,7 @@ import { BayanaLogo } from "../../components/brand/BayanaLogo"
 import { Button } from "../../components/ui/button"
 import { ContinueArrowIcon } from "../../components/auth/icons/ContinueArrowIcon"
 import { AUTH_LOGIN_PATH } from "../../lib/auth-paths"
+import { authBodyTextClassName, authPrimaryButtonClassName } from "../../lib/auth-form-styles"
 import { maskEmail } from "../../lib/mask-email"
 
 function decodeParam(value: string | null): string {
@@ -72,10 +73,10 @@ export function InvitedMemberPage() {
               <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
                 Welcome, {inviteeFirstName}
               </h1>
-              <p className="text-sm font-normal leading-[22px] text-text-neutral-400">
-                <span className="font-medium text-text-default-500">{inviterName}</span> has invited you to{" "}
-                <span className="font-medium text-text-default-500">{organisationName}</span>. To accept invitation please
-                login as <span className="font-medium text-text-default-500">{maskedEmail}</span>
+              <p className={authBodyTextClassName}>
+                <span className="type-small-medium text-text-default-500">{inviterName}</span> has invited you to{" "}
+                <span className="type-small-medium text-text-default-500">{organisationName}</span>. To accept invitation please
+                login as <span className="type-small-medium text-text-default-500">{maskedEmail}</span>
               </p>
             </div>
           </div>
@@ -84,7 +85,7 @@ export function InvitedMemberPage() {
             type="button"
             variant="primary"
             block
-            className=" text-base font-semibold"
+            className={authPrimaryButtonClassName}
             rightIcon={<ContinueArrowIcon className="size-4 text-white" />}
             onClick={handleLogIn}
           >

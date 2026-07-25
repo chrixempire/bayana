@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import type { DateRange } from "react-day-picker"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Button } from "../ui/button"
@@ -78,7 +79,7 @@ export function CreateEventDateRangeField({
           )}
         >
           <span>{display || "Choose date(s)"}</span>
-          <CalendarIcon className="size-4 shrink-0 text-icon-neutral" />
+          <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.meta} className="shrink-0" />
         </button>
       </PopoverTrigger>
 

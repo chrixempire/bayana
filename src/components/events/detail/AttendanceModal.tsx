@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { ChevronDown, Copy, Download, Search } from "lucide-react"
 import { cn } from "../../../lib/utils"
 import { Input } from "../../ui/input"
 import { Modal } from "../../ui/modal"
@@ -13,6 +12,8 @@ import {
   TableRow,
 } from "../../ui/table"
 import { toast } from "../../../hooks/use-toast"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import type { VolunteersData } from "../../../pages/dashboard/event-detail-types"
 import { PersonAvatar } from "./PersonAvatar"
 
@@ -106,7 +107,7 @@ export function AttendanceModal({
             onClick={() => toast({ title: "QR code downloaded" })}
             className="inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
           >
-            <Download className="size-4" />
+            <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.meta} />
             Download
           </button>
 
@@ -127,7 +128,7 @@ export function AttendanceModal({
               className="shrink-0 cursor-pointer text-icon-neutral"
               aria-label="Copy code"
             >
-              <Copy className="size-4" />
+              <EventIcon name="file-fill" size={EVENT_ICON_SIZE.meta} />
             </button>
           </div>
 
@@ -146,7 +147,7 @@ export function AttendanceModal({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search volunteers"
-                leftIcon={<Search className="size-4" />}
+                leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
                 aria-label="Search attendance"
               />
             </div>
@@ -192,7 +193,7 @@ export function AttendanceModal({
                     <TableCell>
                       <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-bg-warning-soft px-2 text-xs font-[510] leading-4 text-text-warning">
                         Awaiting
-                        <ChevronDown className="size-3" />
+                        <EventIcon name="down-fill" size={EVENT_ICON_SIZE.composeAction} />
                       </span>
                     </TableCell>
                   </TableRow>

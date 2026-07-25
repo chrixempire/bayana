@@ -87,10 +87,6 @@ function EventCover({ images, title }: { images: string[]; title: string }) {
 
 const HEADER_BUTTON = "h-8 min-h-8 gap-1.5 rounded-[10px] px-3 text-sm"
 
-const HEADER_BUTTON_TRAILING_ICON = (
-  <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
-)
-
 function menuIcon(name: EventIconName, destructive = false) {
   return (
     <EventIcon
@@ -301,7 +297,6 @@ export function EventDetailHeader({
                 variant="primary"
                 className={HEADER_BUTTON}
                 leftIcon={<EventIcon name="horn-fill" size={EVENT_ICON_SIZE.buttonLeading} />}
-                rightIcon={HEADER_BUTTON_TRAILING_ICON}
                 onClick={onPostUpdate}
               >
                 Post update
@@ -311,7 +306,6 @@ export function EventDetailHeader({
               variant="neutral"
               className={HEADER_BUTTON}
               leftIcon={<EventIcon name="pencil-fill" size={EVENT_ICON_SIZE.buttonLeading} />}
-              rightIcon={HEADER_BUTTON_TRAILING_ICON}
               onClick={onEdit}
             >
               Edit event

@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { ImageIcon, Paperclip, X } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Modal } from "../../ui/modal"
 import { toast } from "../../../hooks/use-toast"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import { PersonAvatar } from "./PersonAvatar"
 
 export function PostUpdateModal({
@@ -32,7 +33,7 @@ export function PostUpdateModal({
         className="absolute right-4 top-4 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-bg-default-100 text-text-table-header transition-colors hover:bg-bg-active-200"
         aria-label="Close"
       >
-        <X className="size-4" />
+        <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
       </button>
 
       <div className="mt-8 flex gap-2.5">
@@ -50,10 +51,10 @@ export function PostUpdateModal({
       <div className="mt-3 flex items-center justify-between">
         <div className="flex items-center gap-1 text-icon-neutral">
           <button type="button" className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg hover:bg-bg-default-100" aria-label="Add image">
-            <ImageIcon className="size-4" />
+            <EventIcon name="pic-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
           <button type="button" className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg hover:bg-bg-default-100" aria-label="Add attachment">
-            <Paperclip className="size-4" />
+            <EventIcon name="attachment-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
         </div>
         <Button

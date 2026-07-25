@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
-import { Trash2, Upload } from "lucide-react"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { Modal } from "../ui/modal"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
@@ -139,7 +140,7 @@ export function CreateEventAddItemModal({
                 onClick={() => setDraft((prev) => ({ ...prev, imageUrl: null }))}
                 className="absolute right-1 top-1 inline-flex size-6 cursor-pointer items-center justify-center rounded-full bg-bg-canvas text-text-events-strong shadow-[0_2px_8px_rgba(44,50,55,0.12)] hover:bg-bg-on-canvas"
               >
-                <Trash2 className="size-3.5" />
+                <EventIcon name="delete-fill" size={EVENT_ICON_SIZE.fieldHint} />
               </button>
             </div>
           ) : (
@@ -153,8 +154,9 @@ export function CreateEventAddItemModal({
               }}
               className="flex h-[110px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#E1E5EA] bg-bg-canvas p-4 text-center transition-colors hover:bg-bg-on-canvas/80"
             >
-              <span className="inline-flex size-8 items-center justify-center rounded-lg border border-border-default-100 bg-bg-canvas text-text-table-header">
-                <Upload className="size-4" />
+              <span className="inline-flex items-center justify-center gap-1 rounded-lg border border-border-default-100 bg-bg-canvas px-2 py-1.5 text-text-table-header">
+                <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.buttonLeading} />
+                <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
               </span>
               <span className="type-events-tab text-center">Drag &amp; drop or choose image</span>
               <span className="type-create-event-caption text-center">

@@ -1,17 +1,18 @@
-import { Star } from "lucide-react"
 import { Modal } from "../ui/modal"
 import { Button } from "../ui/button"
 import { PersonAvatar } from "../events/detail/PersonAvatar"
-import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
 import type { ReviewRow } from "../../pages/dashboard/reviews-data"
 
-function Stars({ rating }: { rating: number }) {
+function StarRating({ rating }: { rating: number }) {
   return (
-    <span className="inline-flex items-center gap-0.5">
+    <span className="inline-flex items-center gap-1">
       {Array.from({ length: 5 }, (_, i) => (
-        <Star
+        <EventIcon
           key={i}
-          className={cn("size-4", i < rating ? "fill-[#f79e19] text-[#f79e19]" : "fill-bg-default-100 text-bg-default-100")}
+          name={i < rating ? "star-fill-accent" : "star-fill"}
+          size={16}
+          className="shrink-0"
         />
       ))}
     </span>
@@ -60,7 +61,7 @@ export function ReviewDetailsModal({
             </span>
           </Field>
           <Field label="Ratings">
-            <Stars rating={review.rating} />
+            <StarRating rating={review.rating} />
           </Field>
           <Field label="Review">
             <span className="text-sm leading-[22px] text-text-events-strong">

@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { CheckCircle2 } from "lucide-react"
 import { cn } from "../../../lib/utils"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Textarea } from "../../ui/textarea"
@@ -143,7 +144,7 @@ export function EditEventModal({
               <Field label="Title" required>
                 <Input density="compact" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <span className="flex items-center gap-1 text-xs font-[510] text-text-success">
-                  <CheckCircle2 className="size-3.5" />
+                  <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.fieldHint} />
                   {wordCount}/{wordCount} words
                 </span>
               </Field>

@@ -1,9 +1,20 @@
 import { useLayoutEffect, useRef, type ReactNode } from "react"
 import { cn } from "../../lib/utils"
-import { DASHBOARD_CONTENT_WIDTH_PX, DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+import {
+  DASHBOARD_CONTENT_WIDTH_PX,
+  DASHBOARD_PAGE_GUTTER_PX,
+  DASHBOARD_DETAIL_MAX_WIDTH_PX,
+  dashboardDetailContentClassName,
+} from "../../lib/dashboard-layout"
 import type { DashboardTabId } from "../../lib/dashboard-paths"
 
-export { DASHBOARD_CONTENT_WIDTH_PX, DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+export {
+  DASHBOARD_CONTENT_WIDTH_PX,
+  DASHBOARD_PAGE_GUTTER_PX,
+  DASHBOARD_DETAIL_GUTTER_PX,
+  DASHBOARD_DETAIL_MAX_WIDTH_PX,
+  dashboardDetailContentClassName,
+} from "../../lib/dashboard-layout"
 import { DashboardHeader } from "./DashboardHeader"
 import { DashboardNavTabs } from "./DashboardNavTabs"
 import { OnboardingBanner } from "./OnboardingBanner"
@@ -86,7 +97,7 @@ export function DashboardLayout({
 
       <main
         className={cn(
-          "min-h-0 w-full flex-1 overflow-y-auto overscroll-y-contain bg-bg-on-canvas",
+          "min-h-0 w-full flex-1 overflow-y-auto overscroll-y-contain bg-bg-canvas",
           mainClassName,
         )}
       >
@@ -114,7 +125,7 @@ type DashboardWideContentProps = {
   flushBottom?: boolean
 }
 
-/** Full-width dashboard pages (tables, lists) — 40px gutters left and right. */
+/** Full-width dashboard pages (tables, lists) — 104px gutters left and right. */
 export function DashboardWideContent({
   children,
   className,
@@ -147,6 +158,18 @@ export function DashboardFullBleed({ children, className }: { children: ReactNod
         marginRight: -DASHBOARD_PAGE_GUTTER_PX,
         width: `calc(100% + ${DASHBOARD_PAGE_GUTTER_PX * 2}px)`,
       }}
+    >
+      {children}
+    </div>
+  )
+}
+
+/** Detail pages — fixed 1152px content; 144px side margin at 1440px viewport. */
+export function DashboardDetailContent({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div
+      className={cn(dashboardDetailContentClassName, "py-6 sm:py-8", className)}
+      style={{ maxWidth: DASHBOARD_DETAIL_MAX_WIDTH_PX }}
     >
       {children}
     </div>

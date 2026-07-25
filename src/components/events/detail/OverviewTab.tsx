@@ -63,7 +63,7 @@ export function OverviewTab({
 }) {
   return (
     <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
-      <div className="flex min-w-0 flex-1 flex-col gap-6">
+      <div className="flex min-w-0 w-full flex-col gap-6 xl:w-[728px] xl:shrink-0">
         <AboutCard about={event.about} />
 
         <DetailCard
@@ -72,7 +72,6 @@ export function OverviewTab({
             <DetailSmallButton onClick={onProvideSignature}>
               <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.buttonLeading} />
               Provide signature
-              <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
             </DetailSmallButton>
           }
         >

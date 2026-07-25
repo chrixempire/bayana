@@ -1,7 +1,8 @@
 import { useEffect, type ReactNode } from "react"
 import { createPortal } from "react-dom"
-import { X } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 
 const SIZE_CLASS = {
   sm: "max-w-[400px]",
@@ -91,7 +92,7 @@ export function Modal({
               className="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-bg-default-100 text-text-table-header transition-colors hover:bg-bg-active-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-input-active"
               aria-label="Close"
             >
-              <X className="size-4" />
+              <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
             </button>
           </div>
         ) : null}

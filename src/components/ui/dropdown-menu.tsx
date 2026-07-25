@@ -1,8 +1,9 @@
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { Check, ChevronRight, Circle } from "lucide-react"
 
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 
@@ -32,7 +33,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto size-4 text-icon-neutral" />
+    <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
   </DropdownMenuPrimitive.SubTrigger>
 ))
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName
@@ -103,7 +104,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   >
     <span className="absolute left-2 flex size-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Check className="size-4 text-bg-accent" />
+        <EventIcon name="check-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -125,7 +126,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   >
     <span className="absolute left-2 flex size-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Circle className="size-2 fill-bg-accent text-bg-accent" />
+        <span className="size-2 rounded-full bg-bg-accent" aria-hidden />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}

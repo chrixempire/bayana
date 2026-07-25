@@ -1,12 +1,12 @@
 import { cn } from "./utils"
 
-/** Dashboard top nav tab — active (e.g. Events). */
+/** Dashboard top nav tab — inactive uses Small/Medium; active uses Small/Semibold. */
 export function dashboardTabClassName(isActive: boolean) {
   return cn(
-    "inline-flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-lg px-2 py-0 text-sm leading-[22px] tracking-normal transition-colors",
+    "inline-flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-lg px-2 py-0 transition-colors",
     isActive
-      ? "bg-bg-nav-tab-active font-semibold text-text-nav-tab-active"
-      : "font-medium text-text-events-strong hover:bg-bg-default-100",
+      ? "type-small-semibold bg-bg-nav-tab-active text-text-nav-tab-active"
+      : "type-small-medium text-text-events-strong hover:bg-bg-default-100",
   )
 }
 

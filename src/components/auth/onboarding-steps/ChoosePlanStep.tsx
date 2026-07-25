@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom"
 import { BayanaLogo } from "../../brand/BayanaLogo"
 import { Button } from "../../ui/button"
 import { cn } from "../../../lib/utils"
+import { authBodyTextClassName, authNeutralButtonClassName, authPrimaryButtonClassName } from "../../../lib/auth-form-styles"
 
 type BillingCycle = "monthly" | "quarterly" | "yearly"
 
@@ -229,7 +230,7 @@ export function ChoosePlanStep({
                       <RocketIcon className="size-4 shrink-0 text-icon-neutral" />
                       <p className="text-base font-medium leading-6 tracking-[-0.1px] text-[#2c3237]">Free</p>
                     </div>
-                    <p className="text-sm font-normal leading-[22px] tracking-[-0.1px] text-[#656f78]">
+                    <p className={authBodyTextClassName}>
                       Enjoy our basic features
                     </p>
                   </div>
@@ -238,7 +239,7 @@ export function ChoosePlanStep({
                     <p
                       key={priceMotionEnabled ? cycle : "static"}
                       className={cn(
-                        "text-sm font-normal leading-[22px] tracking-[-0.1px] text-[#656f78]",
+                        authBodyTextClassName,
                         priceMotionEnabled && "plan-cadence-shift",
                       )}
                     >
@@ -249,7 +250,7 @@ export function ChoosePlanStep({
                     variant="neutral"
                     block
                     disabled={variant === "upgrade" || isPremium}
-                    className="h-10 rounded-xl border-border-input-default-200 text-sm font-semibold leading-[22px] text-[#2c3237]"
+                    className={cn("rounded-xl border-border-input-default-200 text-[#2c3237]", authNeutralButtonClassName)}
                   >
                     {variant === "upgrade" ? "Current plan" : "Choose"}
                   </Button>
@@ -268,7 +269,7 @@ export function ChoosePlanStep({
                       <PremiumMarkIcon className="size-4 shrink-0" />
                       <p className="text-base font-medium leading-6 tracking-[-0.1px] text-[#2c3237]">Premium</p>
                     </div>
-                    <p className="text-sm font-normal leading-[22px] tracking-[-0.1px] text-[#656f78]">
+                    <p className={authBodyTextClassName}>
                       Enjoy our full features
                     </p>
                   </div>
@@ -288,7 +289,7 @@ export function ChoosePlanStep({
                     <p
                       key={priceMotionEnabled ? cycle : "static"}
                       className={cn(
-                        "text-sm font-normal leading-[22px] tracking-[-0.1px] text-[#656f78]",
+                        authBodyTextClassName,
                         priceMotionEnabled && "plan-cadence-shift",
                       )}
                     >
@@ -299,7 +300,7 @@ export function ChoosePlanStep({
                     variant="primary"
                     block
                     disabled={isPremium}
-                    className="h-10 rounded-xl text-sm font-semibold leading-[22px]"
+                    className={cn("rounded-xl", authPrimaryButtonClassName)}
                     onClick={onComplete}
                   >
                     {isPremium ? "Current plan" : variant === "upgrade" ? "Upgrade" : "Subscribe"}

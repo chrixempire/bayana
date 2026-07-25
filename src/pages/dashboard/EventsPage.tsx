@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react"
-import { Plus, Search } from "lucide-react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { CreateEventTypeModal } from "../../components/create-event/CreateEventTypeModal"
 import { createEventPath } from "../../lib/create-event-paths"
@@ -22,8 +21,11 @@ import {
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
+import { EventIcon } from "../../components/events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { ConfirmModal } from "../../components/ui/confirm-modal"
 import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filters"
+import { tableSurfaceClassName } from "../../lib/table-styles"
 import { toast } from "../../hooks/use-toast"
 import { useSimulatedLoading } from "../../hooks/use-simulated-loading"
 import {
@@ -353,7 +355,7 @@ export function EventsPage() {
               variant="primary"
               size="sm"
               className="h-10 min-h-10 rounded-xl px-3.5"
-              leftIcon={<Plus className="size-4" />}
+              leftIcon={<EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />}
               onClick={() => setCreateModalOpen(true)}
             >
               {pageConfig.createButtonLabel}
@@ -448,14 +450,14 @@ export function EventsPage() {
                   setPage(1)
                 }}
                 placeholder={activeTabConfig.searchPlaceholder}
-                leftIcon={<Search className="size-4" />}
+                leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
                 aria-label={activeTabConfig.searchPlaceholder}
               />
             </div>
           </div>
         </section>
 
-        <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+        <div className={tableSurfaceClassName}>
           <EventsTable
             rows={pagedRows}
             columns={columns}
@@ -470,7 +472,6 @@ export function EventsPage() {
 
           {loading ? null : (
             <DataTablePagination
-              className="border-t border-border-default-100 px-4 pb-4"
               from={pagination.from}
               to={pagination.to}
               total={pagination.total}

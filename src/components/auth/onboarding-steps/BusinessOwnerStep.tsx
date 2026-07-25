@@ -4,6 +4,7 @@ import { FormDropdown } from "../../ui/form-dropdown"
 import { Input } from "../../ui/input"
 import { ID_TYPE_OPTIONS } from "../../../lib/id-types"
 import { cn } from "../../../lib/utils"
+import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
 import { OnboardingStepShell } from "../OnboardingStepShell"
@@ -59,7 +60,7 @@ export function BusinessOwnerStep({
       titleBlock={
         <div className="flex flex-col gap-3 tracking-[-0.1px]">
           <h1 className="font-display text-2xl font-semibold leading-8 text-text-default-500">Verify your business owner</h1>
-          <p className="text-sm font-normal leading-[22px] text-text-neutral-400">
+          <p className={authBodyTextClassName}>
             Provide the information of your ultimate beneficial owner. The person that owns the highest stakes in your
             business
           </p>
@@ -131,7 +132,7 @@ export function BusinessOwnerStep({
 
         <div className="flex flex-col gap-3">
           <Button
-            className="h-10 min-h-10 gap-2 rounded-xl px-3.5 shadow-[inset_0_-2px_1px_0_rgb(25,89,140,0.5)]"
+            className={authOnboardingPrimaryButtonClassName}
             variant="primary"
             block
             rightIcon={<ContinueArrowIcon className="text-white" />}

@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { CreditCard, Landmark, Search } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import {
@@ -13,6 +12,8 @@ import {
 import { DataTableEmptyState, FilterDropdown, RowActionsDropdown } from "../../data-table"
 import type { RowActionConfig } from "../../data-table"
 import { toast } from "../../../hooks/use-toast"
+import { EventIcon, type EventIconName } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import type { DonationsData } from "../../../pages/dashboard/event-detail-types"
 import { PersonAvatar } from "./PersonAvatar"
 import { WithdrawModal } from "./WithdrawModal"
@@ -22,9 +23,9 @@ import { useSimulatedLoading } from "../../../hooks/use-simulated-loading"
 const ROW_ACTIONS: RowActionConfig[] = [{ id: "view", label: "View details", icon: "eye" }]
 
 const CHANNEL_LABEL = {
-  card: { label: "Card", icon: CreditCard },
-  "bank-transfer": { label: "Bank transfer", icon: Landmark },
-} as const
+  card: { label: "Card", icon: "bank-card-fill" },
+  "bank-transfer": { label: "Bank transfer", icon: "bank-fill" },
+} as const satisfies Record<string, { label: string; icon: EventIconName }>
 
 export function DonationsTab({ data }: { data: DonationsData }) {
   const [search, setSearch] = useState("")
@@ -165,7 +166,7 @@ export function DonationsTab({ data }: { data: DonationsData }) {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search donation"
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label="Search donation"
           />
         </div>
@@ -208,7 +209,6 @@ export function DonationsTab({ data }: { data: DonationsData }) {
               ) : (
                 rows.map((row) => {
                 const channel = CHANNEL_LABEL[row.channel]
-                const ChannelIcon = channel.icon
                 return (
                   <TableRow key={row.id}>
                     <TableCell className="pl-4 font-[510] text-text-events-strong">{row.id}</TableCell>
@@ -222,7 +222,7 @@ export function DonationsTab({ data }: { data: DonationsData }) {
                     </TableCell>
                     <TableCell>
                       <span className="flex items-center gap-1.5 text-text-table-header">
-                        <ChannelIcon className="size-4" />
+                        <EventIcon name={channel.icon} size={EVENT_ICON_SIZE.meta} />
                         {channel.label}
                       </span>
                     </TableCell>

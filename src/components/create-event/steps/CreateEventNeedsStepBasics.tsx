@@ -1,4 +1,5 @@
-import { Check } from "lucide-react"
+import { EventIcon } from "../../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../events/icons/event-icon-sizes"
 import { Input } from "../../ui/input"
 import { Textarea } from "../../ui/textarea"
 import { CauseImageUpload } from "../CauseImageUpload"
@@ -48,7 +49,7 @@ export function CreateEventNeedsStepBasics({
           </p>
         ) : titleValid ? (
           <p className="flex items-center gap-1.5 text-xs leading-5 text-[#36b55c]">
-            <Check className="size-3.5" />
+            <EventIcon name="check-fill" size={EVENT_ICON_SIZE.fieldHint} />
             {wordCount}/{CREATE_EVENT_TITLE_MAX_WORDS} words
           </p>
         ) : (
