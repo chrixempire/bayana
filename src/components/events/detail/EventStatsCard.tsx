@@ -1,11 +1,12 @@
-import { ArrowRight, Check, Clock, MapPin, MoreHorizontal, Video } from "lucide-react"
 import { cn } from "../../../lib/utils"
 import type {
   EventDetail,
   EventSession,
   EventSessionAttendees,
 } from "../../../pages/dashboard/event-detail-types"
-import { DetailSmallButton } from "./detail-primitives"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
+import { DetailSmallButton, detailCardSurfaceClassName } from "./detail-primitives"
 
 function StatCell({
   value,
@@ -77,17 +78,22 @@ function SessionTimingBadge({ session }: { session: EventSession }) {
   const timing = resolveTiming(session)
   if (timing === "happening") {
     return (
-      <span className="inline-flex h-4 items-center gap-0.5 rounded bg-[#36b55c] px-1 text-[10px] font-semibold leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
-        <Check className="size-2.5" strokeWidth={3} />
-        Happening
+      <span className="inline-flex h-4 items-center gap-0.5 rounded bg-[#36b55c] p-0.5 text-[10px] font-semibold leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
+        <EventIcon name="location-fill" size={EVENT_ICON_SIZE.sessionBadge} />
+        <span className="px-0.5">Happening</span>
+        <span className="inline-flex size-2.5 rotate-45 items-center justify-center overflow-hidden">
+          <EventIcon name="check-fill-white" size={EVENT_ICON_SIZE.sessionBadge} />
+        </span>
       </span>
     )
   }
   if (timing === "done") {
     return (
-      <span className="inline-flex h-4 items-center gap-0.5 rounded bg-bg-active-200 px-1 text-[10px] font-semibold leading-[18px] tracking-[0.1px] text-text-table-header">
-        <Check className="size-2.5" strokeWidth={3} />
-        Done
+      <span className="inline-flex h-4 items-center gap-0.5 rounded bg-bg-active-200 p-0.5 text-[10px] font-semibold leading-[18px] tracking-[0.1px] text-text-table-header">
+        <span className="inline-flex size-2.5 rotate-45 items-center justify-center overflow-hidden">
+          <EventIcon name="check-fill-grey" size={EVENT_ICON_SIZE.sessionBadge} />
+        </span>
+        <span className="px-0.5">Done</span>
       </span>
     )
   }
@@ -107,20 +113,20 @@ function DateBadge({ session }: { session: EventSession }) {
     <div className="flex w-10 shrink-0 flex-col overflow-hidden rounded-lg shadow-button-neutral">
       <div
         className={cn(
-          "flex h-3 items-center justify-center",
+          "flex h-3 items-center justify-center px-[9px] py-[3px]",
           highlighted ? "bg-bg-accent" : "bg-bg-active-200",
         )}
       >
         <span
           className={cn(
-            "text-[10px] font-[510] leading-3 tracking-[0.5px]",
+            "text-[10px] font-[510] leading-[18px] tracking-[0.5px]",
             highlighted ? "text-text-on-solid-bg" : "text-text-table-header",
           )}
         >
           {session.month}
         </span>
       </div>
-      <div className="flex h-7 items-center justify-center bg-bg-canvas">
+      <div className="flex h-7 items-center justify-center rounded-md bg-bg-canvas p-2">
         <span className="text-xs font-semibold leading-5 text-text-events-strong">
           {session.day}
         </span>
@@ -138,7 +144,7 @@ function SessionRow({ session, onAction }: { session: EventSession; onAction?: (
         <div className="flex items-center gap-1.5">
           <SessionTimingBadge session={session} />
           <div className="flex items-center gap-1 text-text-table-header">
-            <Clock className="size-3 shrink-0" />
+            <EventIcon name="time-fill" size={EVENT_ICON_SIZE.sessionTime} />
             <span className="text-xs font-normal leading-5">{session.time}</span>
           </div>
         </div>
@@ -150,14 +156,14 @@ function SessionRow({ session, onAction }: { session: EventSession; onAction?: (
         <div className="flex items-center gap-1">
           {session.meetLink ? (
             <>
-              <Video className="size-4 shrink-0 text-button-primary" />
+              <EventIcon name="google-meet" size={EVENT_ICON_SIZE.sessionMaps} />
               <span className="truncate text-xs font-normal leading-5 text-button-primary">
                 {session.meetLink}
               </span>
             </>
           ) : (
             <>
-              <MapPin className="size-4 shrink-0 text-icon-negative" />
+              <EventIcon name="google-maps-pin" size={EVENT_ICON_SIZE.sessionMaps} />
               <span className="truncate text-xs font-normal leading-5 text-text-table-header">
                 {session.location}
               </span>
@@ -166,7 +172,7 @@ function SessionRow({ session, onAction }: { session: EventSession; onAction?: (
         </div>
 
         {session.attendees ? (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <AvatarStack attendees={session.attendees} />
             <span className="truncate text-xs font-normal leading-5 text-text-table-header">
               {session.attendees.summary}
@@ -175,8 +181,13 @@ function SessionRow({ session, onAction }: { session: EventSession; onAction?: (
         ) : null}
       </div>
 
-      <DetailSmallButton className="shrink-0" aria-label="Session actions" onClick={onAction}>
-        <MoreHorizontal className="size-3" />
+      <DetailSmallButton
+        className="shrink-0"
+        iconOnly
+        aria-label="Session actions"
+        onClick={onAction}
+      >
+        <EventIcon name="more-fill" size={EVENT_ICON_SIZE.sessionMore} />
       </DetailSmallButton>
     </div>
   )
@@ -194,7 +205,7 @@ export function EventStatsCard({
   onSessionAction?: () => void
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-border-default-100 bg-bg-canvas">
+    <section className={detailCardSurfaceClassName}>
       <div className="grid grid-cols-2">
         <StatCell
           value={String(stats.volunteers.current)}
@@ -205,14 +216,14 @@ export function EventStatsCard({
           value={stats.donations.current}
           suffix={`/ ${stats.donations.max}`}
           label="Donations"
-          className="border-l"
+          className="border-l border-border-default-100"
         />
         <StatCell
           value={String(stats.sessions.current)}
           suffix={`/ ${stats.sessions.max}`}
           label="Sessions"
         />
-        <StatCell value={stats.attendance} label="Attendance" className="border-l" />
+        <StatCell value={stats.attendance} label="Attendance" className="border-l border-border-default-100" />
       </div>
 
       <div className="flex items-center px-4 pt-4">
@@ -228,9 +239,13 @@ export function EventStatsCard({
       </div>
 
       <div className="flex items-center justify-center border-t border-border-default-100 py-4">
-        <DetailSmallButton className="border-transparent bg-transparent shadow-none" onClick={onViewMore}>
+        <DetailSmallButton
+          className="border-transparent bg-transparent shadow-none hover:bg-transparent"
+          onClick={onViewMore}
+        >
+          <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.buttonLeading} />
           View more
-          <ArrowRight className="size-3" />
+          <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
         </DetailSmallButton>
       </div>
     </section>

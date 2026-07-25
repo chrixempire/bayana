@@ -9,14 +9,11 @@ import {
 } from "../../ui/dropdown-menu"
 import type { Volunteer } from "../../../pages/dashboard/event-detail-types"
 import { PersonAvatar } from "./PersonAvatar"
+import { NewVolunteerBadge, TableSkillTag } from "./detail-primitives"
 import { VolunteerStatusTag } from "./VolunteerStatusTag"
 
 function SkillChip({ label }: { label: string }) {
-  return (
-    <span className="inline-flex h-6 items-center rounded-md bg-bg-default-100 px-2 text-xs font-[510] leading-4 text-text-events-strong">
-      {label}
-    </span>
-  )
+  return <TableSkillTag>{label}</TableSkillTag>
 }
 
 function FieldLabel({ children }: { children: string }) {
@@ -97,11 +94,7 @@ export function VolunteerDetailsModal({
             <div className="flex flex-col gap-0.5">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="text-base font-semibold leading-6 text-text-events-strong">{volunteer.name}</p>
-                {volunteer.isNew ? (
-                  <span className="inline-flex items-center rounded bg-bg-nav-tab-active px-1.5 py-0.5 text-[10px] font-[510] leading-4 text-text-nav-tab-active">
-                    New volunteer!
-                  </span>
-                ) : null}
+                {volunteer.isNew ? <NewVolunteerBadge /> : null}
               </div>
               <p className="text-sm leading-[22px] text-text-table-header">@{volunteer.handle}</p>
             </div>

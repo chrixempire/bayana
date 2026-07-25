@@ -10,6 +10,7 @@ import type {
   EventTableRow,
   EventsPageConfig,
 } from "../../pages/dashboard/events-types"
+import { EventCollabBadge, type EventCollabBadgeVariant } from "./icons/EventChipBadge"
 import {
   DraftsVisibilityIcon,
   PrivateVisibilityIcon,
@@ -43,13 +44,10 @@ const COLLABORATOR_TONE: Record<string, string> = {
   green: "bg-[#36b55c]",
 }
 
-const REQUEST_BADGES: Record<
-  string,
-  { label: string; color: "accent" | "dark" }
-> = {
-  "new-request": { label: "New request", color: "accent" },
-  organizer: { label: "Organizer", color: "dark" },
-  pending: { label: "Pending", color: "accent" },
+const REQUEST_BADGES: Record<string, EventCollabBadgeVariant> = {
+  "new-request": "new-request",
+  organizer: "organizer",
+  pending: "pending",
 }
 
 type EventsTableProps = {
@@ -204,12 +202,8 @@ function renderCell(
             {row.requestBadges && row.requestBadges.length > 0 ? (
               <div className="flex flex-wrap items-center gap-1">
                 {row.requestBadges.map((badge) => {
-                  const cfg = REQUEST_BADGES[badge]
-                  return cfg ? (
-                    <StatusTag key={badge} size="small" color={cfg.color}>
-                      {cfg.label}
-                    </StatusTag>
-                  ) : null
+                  const variant = REQUEST_BADGES[badge]
+                  return variant ? <EventCollabBadge key={badge} variant={variant} /> : null
                 })}
               </div>
             ) : null}

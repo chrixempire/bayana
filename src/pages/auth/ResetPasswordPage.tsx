@@ -131,7 +131,7 @@ export function ResetPasswordPage() {
               <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="reset-password" className="block text-sm font-medium leading-[22px]">
+                    <label htmlFor="reset-password" className="block text-sm font-medium leading-[22px] tracking-normal">
                       New password
                     </label>
                     <Input
@@ -163,7 +163,7 @@ export function ResetPasswordPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="reset-password-confirmation" className="block text-sm font-medium leading-[22px]">
+                    <label htmlFor="reset-password-confirmation" className="block text-sm font-medium leading-[22px] tracking-normal">
                       Confirm password
                     </label>
                     <Input

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { elevatedCardSurfaceClassName } from "../events/detail/detail-primitives"
 import { cn } from "../../lib/utils"
 import { CHART_TRACK } from "../../pages/dashboard/analytics-data"
 
@@ -40,10 +41,10 @@ function smoothPath(points: { x: number; y: number }[]) {
 
 export function ChartLegend({ items }: { items: { label: string; color: string; value?: string }[] }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5">
       {items.map((item) => (
         <span key={item.label} className="inline-flex items-center gap-1.5 text-sm leading-[22px] text-text-table-header">
-          <span className="size-3 rounded-[3px]" style={{ backgroundColor: item.color }} />
+          <span className="size-3 shrink-0 rounded-[2px]" style={{ backgroundColor: item.color }} />
           {item.label}
           {item.value ? <span className="font-semibold text-text-events-strong">{item.value}</span> : null}
         </span>
@@ -60,7 +61,7 @@ export function PieLegend({ slices }: { slices: { label: string; value: number; 
       {slices.map((s) => (
         <div key={s.label} className="flex items-center justify-between gap-3 text-sm leading-[22px]">
           <span className="inline-flex items-center gap-1.5 text-text-table-header">
-            <span className="size-3 rounded-[3px]" style={{ backgroundColor: s.color }} />
+            <span className="size-3 shrink-0 rounded-[2px]" style={{ backgroundColor: s.color }} />
             {s.label}
           </span>
           <span className="font-semibold text-text-events-strong">
@@ -263,7 +264,7 @@ export function SkillBars({ rows }: { rows: { label: string; value: number; pct:
             <span className="text-text-events-strong">{row.label}</span>
             <span className="text-text-table-header">{row.value}</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full" style={{ backgroundColor: CHART_TRACK }}>
+          <div className="h-3 w-full overflow-hidden rounded-full" style={{ backgroundColor: CHART_TRACK }}>
             <div className="h-full rounded-full bg-button-primary" style={{ width: `${row.pct}%` }} />
           </div>
         </div>
@@ -383,9 +384,9 @@ export function ChartCard({
   legend?: React.ReactNode
 }) {
   return (
-    <div className={cn("flex flex-col gap-4 rounded-2xl border border-border-default-100 bg-bg-canvas p-4", className)}>
+    <div className={cn(elevatedCardSurfaceClassName, "flex flex-col gap-4 p-4", className)}>
       <div className="flex items-start justify-between gap-3">
-        <h3 className="font-display text-lg font-semibold leading-6 text-text-events-strong">{title}</h3>
+        <h3 className="text-base font-semibold leading-6 text-text-events-strong">{title}</h3>
         <div className="flex items-center gap-3">
           {legend}
           {action}

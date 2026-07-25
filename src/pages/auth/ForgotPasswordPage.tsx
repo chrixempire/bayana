@@ -83,7 +83,7 @@ export function ForgotPasswordPage() {
             {!isSubmitted ? (
               <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="forgot-password-email" className="block text-sm font-medium leading-[22px]">
+                  <label htmlFor="forgot-password-email" className="block text-sm font-medium leading-[22px] tracking-normal">
                     Email address
                   </label>
                   <Input

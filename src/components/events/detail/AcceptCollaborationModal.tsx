@@ -1,9 +1,10 @@
 import { useState } from "react"
-import { Info } from "lucide-react"
 import { Modal } from "../../ui/modal"
 import { Button } from "../../ui/button"
 import { SearchableSelect } from "../../create-event/SearchableSelect"
 import { CREATE_EVENT_ORGANIZERS } from "../../../data/create-event-settings"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 
 export function AcceptCollaborationModal({
   open,
@@ -59,7 +60,7 @@ export function AcceptCollaborationModal({
             ariaLabel="Organizer"
           />
           <p className="flex items-start gap-1.5 text-xs leading-5 text-text-table-header">
-            <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+            <EventIcon name="info-fill" size={EVENT_ICON_SIZE.fieldHint} className="mt-0.5" />
             This person will serve as a contact person for this event
           </p>
         </div>

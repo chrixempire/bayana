@@ -1,5 +1,6 @@
-import { PenLine } from "lucide-react"
 import type { EventDetail } from "../../../pages/dashboard/event-detail-types"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 import {
   DetailCard,
   DetailChip,
@@ -69,8 +70,9 @@ export function OverviewTab({
           title="Cause certificate"
           action={
             <DetailSmallButton onClick={onProvideSignature}>
-              <PenLine className="size-3.5" />
+              <EventIcon name="pen-fill" size={EVENT_ICON_SIZE.buttonLeading} />
               Provide signature
+              <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
             </DetailSmallButton>
           }
         >

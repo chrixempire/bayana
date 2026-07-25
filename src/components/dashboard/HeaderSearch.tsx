@@ -61,9 +61,9 @@ export function HeaderSearch() {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="relative flex h-10 w-full max-w-[480px] items-center rounded-xl border-0 bg-bg-on-nav/70 pl-9 pr-14 text-left text-sm text-text-on-solid-bg/50 outline-none transition-colors hover:bg-bg-on-nav focus-visible:ring-2 focus-visible:ring-white/25"
+          className="relative flex h-9 w-full max-w-[480px] items-center rounded-xl border-0 bg-bg-on-nav/70 pl-9 pr-14 text-left text-sm font-normal tracking-[-0.1px] text-text-on-solid-bg outline-none transition-colors hover:bg-bg-on-nav focus-visible:ring-2 focus-visible:ring-white/25"
         >
-          <Search className="pointer-events-none absolute left-3 size-4 text-text-on-solid-bg/70" />
+          <Search className="pointer-events-none absolute left-3 size-4 text-text-on-solid-bg" />
           Search..
           <kbd className="pointer-events-none absolute right-3 hidden rounded-md bg-bg-on-on-nav/60 px-1.5 py-0.5 text-[10px] font-medium text-text-on-solid-bg/80 sm:inline">
             ⌘+K

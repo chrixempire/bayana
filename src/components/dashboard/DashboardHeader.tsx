@@ -43,16 +43,16 @@ export function DashboardHeader({
 
         <button
           type="button"
-          className="inline-flex min-w-0 max-w-[220px] cursor-pointer items-center gap-2.5 rounded-xl bg-bg-on-nav/80 px-2.5 py-2 text-left transition-colors hover:bg-bg-on-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:max-w-none"
+          className="inline-flex h-9 min-w-0 max-w-[220px] cursor-pointer items-center gap-2.5 rounded-xl bg-bg-on-nav/80 px-2.5 text-left transition-colors hover:bg-bg-on-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:max-w-none"
           aria-label="Switch organization"
         >
           <span
             aria-hidden
-            className="flex size-7 shrink-0 items-center justify-center rounded-md bg-bg-accent text-xs font-bold text-text-on-solid-bg"
+            className="flex size-6 shrink-0 items-center justify-center rounded-md bg-bg-accent text-xs font-bold text-text-on-solid-bg"
           >
             {organizationInitial}
           </span>
-          <span className="truncate text-sm font-medium leading-[22px]">{organizationName}</span>
+          <span className="truncate text-sm font-medium leading-[22px] tracking-normal">{organizationName}</span>
           <ChevronUpDownIcon />
         </button>
 
@@ -68,7 +68,7 @@ export function DashboardHeader({
       <div className="flex shrink-0 items-center gap-3 justify-self-end sm:gap-4 lg:col-start-3">
         <button
           type="button"
-          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl bg-bg-accent px-3 text-sm font-semibold text-text-on-solid-bg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl bg-bg-accent px-3 text-sm font-semibold tracking-normal text-text-on-solid-bg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
         >
           <LightbulbIcon />
           Upgrade
@@ -81,7 +81,7 @@ export function DashboardHeader({
         <DropdownMenu>
           <DropdownMenuTrigger
             type="button"
-            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#f5d9c8] text-sm font-semibold text-[#5c3d2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#f5d9c8] text-sm font-semibold tracking-normal text-[#5c3d2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             aria-label="Account menu"
           >
             {userInitial}

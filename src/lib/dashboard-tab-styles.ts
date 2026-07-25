@@ -3,10 +3,10 @@ import { cn } from "./utils"
 /** Dashboard top nav tab — active (e.g. Events). */
 export function dashboardTabClassName(isActive: boolean) {
   return cn(
-    "inline-flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded-lg p-2 text-sm leading-[22px] tracking-normal transition-colors",
+    "inline-flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-lg px-2 py-0 text-sm leading-[22px] tracking-normal transition-colors",
     isActive
-      ? "bg-bg-nav-tab-active font-[590] text-text-nav-tab-active"
-      : "font-[510] text-text-events-strong hover:bg-bg-default-100",
+      ? "bg-bg-nav-tab-active font-semibold text-text-nav-tab-active"
+      : "font-medium text-text-events-strong hover:bg-bg-default-100",
   )
 }
 

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import type { LucideIcon } from "lucide-react"
 import {
   Eye,
@@ -9,6 +10,8 @@ import {
   User,
 } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { EventIcon, type EventIconName } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +23,7 @@ export type RowActionConfig = {
   id: string
   label: string
   icon?: string
+  iconName?: EventIconName
   destructive?: boolean
 }
 
@@ -37,6 +41,7 @@ export type RowActionsDropdownProps = {
   onAction?: (actionId: string) => void
   align?: "start" | "center" | "end"
   className?: string
+  triggerIcon?: ReactNode
 }
 
 export function RowActionsDropdown({
@@ -44,6 +49,7 @@ export function RowActionsDropdown({
   onAction,
   align = "end",
   className,
+  triggerIcon,
 }: RowActionsDropdownProps) {
   return (
     <DropdownMenu>
@@ -57,11 +63,11 @@ export function RowActionsDropdown({
         )}
         aria-label="Open row actions"
       >
-        <MoreHorizontal className="size-4" strokeWidth={2.25} />
+        {triggerIcon ?? <MoreHorizontal className="size-4" strokeWidth={2.25} />}
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} className="w-52">
         {actions.map((action) => {
-          const Icon = action.icon ? ICON_MAP[action.icon] : undefined
+          const ItemIcon = action.icon ? ICON_MAP[action.icon] : undefined
 
           return (
             <DropdownMenuItem
@@ -72,7 +78,15 @@ export function RowActionsDropdown({
               )}
               onSelect={() => onAction?.(action.id)}
             >
-              {Icon ? <Icon className="size-4 shrink-0 text-icon-neutral" /> : null}
+              {action.iconName ? (
+                <EventIcon
+                  name={action.iconName}
+                  size={EVENT_ICON_SIZE.dropdownItem}
+                  className={action.destructive ? "text-icon-negative" : undefined}
+                />
+              ) : ItemIcon ? (
+                <ItemIcon className="size-4 shrink-0 text-icon-neutral" />
+              ) : null}
               <span>{action.label}</span>
             </DropdownMenuItem>
           )

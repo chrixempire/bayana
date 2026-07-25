@@ -44,6 +44,8 @@ export type NeedsRecentDonation = {
   id: string
   donor: string
   avatarTone: PersonAvatarTone
+  kind?: "cash" | "in-kind"
+  itemImages?: string[]
   /** Signed contribution, e.g. "+₦10,000.00". */
   amount: string
   /** Remaining-to-goal note, e.g. "₦360,000 left". */
@@ -58,6 +60,10 @@ export type NeedsHomeData = {
   inCashRaised: string
   /** Pre-formatted goal, e.g. "200,000". */
   inCashGoal: string
+  /** Pre-formatted in-kind progress, e.g. "10". */
+  inKindRaised?: string
+  /** Pre-formatted in-kind goal, e.g. "50". */
+  inKindGoal?: string
   recentDonations: NeedsRecentDonation[]
 }
 
