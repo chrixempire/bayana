@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react"
-import { ChevronDown, Eye, Search } from "lucide-react"
 import { cn } from "../../../lib/utils"
 import { Input } from "../../ui/input"
 import { Textarea } from "../../ui/textarea"
@@ -30,6 +29,16 @@ import type {
   VolunteersData,
   VolunteerStatus,
 } from "../../../pages/dashboard/event-detail-types"
+import { EventIcon } from "../icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
+import {
+  elevatedCardSurfaceClassName,
+  NewVolunteerBadge,
+  OverviewCapacityBadge,
+  OverviewCard,
+  OverviewViewButton,
+  TableSkillTag,
+} from "./detail-primitives"
 import { PersonAvatar } from "./PersonAvatar"
 import { VolunteerStatusTag } from "./VolunteerStatusTag"
 import { VolunteerDetailsModal } from "./VolunteerDetailsModal"
@@ -71,73 +80,20 @@ const ACTION_CONFIG: Record<
 }
 
 const ROW_ACTIONS: RowActionConfig[] = [
-  { id: "view", label: "View details", icon: "eye" },
-  { id: "accept", label: "Accept request", icon: "user" },
-  { id: "waitlist", label: "Add to waitlist", icon: "user" },
-  { id: "decline", label: "Decline request", icon: "user" },
-  { id: "remove", label: "Remove volunteer", icon: "trash", destructive: true },
+  { id: "view", label: "View details", iconName: "eye-fill" },
+  { id: "accept", label: "Accept request", iconName: "check-fill" },
+  { id: "waitlist", label: "Add to waitlist", iconName: "add-circle-fill" },
+  { id: "decline", label: "Decline request", iconName: "close-fill" },
+  { id: "remove", label: "Remove volunteer", iconName: "delete-fill", destructive: true },
 ]
-
-function StatCard({
-  label,
-  value,
-  suffix,
-  badge,
-  onView,
-}: {
-  label: string
-  value: string
-  suffix?: string
-  badge?: string
-  onView?: () => void
-}) {
-  return (
-    <div className="flex flex-1 flex-col gap-3 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-[510] leading-[22px] text-text-table-header">{label}</span>
-        <div className="flex items-center gap-1.5">
-          {badge ? (
-            <span className="inline-flex h-6 items-center rounded-md bg-bg-default-100 px-2 text-xs font-[510] leading-4 text-text-table-header">
-              {badge}
-            </span>
-          ) : null}
-          {onView ? (
-            <button
-              type="button"
-              onClick={onView}
-              className="inline-flex size-6 cursor-pointer items-center justify-center rounded-md text-icon-neutral hover:bg-bg-default-100"
-              aria-label="View capacity breakdown"
-            >
-              <Eye className="size-4" />
-            </button>
-          ) : null}
-        </div>
-      </div>
-      <div className="flex items-baseline gap-1">
-        <span className="font-display text-2xl font-semibold leading-8 text-text-events-strong">
-          {value}
-        </span>
-        {suffix ? (
-          <span className="text-sm font-[510] leading-[22px] text-text-table-header">{suffix}</span>
-        ) : null}
-      </div>
-    </div>
-  )
-}
 
 function SkillsCell({ skills }: { skills: string[] }) {
   const [first, ...rest] = skills
   if (!first) return <span className="text-text-table-header">--</span>
   return (
-    <div className="flex items-center gap-1.5">
-      <span className="inline-flex h-6 items-center rounded-md bg-bg-default-100 px-2 text-xs font-[510] leading-4 text-text-events-strong">
-        {first}
-      </span>
-      {rest.length > 0 ? (
-        <span className="inline-flex h-6 items-center rounded-md bg-bg-default-100 px-2 text-xs font-[510] leading-4 text-text-table-header">
-          +{rest.length}
-        </span>
-      ) : null}
+    <div className="flex items-center gap-2">
+      <TableSkillTag>{first}</TableSkillTag>
+      {rest.length > 0 ? <TableSkillTag muted>+{rest.length}</TableSkillTag> : null}
     </div>
   )
 }
@@ -257,51 +213,69 @@ export function VolunteersTab({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row">
-        <StatCard
+        <OverviewCard
           label="Total volunteers"
           value={String(data.totals.volunteers.current)}
           suffix={`/ ${data.totals.volunteers.max}`}
-          badge={`${data.totals.spotsLeft} spot left`}
-          onView={() => setCapacityOpen(true)}
+          headerExtra={
+            data.totals.spotsLeft > 0 ? (
+              <OverviewCapacityBadge>
+                {data.totals.spotsLeft} spot left
+              </OverviewCapacityBadge>
+            ) : null
+          }
+          footerExtra={
+            <OverviewViewButton
+              label="View capacity breakdown"
+              onClick={() => setCapacityOpen(true)}
+            />
+          }
         />
-        <StatCard label="Pending requests" value={String(data.totals.pending)} />
-        <StatCard label="Waitlists" value={String(data.totals.waitlists)} />
+        <OverviewCard
+          label="Pending requests"
+          value={String(data.totals.pending)}
+        />
+        <OverviewCard label="Waitlists" value={String(data.totals.waitlists)} />
       </div>
 
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex flex-wrap gap-2">
           <FilterDropdown
+            appearance="events"
             label="Skills"
             options={["All skills", "IT Training", "Teaching", "Public Speaking"]}
             value={filters.skills}
             onValueChange={(value) => setFilters((prev) => ({ ...prev, skills: value }))}
           />
           <FilterDropdown
+            appearance="events"
             label="Status"
             options={["All status", "Pending", "Accepted", "Waitlist"]}
             value={filters.status}
             onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
           />
           <FilterDropdown
+            appearance="events"
             label="Date applied"
             options={["All time", "Today", "This week", "This month"]}
             value={filters.date}
             onValueChange={(value) => setFilters((prev) => ({ ...prev, date: value }))}
           />
         </div>
-        <div className="w-full xl:max-w-[280px]">
+        <div className="w-full xl:max-w-[400px]">
           <Input
             density="compact"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search volunteers"
-            leftIcon={<Search className="size-4" />}
+            leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label="Search volunteers"
+            className="h-8 min-h-8 rounded-[10px] border-0 bg-bg-default-100 px-3 shadow-none"
           />
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border-default-100 bg-bg-canvas">
+      <div className={cn(elevatedCardSurfaceClassName, "overflow-hidden")}>
         {rows.length > 0 && selectionCount > 0 && !loading ? (
           <div className="flex h-12 items-center justify-between gap-3 border-b border-border-default-100 bg-bg-on-canvas px-4">
             <div className="flex items-center gap-3">
@@ -316,9 +290,9 @@ export function VolunteersTab({
               </span>
             </div>
             <DropdownMenu>
-              <DropdownMenuTrigger className="type-events-filter inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral px-3 shadow-button-neutral outline-none hover:bg-button-neutral-clicked">
+              <DropdownMenuTrigger className="type-events-filter inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral outline-none hover:bg-button-neutral-hover focus-visible:ring-2 focus-visible:ring-border-input-active">
                 Actions
-                <ChevronDown className="size-4 text-icon-neutral" />
+                <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onSelect={() => setBulk("accept")}>Accept request</DropdownMenuItem>
@@ -396,11 +370,7 @@ export function VolunteersTab({
                           <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
                             {row.name}
                           </span>
-                          {row.isNew ? (
-                            <span className="inline-flex shrink-0 items-center rounded bg-bg-nav-tab-active px-1.5 py-0.5 text-[10px] font-[510] leading-4 text-text-nav-tab-active">
-                              New volunteer!
-                            </span>
-                          ) : null}
+                          {row.isNew ? <NewVolunteerBadge /> : null}
                         </span>
                         <span className="truncate text-xs leading-5 text-text-table-header">{row.email}</span>
                       </span>
@@ -422,6 +392,9 @@ export function VolunteersTab({
                     <RowActionsDropdown
                       actions={ROW_ACTIONS}
                       onAction={(actionId) => handleRowAction(row, actionId)}
+                      triggerIcon={
+                        <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
+                      }
                     />
                   </TableCell>
                 </TableRow>

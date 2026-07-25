@@ -1,6 +1,8 @@
 import { Fragment, useState } from "react"
-import { ChevronRight, Clock, MapPin } from "lucide-react"
+import { Clock, MapPin } from "lucide-react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { EventIcon } from "../../components/events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { DashboardLayout } from "../../components/dashboard/DashboardLayout"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
@@ -167,7 +169,20 @@ function seedEvent(
       statusLabel: "Upcoming",
       breadcrumb: ["Events", "Collaborations", event.title],
     }
-    if (collab === "pending" || collab === "accepted") {
+    if (collab === "new-request") {
+      event = {
+        ...event,
+        meta: [
+          {
+            id: "organizer",
+            icon: "contact",
+            label: "Organizer",
+            value: "Acme Incorporation",
+          },
+          ...event.meta.filter((row) => row.id !== "contact" && row.id !== "organizer"),
+        ],
+      }
+    } else if (collab === "pending" || collab === "accepted") {
       // Organizer view: swap the Contact row for a Collaborator row at the top.
       event = {
         ...event,
@@ -206,7 +221,9 @@ function Breadcrumb({ items, onHome }: { items: string[]; onHome: () => void }) 
             ) : (
               <span className={isLast ? "min-w-0 truncate" : "whitespace-nowrap"}>{item}</span>
             )}
-            {isLast ? null : <ChevronRight className="size-3 shrink-0" aria-hidden />}
+            {isLast ? null : (
+              <EventIcon name="arrow-right-line" size={EVENT_ICON_SIZE.buttonLeading} />
+            )}
           </Fragment>
         )
       })}

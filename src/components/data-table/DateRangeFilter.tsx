@@ -2,6 +2,8 @@ import { useState } from "react"
 import { ChevronDown, X } from "lucide-react"
 import type { DateRange } from "react-day-picker"
 import { cn } from "../../lib/utils"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Calendar } from "../ui/calendar"
 import { Button } from "../ui/button"
@@ -23,6 +25,8 @@ export type DateRangeFilterProps = {
   minDate?: Date | null
   /** Disable dates after this day (e.g. a Start date can't follow the End date). */
   maxDate?: Date | null
+  /** Figma events filter chip — add-circle + label + down-fill, 32px tall. */
+  appearance?: "default" | "events"
 }
 
 export function DateRangeFilter({
@@ -33,10 +37,12 @@ export function DateRangeFilter({
   className,
   minDate,
   maxDate,
+  appearance = "default",
 }: DateRangeFilterProps) {
   const [open, setOpen] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
   const [range, setRange] = useState<DateRange | undefined>()
+  const isEvents = appearance === "events"
 
   const anyOption = options[0]
   const isActive = value !== label && value !== anyOption
@@ -76,40 +82,80 @@ export function DateRangeFilter({
     >
       <PopoverTrigger
         className={cn(
-          "type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 data-[state=open]:border-border-input-active",
-          isActive ? "border-border-input-active" : "border-border-input-default-200",
+          isEvents
+            ? "inline-flex h-8 min-h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral outline-none hover:bg-button-neutral-hover focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 data-[state=open]:bg-button-neutral-clicked"
+            : "type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2 data-[state=open]:border-border-input-active",
+          !isEvents && (isActive ? "border-border-input-active" : "border-border-input-default-200"),
           className,
         )}
       >
-        <span className="max-w-[160px] truncate">{displayValue}</span>
-        {isActive ? (
-          <span
-            role="button"
-            tabIndex={0}
-            aria-label={`Clear ${label}`}
-            className="inline-flex shrink-0 items-center justify-center rounded-full p-0.5 text-icon-neutral transition-colors hover:bg-bg-default-100 hover:text-text-events-strong"
-            onPointerDown={(event) => {
-              event.stopPropagation()
-              event.preventDefault()
-            }}
-            onClick={(event) => {
-              event.stopPropagation()
-              event.preventDefault()
-              setRange(undefined)
-              onChange(anyOption, null)
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault()
-                setRange(undefined)
-                onChange(anyOption, null)
-              }
-            }}
-          >
-            <X className="size-3.5" />
-          </span>
+        {isEvents ? (
+          <>
+            <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} />
+            <span className="max-w-[160px] truncate">{displayValue}</span>
+            {isActive ? (
+              <span
+                role="button"
+                tabIndex={0}
+                aria-label={`Clear ${label}`}
+                className="inline-flex shrink-0 items-center justify-center rounded-full p-0.5 text-icon-neutral transition-colors hover:bg-bg-default-100 hover:text-text-events-strong"
+                onPointerDown={(event) => {
+                  event.stopPropagation()
+                  event.preventDefault()
+                }}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  event.preventDefault()
+                  setRange(undefined)
+                  onChange(anyOption, null)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault()
+                    setRange(undefined)
+                    onChange(anyOption, null)
+                  }
+                }}
+              >
+                <X className="size-3.5" />
+              </span>
+            ) : (
+              <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
+            )}
+          </>
         ) : (
-          <ChevronDown className="size-4 shrink-0 text-icon-neutral" />
+          <>
+            <span className="max-w-[160px] truncate">{displayValue}</span>
+            {isActive ? (
+              <span
+                role="button"
+                tabIndex={0}
+                aria-label={`Clear ${label}`}
+                className="inline-flex shrink-0 items-center justify-center rounded-full p-0.5 text-icon-neutral transition-colors hover:bg-bg-default-100 hover:text-text-events-strong"
+                onPointerDown={(event) => {
+                  event.stopPropagation()
+                  event.preventDefault()
+                }}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  event.preventDefault()
+                  setRange(undefined)
+                  onChange(anyOption, null)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault()
+                    setRange(undefined)
+                    onChange(anyOption, null)
+                  }
+                }}
+              >
+                <X className="size-3.5" />
+              </span>
+            ) : (
+              <ChevronDown className="size-4 shrink-0 text-icon-neutral" />
+            )}
+          </>
         )}
       </PopoverTrigger>
       <PopoverContent

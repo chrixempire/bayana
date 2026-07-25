@@ -104,9 +104,9 @@ export function CreateAccountPage() {
               <h6 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
                 Get started with Bayana
               </h6>
-              <p className="text-sm leading-[22px] text-text-neutral-400">
+              <p className="text-sm font-normal leading-[22px] tracking-[-0.1px] text-text-neutral-400">
                 Already have an account?{" "}
-                <Link to={AUTH_LOGIN_PATH} className="font-medium text-[#278cff] underline underline-offset-2">
+                <Link to={AUTH_LOGIN_PATH} className="font-medium tracking-normal text-[#278cff] underline underline-offset-2">
                   Sign in
                 </Link>
               </p>
@@ -123,7 +123,7 @@ export function CreateAccountPage() {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="create-account-email"
-                    className="block text-sm font-medium leading-[22px] text-text-default-500"
+                    className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
                   >
                     Email address
                   </label>
@@ -147,7 +147,7 @@ export function CreateAccountPage() {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="create-account-password"
-                    className="block text-sm font-medium leading-[22px] text-text-default-500"
+                    className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
                   >
                     Password
                   </label>
@@ -181,7 +181,7 @@ export function CreateAccountPage() {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="create-account-password-confirmation"
-                    className="block text-sm font-medium leading-[22px] text-text-default-500"
+                    className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
                   >
                     Confirm password
                   </label>

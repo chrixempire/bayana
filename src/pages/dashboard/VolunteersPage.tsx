@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { ChevronDown, Eye, MessageSquare, MoreHorizontal, Search, ShieldBan, ShieldCheck, Upload } from "lucide-react"
+import { MessageSquare, ShieldBan, ShieldCheck, Upload } from "lucide-react"
 import {
   DashboardFullBleed,
   DashboardLayout,
@@ -26,6 +26,12 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
 import { PersonAvatar } from "../../components/events/detail/PersonAvatar"
+import {
+  elevatedCardSurfaceClassName,
+  OverviewCard,
+} from "../../components/events/detail/detail-primitives"
+import { EventIcon } from "../../components/events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { ReviewsTab } from "../../components/volunteers/ReviewsTab"
 import { ExportVolunteersModal } from "../../components/dashboard/ExportVolunteersModal"
 import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filters"
@@ -55,17 +61,6 @@ function StatusPill({ status }: { status: VolunteerListRow["status"] }) {
     >
       {status === "active" ? "Active" : "Blacklisted"}
     </span>
-  )
-}
-
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="flex flex-1 flex-col gap-2 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-      <span className="text-sm leading-[22px] text-text-table-header">{label}</span>
-      <span className="font-display text-2xl font-semibold leading-8 text-text-events-strong">
-        {value}
-      </span>
-    </div>
   )
 }
 
@@ -228,9 +223,9 @@ export function VolunteersPage() {
         ) : (
           <>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <StatCard label="Total volunteers" value={totals.total} />
-              <StatCard label="Active volunteers" value={totals.active} />
-              <StatCard label="Blacklisted volunteers" value={totals.blacklisted} />
+              <OverviewCard label="Total volunteers" value={String(totals.total)} />
+              <OverviewCard label="Active volunteers" value={String(totals.active)} />
+              <OverviewCard label="Blacklisted volunteers" value={String(totals.blacklisted)} />
             </div>
 
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -245,6 +240,7 @@ export function VolunteersPage() {
                   }}
                 />
                 <FilterDropdown
+                  appearance="events"
                   label="Status"
                   options={["All status", "Active", "Blacklisted"]}
                   value={statusFilter}
@@ -282,13 +278,14 @@ export function VolunteersPage() {
                     setPage(1)
                   }}
                   placeholder="Search volunteers"
-                  leftIcon={<Search className="size-4" />}
+                  leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
                   aria-label="Search volunteers"
+                  className="h-8 min-h-8 rounded-[10px] border-0 bg-bg-default-100 px-3 shadow-none"
                 />
               </div>
             </div>
 
-            <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+            <div className={cn(elevatedCardSurfaceClassName, "overflow-hidden")}>
               <Table contained={false} className="w-full table-fixed">
                 <colgroup>
                   <col style={{ width: "3rem" }} />
@@ -317,9 +314,9 @@ export function VolunteersPage() {
                             </span>
                           </div>
                           <DropdownMenu>
-                            <DropdownMenuTrigger className="type-events-filter inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-border-input-default-200 bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active">
+                            <DropdownMenuTrigger className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral outline-none hover:bg-button-neutral-hover focus-visible:ring-2 focus-visible:ring-border-input-active">
                               Actions
-                              <ChevronDown className="size-4 text-icon-neutral" />
+                              <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="min-w-[11rem]">
                               <DropdownMenuItem
@@ -435,12 +432,12 @@ export function VolunteersPage() {
                                 aria-label={`Actions for ${row.name}`}
                                 className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-icon-neutral outline-none transition-colors hover:bg-bg-default-100 focus-visible:ring-2 focus-visible:ring-border-input-active"
                               >
-                                <MoreHorizontal className="size-4" />
+                                <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
                               </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="min-w-[11rem]">
                               <DropdownMenuItem onSelect={() => navigate(`/volunteers/${row.id}`)}>
-                                <Eye className="size-4 text-icon-neutral" />
+                                <EventIcon name="eye-fill" size={EVENT_ICON_SIZE.dropdownItem} />
                                 View details
                               </DropdownMenuItem>
                               <DropdownMenuItem

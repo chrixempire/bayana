@@ -16,38 +16,96 @@ const NEEDS_STATUS_LABELS: Record<EventDetailStatus, string> = {
   draft: "Draft",
 }
 
-const RECENT_DONATIONS: NeedsRecentDonation[] = [
+const RECENT_CASH_DONATIONS: NeedsRecentDonation[] = [
   { id: "rd-1", donor: "Daniel Osonuga", avatarTone: "green", amount: "+₦10,000.00", left: "₦360,000 left", timeAgo: "Just now" },
   { id: "rd-2", donor: "Anonymous", avatarTone: "purple", amount: "+₦10,000.00", left: "₦370,000 left", timeAgo: "2 mins ago" },
   { id: "rd-3", donor: "Anonymous", avatarTone: "blue", amount: "+₦10,000.00", left: "₦370,000 left", timeAgo: "2 mins ago" },
   { id: "rd-4", donor: "David Bamidele", avatarTone: "orange", amount: "+₦10,000.00", left: "₦380,000 left", timeAgo: "1 hour ago" },
 ]
 
-function needsHomeForStatus(status: EventDetailStatus): NeedsHomeData {
+const RECENT_MIXED_DONATIONS: NeedsRecentDonation[] = [
+  RECENT_CASH_DONATIONS[0],
+  {
+    id: "rd-2",
+    donor: "Daniel Osonuga",
+    avatarTone: "green",
+    kind: "in-kind",
+    amount: "+2",
+    left: "40 left",
+    timeAgo: "Just now",
+  },
+  RECENT_CASH_DONATIONS[1],
+  {
+    id: "rd-4",
+    donor: "Anonymous",
+    avatarTone: "purple",
+    kind: "in-kind",
+    amount: "+2",
+    left: "42 left",
+    timeAgo: "2 mins ago",
+  },
+  RECENT_CASH_DONATIONS[2],
+  RECENT_CASH_DONATIONS[3],
+]
+
+function needsHomeForStatus(status: EventDetailStatus, includeInKind: boolean): NeedsHomeData {
   if (status === "upcoming") {
-    return { donorsCount: 0, inCashRaised: "₦0", inCashGoal: "200,000", recentDonations: [] }
+    return {
+      donorsCount: 0,
+      inCashRaised: "₦0",
+      inCashGoal: "200,000",
+      recentDonations: [],
+    }
   }
-  if (status === "fully-fulfilled" || status === "completed") {
-    return { donorsCount: 12, inCashRaised: "₦200,000", inCashGoal: "200,000", recentDonations: RECENT_DONATIONS }
+
+  const base: NeedsHomeData = {
+    donorsCount: 12,
+    inCashRaised: status === "active" ? "₦100,000" : "₦200,000",
+    inCashGoal: "200,000",
+    recentDonations: includeInKind ? RECENT_MIXED_DONATIONS : RECENT_CASH_DONATIONS,
   }
-  return { donorsCount: 12, inCashRaised: "₦100,000", inCashGoal: "200,000", recentDonations: RECENT_DONATIONS }
+
+  if (includeInKind) {
+    return {
+      ...base,
+      inKindRaised: status === "active" ? "10" : "50",
+      inKindGoal: "50",
+    }
+  }
+
+  return base
 }
 
-const NEEDS_META: EventDetailMetaRow[] = [
-  { id: "date", icon: "calendar", label: "Date", value: "22 Jan 2025 to 31 Jan 2025" },
-  { id: "visibility", icon: "visibility", label: "Visibility", value: "Public" },
-  { id: "donation-type", icon: "donation-type", label: "Donation type", value: "In cash, In-kind" },
-  { id: "target-amount", icon: "target-amount", label: "Target amount", value: "₦ 200,000.00" },
-  { id: "items", icon: "items", label: "Items", value: "50 items" },
-  { id: "contact", icon: "contact", label: "Contact", value: "Daniel Osonuga" },
-  {
-    id: "updated",
-    icon: "updated",
-    label: "Last updated",
-    value: "4th December 2025, 08:30 PM",
-    avatarInitial: "A",
-  },
-]
+function needsMetaForStatus(status: EventDetailStatus): EventDetailMetaRow[] {
+  const rows: EventDetailMetaRow[] = [
+    { id: "date", icon: "calendar", label: "Date", value: "22 Jan 2025 to 31 Jan 2025" },
+    { id: "visibility", icon: "visibility", label: "Visibility", value: "Public" },
+    {
+      id: "donation-type",
+      icon: "donation-type",
+      label: "Donation type",
+      value: status === "upcoming" ? "In cash" : "In cash, In-kind",
+    },
+    { id: "target-amount", icon: "target-amount", label: "Target amount", value: "₦ 200,000.00" },
+  ]
+
+  if (status !== "upcoming") {
+    rows.push({ id: "items", icon: "items", label: "Items", value: "50 items" })
+  }
+
+  rows.push(
+    { id: "contact", icon: "contact", label: "Contact", value: "Daniel Osonuga" },
+    {
+      id: "updated",
+      icon: "updated",
+      label: "Last updated",
+      value: "4th December 2025, 08:30 PM",
+      avatarInitial: "A",
+    },
+  )
+
+  return rows
+}
 
 const PLEDGED_ITEMS = [
   { name: "Bag of rice", quantity: 1 },
@@ -109,7 +167,8 @@ export function buildNeedsEventDetail(
   base: EventDetail,
   status: EventDetailStatus = "upcoming",
 ): EventDetail {
-  const home = needsHomeForStatus(status)
+  const includeInKind = status !== "upcoming"
+  const home = needsHomeForStatus(status, includeInKind)
   const raisedValue = status === "upcoming" ? 0 : status === "active" ? 100000 : 200000
   const title = "₦500,000 for flood relief food item"
 
@@ -120,7 +179,7 @@ export function buildNeedsEventDetail(
     statusLabel: NEEDS_STATUS_LABELS[status],
     title,
     breadcrumb: ["Events", "Needs", title],
-    meta: NEEDS_META,
+    meta: needsMetaForStatus(status),
     about: {
       ...base.about,
       label: "About this cause",

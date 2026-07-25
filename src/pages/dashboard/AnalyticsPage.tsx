@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { CalendarDays, ChevronDown, FileDown, Sparkles, Star } from "lucide-react"
 import { DashboardLayout, DashboardWideContent } from "../../components/dashboard/DashboardLayout"
+import { AnalyticsStatCard } from "../../components/analytics/AnalyticsStatCard"
 import { FilterDropdown, DataTablePagination } from "../../components/data-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
 import {
@@ -21,6 +21,9 @@ import {
   SkillBars,
 } from "../../components/analytics/charts"
 import { ExportReportModal } from "../../components/analytics/ExportReportModal"
+import { EventIcon } from "../../components/events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
+import { elevatedCardSurfaceClassName } from "../../components/events/detail/detail-primitives"
 import { downloadImpactReport } from "../../lib/impact-report"
 import { toast } from "../../hooks/use-toast"
 import { cn } from "../../lib/utils"
@@ -57,34 +60,11 @@ function pctOf(slices: { value: number }[], index: number) {
   return total > 0 ? `${Math.round((slices[index].value / total) * 100)}%` : "0%"
 }
 
-function StatCardView({ card, empty }: { card: StatCard; empty: boolean }) {
-  return (
-    <div className="flex flex-col gap-2 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-      <span className="text-sm leading-[22px] text-text-table-header">{card.label}</span>
-      <span className="flex items-center gap-1.5 font-display text-2xl font-semibold leading-8 text-text-events-strong">
-        {empty ? "—" : card.value}
-        {!empty && card.star ? <Star className="size-5 fill-[#f79e19] text-[#f79e19]" /> : null}
-      </span>
-      <span className="text-sm leading-[22px]">
-        <span
-          className={cn(
-            "font-medium",
-            empty ? "text-text-table-header" : card.trend === "up" ? "text-text-success" : "text-text-negative",
-          )}
-        >
-          {empty ? "0.0%" : card.delta}
-        </span>{" "}
-        <span className="text-text-table-header">from last 30 days</span>
-      </span>
-    </div>
-  )
-}
-
 function StatGrid({ cards, empty }: { cards: StatCard[]; empty: boolean }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => (
-        <StatCardView key={card.label} card={card} empty={empty} />
+        <AnalyticsStatCard key={card.label} card={card} empty={empty} />
       ))}
     </div>
   )
@@ -92,7 +72,27 @@ function StatGrid({ cards, empty }: { cards: StatCard[]; empty: boolean }) {
 
 function EmptyChart({ label }: { label: string }) {
   return (
-    <div className="flex h-[300px] items-center justify-center text-sm text-text-table-header">{label}</div>
+    <div className="flex h-[300px] items-center justify-center text-sm leading-[22px] text-text-table-header">
+      {label}
+    </div>
+  )
+}
+
+function InsightsButton() {
+  return (
+    <Popover>
+      <PopoverTrigger className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-lg px-2.5 text-xs font-semibold leading-5 text-text-events-strong outline-none hover:bg-bg-default-100 data-[state=open]:bg-bg-default-100">
+        <EventIcon name="sparkles-fill" size={EVENT_ICON_SIZE.composeAction} />
+        Insights
+        <EventIcon name="down-fill" size={EVENT_ICON_SIZE.composeAction} />
+      </PopoverTrigger>
+      <PopoverContent
+        align="end"
+        className="max-w-[220px] rounded-xl bg-[#2c3237] px-3 py-2 text-xs leading-5 text-white shadow-lg"
+      >
+        40% of volunteers selected Teaching as a skill.
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -106,7 +106,6 @@ export function AnalyticsPage() {
   const [sortBy, setSortBy] = useState("Amount raised")
   const [exportOpen, setExportOpen] = useState(false)
 
-  // Event donations table
   const [page, setPage] = useState(1)
   const pageSize = 10
   const rows = useMemo(() => (isEmpty ? [] : EVENT_DONATIONS), [isEmpty])
@@ -121,23 +120,25 @@ export function AnalyticsPage() {
   return (
     <DashboardLayout activeTab="analytics">
       <DashboardWideContent flushBottom className="flex flex-col gap-6 pb-10">
-        {/* Header */}
+        {/* Header — Figma 80px content header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
+          <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
             Analytics
           </h1>
           <div className="flex items-center gap-3">
             <DropdownMenu>
-              <DropdownMenuTrigger className="type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border border-border-input-default-200 bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas data-[state=open]:border-border-input-active">
-                <CalendarDays className="size-4 text-icon-neutral" />
+              <DropdownMenuTrigger className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral outline-none hover:bg-button-neutral-hover data-[state=open]:bg-button-neutral-clicked">
+                <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.nav} />
                 <span>{dateLabel}</span>
-                <ChevronDown className="size-4 text-icon-neutral" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-[11rem]">
                 {DATE_OPTIONS.map((option) => (
                   <DropdownMenuItem
                     key={option}
-                    className={cn("cursor-pointer", option === dateLabel && "bg-bg-accent-soft font-medium text-bg-accent")}
+                    className={cn(
+                      "cursor-pointer",
+                      option === dateLabel && "bg-bg-accent-soft font-medium text-bg-accent",
+                    )}
                     onSelect={() => setDateLabel(option)}
                   >
                     {option}
@@ -147,26 +148,41 @@ export function AnalyticsPage() {
             </DropdownMenu>
             <button
               type="button"
-              onClick={() => setExportOpen(true)}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-button-primary px-3.5 text-sm font-semibold text-text-on-solid-bg shadow-button-primary transition-opacity hover:opacity-90"
+              disabled={isEmpty}
+              onClick={() => !isEmpty && setExportOpen(true)}
+              className={cn(
+                "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] px-3 text-sm font-semibold leading-[22px] transition-opacity",
+                isEmpty
+                  ? "cursor-not-allowed bg-button-disabled text-text-disabled-300"
+                  : "bg-button-primary text-text-on-solid-bg shadow-button-primary hover:opacity-90",
+              )}
             >
-              <FileDown className="size-4" />
+              <EventIcon
+                name="add-circle-fill"
+                size={EVENT_ICON_SIZE.buttonLeading}
+                inverted={!isEmpty}
+              />
               Download impact report
+              <EventIcon
+                name="add-circle-fill"
+                size={EVENT_ICON_SIZE.buttonTrailing}
+                inverted={!isEmpty}
+              />
             </button>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-6 border-b border-border-default-100">
+        {/* Tabs — Figma h-40 border-b-2 active indicator */}
+        <div className="flex gap-4 border-b border-border-default-100">
           {TABS.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => setTab(item.id)}
               className={cn(
-                "type-events-tab relative cursor-pointer pb-3",
+                "relative flex h-10 cursor-pointer items-center py-2 text-sm font-[510] leading-[22px]",
                 tab === item.id
-                  ? "text-text-events-strong after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-bg-accent"
+                  ? "border-b-2 border-border-input-active text-text-events-strong"
                   : "text-text-table-header hover:text-text-neutral-400",
               )}
             >
@@ -177,7 +193,10 @@ export function AnalyticsPage() {
 
         {tab === "overview" ? (
           <>
-            <StatGrid cards={OVERVIEW_STATS} empty={isEmpty} />
+            <div className="flex flex-col gap-4">
+              <StatGrid cards={OVERVIEW_STATS.slice(0, 4)} empty={isEmpty} />
+              <StatGrid cards={OVERVIEW_STATS.slice(4)} empty={isEmpty} />
+            </div>
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <ChartCard
                 title="Event Activity"
@@ -213,6 +232,8 @@ export function AnalyticsPage() {
                     options={["Volunteers", "Donations", "Events", "Cash raised", "Reviews"]}
                     value={demographic}
                     onValueChange={setDemographic}
+                    appearance="events"
+                    triggerClassName="h-7 min-h-7 px-2.5 text-xs"
                   />
                 }
               >
@@ -224,18 +245,21 @@ export function AnalyticsPage() {
 
         {tab === "donations" ? (
           <>
-            <StatGrid cards={DONATION_STATS} empty={isEmpty} />
+            <div className="flex flex-col gap-4">
+              <StatGrid cards={DONATION_STATS.slice(0, 4)} empty={isEmpty} />
+              <StatGrid cards={DONATION_STATS.slice(4)} empty={isEmpty} />
+            </div>
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <div className="flex flex-col rounded-2xl border border-border-default-100 bg-bg-canvas">
+              <div className={cn(elevatedCardSurfaceClassName, "flex flex-col")}>
                 <div className="flex items-center justify-between gap-3 p-4">
-                  <h3 className="font-display text-lg font-semibold leading-6 text-text-events-strong">
-                    Event donations
-                  </h3>
+                  <h3 className="text-base font-semibold leading-6 text-text-events-strong">Event donations</h3>
                   <FilterDropdown
                     label="Amount raised"
                     options={["Amount raised", "No. of donors", "Average donation"]}
                     value={sortBy}
                     onValueChange={setSortBy}
+                    appearance="events"
+                    triggerClassName="h-7 min-h-7 px-2.5 text-xs"
                   />
                 </div>
                 <Table contained={false} className="w-full">
@@ -250,7 +274,7 @@ export function AnalyticsPage() {
                   <TableBody>
                     {paged.length === 0 ? (
                       <TableRow className="hover:bg-transparent">
-                        <TableCell colSpan={4} className="py-16 text-center text-sm text-text-table-header">
+                        <TableCell colSpan={4} className="py-16 text-center text-sm leading-[22px] text-text-table-header">
                           No data yet
                         </TableCell>
                       </TableRow>
@@ -331,23 +355,7 @@ export function AnalyticsPage() {
                 )}
               </ChartCard>
 
-              <ChartCard
-                title="Top 5 skills"
-                action={
-                  <Popover>
-                    <PopoverTrigger className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-border-default-100 bg-bg-canvas px-2.5 text-sm font-medium text-text-events-strong outline-none hover:bg-bg-default-100 data-[state=open]:border-border-input-active">
-                      <Sparkles className="size-4 text-bg-accent" />
-                      Insights
-                    </PopoverTrigger>
-                    <PopoverContent
-                      align="end"
-                      className="max-w-[220px] rounded-xl bg-[#2c3237] px-3 py-2 text-xs leading-5 text-white shadow-lg"
-                    >
-                      40% of volunteers selected Teaching as a skill.
-                    </PopoverContent>
-                  </Popover>
-                }
-              >
+              <ChartCard title="Top 5 skills" action={<InsightsButton />}>
                 {isEmpty ? <EmptyChart label="No data yet" /> : <SkillBars rows={TOP_SKILLS} />}
               </ChartCard>
             </div>

@@ -24,7 +24,7 @@ export const OVERVIEW_STATS: StatCard[] = [
   { label: "Total cash donations", value: "₦150,215,000.00", delta: "+6.0%", trend: "up" },
   { label: "Total in-kind donations", value: "23,500", delta: "+5.0%", trend: "up" },
   { label: "Need fulfilment rate", value: "75 %", delta: "-1.5%", trend: "down" },
-  { label: "Public review", value: "3.5", delta: "-2.0%", trend: "down", star: true },
+  { label: "Public ratings", value: "3.5", delta: "-2.0%", trend: "down", star: true },
 ]
 
 export const DONATION_STATS: StatCard[] = [

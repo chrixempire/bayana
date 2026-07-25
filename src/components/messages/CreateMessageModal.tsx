@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { CalendarDays, X } from "lucide-react"
 import { Modal } from "../ui/modal"
 import { Button } from "../ui/button"
 import { Switch } from "../ui/switch"
@@ -10,6 +9,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { ProBadge } from "../create-event/ProBadge"
 import { CreateEventFieldLabel } from "../create-event/CreateEventFieldLabel"
 import { PersonAvatar } from "../events/detail/PersonAvatar"
+import { EventIcon } from "../events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { cn } from "../../lib/utils"
 
 function startOfToday() {
@@ -127,7 +128,7 @@ export function CreateMessageModal({
                     onClick={() => removeRecipient(name)}
                     className="cursor-pointer text-icon-neutral hover:text-text-events-strong"
                   >
-                    <X className="size-3.5" />
+                    <EventIcon name="close-fill" size={EVENT_ICON_SIZE.composeAction} />
                   </button>
                 </span>
               ))}
@@ -162,7 +163,7 @@ export function CreateMessageModal({
                 )}
               >
                 <span>{date || "DD / MM / YYYY"}</span>
-                <CalendarDays className="size-4 shrink-0 text-icon-neutral" />
+                <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.nav} />
               </PopoverTrigger>
               <PopoverContent
                 align="start"

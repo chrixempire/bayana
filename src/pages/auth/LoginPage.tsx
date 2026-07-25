@@ -112,9 +112,9 @@ export function LoginPage() {
               <h1 className="font-display text-[20px] font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
                 Log in to Bayana
               </h1>
-              <p className="text-sm leading-[22px] text-text-neutral-400">
+              <p className="text-sm font-normal leading-[22px] tracking-[-0.1px] text-text-neutral-400">
                 Don&apos;t have an account?{" "}
-                <Link to={AUTH_CREATE_ACCOUNT_PATH} className="font-medium text-[#278cff] underline underline-offset-2">
+                <Link to={AUTH_CREATE_ACCOUNT_PATH} className="font-medium tracking-normal text-[#278cff] underline underline-offset-2">
                   Sign up
                 </Link>
               </p>
@@ -123,7 +123,7 @@ export function LoginPage() {
             <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="login-email" className="block text-sm font-medium leading-[22px] text-text-default-500">
+                  <label htmlFor="login-email" className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500">
                     Email address
                   </label>
                   <Input
@@ -147,13 +147,13 @@ export function LoginPage() {
                   <div className="flex items-center justify-between gap-3">
                     <label
                       htmlFor="login-password"
-                      className="block text-sm font-medium leading-[22px] text-text-default-500"
+                      className="block text-sm font-medium leading-[22px] tracking-normal text-text-default-500"
                     >
                       Password
                     </label>
                     <Link
                       to={AUTH_FORGOT_PASSWORD_PATH}
-                      className="text-sm font-medium leading-[22px] text-[#278cff] underline-offset-2 hover:underline"
+                      className="text-sm font-medium leading-[22px] tracking-normal text-[#278cff] underline-offset-2 hover:underline"
                     >
                       Forgot password?
                     </Link>

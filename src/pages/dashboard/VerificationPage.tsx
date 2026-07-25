@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { ChevronRight, Search } from "lucide-react"
+import { cn } from "../../lib/utils"
 import { DashboardLayout, DashboardWideContent } from "../../components/dashboard/DashboardLayout"
 import {
   DataTableEmptyState,
@@ -11,48 +11,21 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
 import { Checkbox } from "../../components/ui/checkbox"
 import { Input } from "../../components/ui/input"
+import { elevatedCardSurfaceClassName, OverviewCard } from "../../components/events/detail/detail-primitives"
+import { EventIcon } from "../../components/events/icons/EventIcon"
+import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
+import {
+  VerificationStatusTag,
+  verificationRowShowsNavArrow,
+} from "../../components/verification/VerificationStatusTag"
 import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filters"
 import { toast } from "../../hooks/use-toast"
-import { cn } from "../../lib/utils"
 import {
   VERIFICATION_ROWS,
   VERIFICATION_STATUS_LABELS,
   VERIFICATION_TOTALS,
   type VerificationRow,
-  type VerificationStatus,
 } from "./verification-data"
-
-const STATUS_TONE: Record<VerificationStatus, string> = {
-  "requires-action": "bg-bg-info-soft text-text-info",
-  incomplete: "bg-bg-default-100 text-text-table-header",
-  "in-review": "bg-bg-warning-soft text-text-warning",
-  verified: "bg-bg-success-soft text-text-success",
-  rejected: "bg-bg-negative-soft text-text-negative",
-}
-
-function StatusBadge({ status }: { status: VerificationStatus }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex h-6 items-center rounded-lg px-2 text-xs font-[510] leading-4",
-        STATUS_TONE[status],
-      )}
-    >
-      {VERIFICATION_STATUS_LABELS[status]}
-    </span>
-  )
-}
-
-function OverviewCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="flex flex-1 flex-col gap-2 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-      <span className="text-sm leading-[22px] text-text-table-header">{label}</span>
-      <span className="font-display text-2xl font-semibold leading-8 text-text-events-strong">
-        {value}
-      </span>
-    </div>
-  )
-}
 
 const STATUS_OPTIONS = ["Requires action", "Incomplete", "In review", "Verified", "Rejected"]
 
@@ -111,6 +84,14 @@ export function VerificationPage() {
     ? { title: "No result found", description: "We couldn't find any result based on the filter" }
     : { title: "No verification yet", description: "Verification requests will appear here" }
 
+  const openRow = (row: VerificationRow) => {
+    if (!verificationRowShowsNavArrow(row.status)) return
+    toast({
+      title: "Coming soon",
+      description: "Verification details will be available after API integration.",
+    })
+  }
+
   return (
     <DashboardLayout activeTab="verification">
       <DashboardWideContent flushBottom className="flex flex-col gap-6">
@@ -119,14 +100,15 @@ export function VerificationPage() {
         </h1>
 
         <div className="flex flex-col gap-4 sm:flex-row">
-          <OverviewCard label="Total verifications" value={totals.total} />
-          <OverviewCard label="Ongoing verifications" value={totals.ongoing} />
-          <OverviewCard label="Verified" value={totals.verified} />
+          <OverviewCard label="Total verifications" value={String(totals.total)} />
+          <OverviewCard label="Ongoing verifications" value={String(totals.ongoing)} />
+          <OverviewCard label="Verified" value={String(totals.verified)} />
         </div>
 
         <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <MultiSelectFilter
+              appearance="events"
               label="Status"
               options={STATUS_OPTIONS}
               values={statusFilters}
@@ -136,6 +118,7 @@ export function VerificationPage() {
               }}
             />
             <DateRangeFilter
+              appearance="events"
               label="Last updated"
               options={["Any date", "Today", "This week", "This month", "Custom range"]}
               value={dateLabel}
@@ -155,13 +138,14 @@ export function VerificationPage() {
                 setPage(1)
               }}
               placeholder="Search verifications"
-              leftIcon={<Search className="size-4" />}
+              leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
               aria-label="Search verifications"
+              className="h-8 min-h-8 rounded-[10px] border-0 bg-bg-default-100 px-3 shadow-none"
             />
           </div>
         </div>
 
-        <div className="rounded-xl border border-border-default-100 bg-bg-canvas">
+        <div className={cn(elevatedCardSurfaceClassName, "overflow-hidden")}>
           <Table contained={false} className="w-full table-fixed">
             <colgroup>
               <col style={{ width: "3rem" }} />
@@ -172,7 +156,7 @@ export function VerificationPage() {
             </colgroup>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="w-10">
+                <TableHead className="w-10 pl-4">
                   <Checkbox
                     size="sm"
                     checked={allPagedSelected ? true : pagedSelected > 0 ? "indeterminate" : false}
@@ -181,9 +165,9 @@ export function VerificationPage() {
                     aria-label="Select all"
                   />
                 </TableHead>
-                <TableHead>Verification</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last updated</TableHead>
+                <TableHead className="min-w-[240px]">Verification</TableHead>
+                <TableHead className="min-w-[140px]">Status</TableHead>
+                <TableHead className="min-w-[160px]">Last updated</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
@@ -195,41 +179,53 @@ export function VerificationPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                paged.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={selectedIds.has(row.id) ? "selected" : undefined}
-                    className="cursor-pointer"
-                    onClick={() =>
-                      toast({
-                        title: "Coming soon",
-                        description: "Verification details will be available after API integration.",
-                      })
-                    }
-                  >
-                    <TableCell onClick={(event) => event.stopPropagation()}>
-                      <Checkbox
-                        size="sm"
-                        checked={selectedIds.has(row.id)}
-                        onCheckedChange={() => toggleOne(row.id)}
-                        aria-label={`Select ${row.title}`}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="type-table-cell-primary">{row.title}</span>
-                        <span className="type-table-cell-secondary">{row.subtitle}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <StatusBadge status={row.status} />
-                    </TableCell>
-                    <TableCell className="type-table-cell-primary">{row.lastUpdated}</TableCell>
-                    <TableCell className="text-right">
-                      <ChevronRight className="ml-auto size-4 text-icon-neutral" />
-                    </TableCell>
-                  </TableRow>
-                ))
+                paged.map((row) => {
+                  const showArrow = verificationRowShowsNavArrow(row.status)
+                  return (
+                    <TableRow
+                      key={row.id}
+                      data-state={selectedIds.has(row.id) ? "selected" : undefined}
+                      className={cn(showArrow && "cursor-pointer")}
+                      onClick={() => openRow(row)}
+                    >
+                      <TableCell className="pl-4" onClick={(event) => event.stopPropagation()}>
+                        <Checkbox
+                          size="sm"
+                          checked={selectedIds.has(row.id)}
+                          onCheckedChange={() => toggleOne(row.id)}
+                          aria-label={`Select ${row.title}`}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex min-w-0 flex-col gap-1">
+                          <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
+                            {row.title}
+                          </span>
+                          <span className="truncate text-sm font-normal leading-[22px] tracking-[-0.1px] text-text-table-header">
+                            {row.subtitle}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <VerificationStatusTag status={row.status} />
+                      </TableCell>
+                      <TableCell className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                        {row.lastUpdated}
+                      </TableCell>
+                      <TableCell className="pr-4 text-right">
+                        <span
+                          className={cn(
+                            "inline-flex size-8 items-center justify-center",
+                            !showArrow && "invisible",
+                          )}
+                          aria-hidden={!showArrow}
+                        >
+                          <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.tableMore} />
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
               )}
             </TableBody>
           </Table>
