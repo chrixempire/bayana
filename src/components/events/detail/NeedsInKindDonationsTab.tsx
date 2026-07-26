@@ -159,7 +159,7 @@ export function NeedsInKindDonationsTab({
       <div className={tableSurfaceClassName}>
         <div className="w-full overflow-x-auto">
           <div style={{ minWidth: 820 }}>
-            <table className="w-full table-fixed border-separate border-spacing-0 caption-bottom text-sm">
+            <table className="w-full table-fixed border-separate border-spacing-0 caption-bottom">
               <colgroup>
                 <col style={{ width: "48px" }} />
                 <col style={{ width: "16%" }} />

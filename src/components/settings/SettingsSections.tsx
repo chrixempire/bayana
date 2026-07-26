@@ -5,8 +5,8 @@ import { Textarea } from "../ui/textarea"
 import { Switch } from "../ui/switch"
 import { Checkbox } from "../ui/checkbox"
 import { SelectableChip } from "../ui/selectable-chip"
-import { FilterDropdown, DataTablePagination } from "../data-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
+import { FilterDropdown, DataTablePagination, TableActionsCell, TableActionsHead, TableNavCell, TableSelectCell, TableSelectHead } from "../data-table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, tableHeaderRowClassName } from "../ui/table"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,7 @@ import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { SettingsSearchIcon, SettingsUploadButton, settingsTableCardClassName } from "./settings-primitives"
 import { toast } from "../../hooks/use-toast"
 import { cn } from "../../lib/utils"
+import { tableSurfaceClassName } from "../../lib/table-styles"
 import {
   InviteMemberModal,
   EditMemberModal,
@@ -153,7 +154,7 @@ export function ProfileSection() {
         ) : (
           <PersonAvatar name="Daniel Osonuga" tone="orange" size={64} />
         )}
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col items-start gap-1.5">
           <SettingsUploadButton onClick={photo.open}>Upload photo</SettingsUploadButton>
           {photo.input}
           <span className="text-xs text-text-table-header">JPG, PNG & GIF file up to 2MB at least 400px by 400px</span>
@@ -275,7 +276,7 @@ export function NgoProfileSection() {
               <EventIcon name="pic-fill" size={24} />
             </span>
           )}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col items-start gap-1.5">
             <SettingsUploadButton onClick={logo.open}>Upload logo</SettingsUploadButton>
             {logo.input}
             <span className="text-xs text-text-table-header">JPG, PNG & GIF file up to 5MB at least 400px by 400px</span>
@@ -483,6 +484,7 @@ export function TeamMembersSection() {
           </div>
           <FilterDropdown
             appearance="events"
+            showLeadingIcon={false}
             label="All"
             options={["All", ...new Set(rows.map((r) => r.role))]}
             value={roleFilter}
@@ -492,8 +494,7 @@ export function TeamMembersSection() {
         <Button
           variant="primary"
           size="sm"
-          className="rounded-lg"
-          leftIcon={<EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />}
+          className="w-fit rounded-lg"
           onClick={() => setInviteOpen(true)}
         >
           Invite member
@@ -503,8 +504,8 @@ export function TeamMembersSection() {
       <div className={settingsTableCardClassName}>
         <Table contained={false} className="w-full">
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-12 px-0 text-center">
+            <TableRow className={tableHeaderRowClassName}>
+              <TableSelectHead>
                 <Checkbox
                   size="sm"
                   checked={allSelected ? true : selected.size > 0 ? "indeterminate" : false}
@@ -513,18 +514,18 @@ export function TeamMembersSection() {
                   }
                   aria-label="Select all"
                 />
-              </TableHead>
+              </TableSelectHead>
               <TableHead>Team member</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date joined</TableHead>
-              <TableHead className="w-12 px-0 text-center" />
+              <TableActionsHead />
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.map((row) => (
               <TableRow key={row.id} className="hover:bg-transparent">
-                <TableCell onClick={(e) => e.stopPropagation()}>
+                <TableSelectCell onClick={(e) => e.stopPropagation()}>
                   <Checkbox
                     size="sm"
                     checked={selected.has(row.id)}
@@ -538,7 +539,7 @@ export function TeamMembersSection() {
                     }
                     aria-label={`Select ${row.name}`}
                   />
-                </TableCell>
+                </TableSelectCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <PersonAvatar name={row.name} tone={row.avatarTone} imageUrl={row.avatarImage} size={40} />
@@ -560,7 +561,7 @@ export function TeamMembersSection() {
                   <StatusBadge status={row.status} />
                 </TableCell>
                 <TableCell className="type-table-cell-secondary">{row.dateJoined}</TableCell>
-                <TableCell className="text-right">
+                <TableActionsCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button
@@ -603,7 +604,7 @@ export function TeamMembersSection() {
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </TableCell>
+                </TableActionsCell>
               </TableRow>
             ))}
           </TableBody>
@@ -670,12 +671,14 @@ export function AuditLogsSection() {
   const [member, setMember] = useState("Member")
   const [dateFilter, setDateFilter] = useState("Date")
   const [detail, setDetail] = useState<AuditLog | null>(null)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
 
   const filtered = AUDIT_LOGS.filter((l) => {
     if (member !== "Member" && l.member !== member) return false
     if (query.trim() && !`${l.member} ${l.fullLog}`.toLowerCase().includes(query.trim().toLowerCase())) return false
     return true
   })
+  const allSelected = filtered.length > 0 && filtered.every((log) => selected.has(log.id))
 
   return (
     <div className="flex w-full max-w-[968px] flex-col gap-6">
@@ -684,6 +687,7 @@ export function AuditLogsSection() {
         <div className="flex items-center gap-2">
           <FilterDropdown
             appearance="events"
+            showLeadingIcon={false}
             label="Member"
             options={["Member", ...new Set(AUDIT_LOGS.map((l) => l.member))]}
             value={member}
@@ -691,6 +695,7 @@ export function AuditLogsSection() {
           />
           <FilterDropdown
             appearance="events"
+            showLeadingIcon={false}
             label="Date"
             options={["Date", "Today", "This week", "This month"]}
             value={dateFilter}
@@ -708,25 +713,44 @@ export function AuditLogsSection() {
         </div>
       </div>
 
-      <div className={settingsTableCardClassName}>
+      <div className={tableSurfaceClassName}>
         <Table contained={false} className="w-full">
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-12 px-0 text-center">
-                <Checkbox size="sm" checked={false} aria-label="Select all" />
-              </TableHead>
+            <TableRow className={tableHeaderRowClassName}>
+              <TableSelectHead>
+                <Checkbox
+                  size="sm"
+                  checked={allSelected ? true : selected.size > 0 ? "indeterminate" : false}
+                  onCheckedChange={() =>
+                    setSelected(allSelected ? new Set() : new Set(filtered.map((log) => log.id)))
+                  }
+                  aria-label="Select all"
+                />
+              </TableSelectHead>
               <TableHead>Member</TableHead>
               <TableHead>Log</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="w-12 px-0 text-center" />
+              <TableActionsHead />
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.map((log) => (
               <TableRow key={log.id} className="cursor-pointer" onClick={() => setDetail(log)}>
-                <TableCell onClick={(e) => e.stopPropagation()}>
-                  <Checkbox size="sm" checked={false} aria-label={`Select ${log.member}`} />
-                </TableCell>
+                <TableSelectCell onClick={(e) => e.stopPropagation()}>
+                  <Checkbox
+                    size="sm"
+                    checked={selected.has(log.id)}
+                    onCheckedChange={() =>
+                      setSelected((prev) => {
+                        const next = new Set(prev)
+                        if (next.has(log.id)) next.delete(log.id)
+                        else next.add(log.id)
+                        return next
+                      })
+                    }
+                    aria-label={`Select ${log.member}`}
+                  />
+                </TableSelectCell>
                 <TableCell>
                   <span className="flex items-center gap-3 type-table-cell-primary">
                     <PersonAvatar name={log.member} tone={log.avatarTone} size={36} />
@@ -735,15 +759,14 @@ export function AuditLogsSection() {
                 </TableCell>
                 <TableCell className="type-table-cell-secondary">{log.log}</TableCell>
                 <TableCell className="type-table-cell-primary">{log.date}</TableCell>
-                <TableCell className="text-right">
-                  <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
-                </TableCell>
+                <TableNavCell>
+                  <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" />
+                </TableNavCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
         <DataTablePagination
-          className="border-t border-border-default-100 px-4 pb-4"
           from={filtered.length === 0 ? 0 : 1}
           to={filtered.length}
           total={filtered.length}
@@ -810,8 +833,7 @@ export function PayoutsSection() {
               <Button
                 variant="primary"
                 size="sm"
-                className="rounded-lg"
-                leftIcon={<EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />}
+                className="w-fit rounded-lg"
                 onClick={() => setAddOpen(true)}
               >
                 Add account
@@ -866,14 +888,15 @@ export function PayoutsSection() {
                 ) : null}
               </div>
             ))}
-            <button
-              type="button"
-              onClick={() => setAddOpen(true)}
-              className="flex w-full items-center justify-center gap-1.5 px-4 py-3 text-sm font-[510] text-text-events-strong transition-colors hover:bg-bg-default-100/60"
-            >
-              <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" />
-              Add account
-            </button>
+            <div className="px-4 py-3">
+              <button
+                type="button"
+                onClick={() => setAddOpen(true)}
+                className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-sm font-[510] text-text-events-strong transition-colors hover:text-text-neutral-400"
+              >
+                Add account
+              </button>
+            </div>
           </div>
           )}
 
@@ -1192,23 +1215,23 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
         </div>
         <Table contained={false} className="w-full">
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-12 px-0 text-center">
+            <TableRow className={tableHeaderRowClassName}>
+              <TableSelectHead>
                 <Checkbox size="sm" checked={false} disabled={!premium} aria-label="Select all" />
-              </TableHead>
+              </TableSelectHead>
               <TableHead>Invoice</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="w-12 px-0 text-center" />
+              <TableActionsHead />
             </TableRow>
           </TableHeader>
           <TableBody>
             {premium ? (
               PREMIUM_INVOICES.map((inv) => (
                 <TableRow key={inv.id} className="hover:bg-transparent">
-                  <TableCell>
+                  <TableSelectCell>
                     <Checkbox size="sm" checked={false} aria-label={`Select ${inv.title}`} />
-                  </TableCell>
+                  </TableSelectCell>
                   <TableCell>
                     <div className="flex flex-col">
                       <span className="type-table-cell-primary">{inv.title}</span>
@@ -1226,9 +1249,9 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
                       {inv.status}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
-                  </TableCell>
+                  <TableNavCell>
+                    <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" />
+                  </TableNavCell>
                 </TableRow>
               ))
             ) : (

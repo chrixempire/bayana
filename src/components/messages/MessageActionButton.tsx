@@ -1,6 +1,4 @@
 import type { ReactNode } from "react"
-import { EventIcon } from "../events/icons/EventIcon"
-import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { cn } from "../../lib/utils"
 
 type MessageActionButtonProps = {
@@ -11,7 +9,7 @@ type MessageActionButtonProps = {
   destructive?: boolean
 }
 
-/** Figma neutral chip button — leading icon, label, trailing add-circle. */
+/** Figma neutral chip button — leading icon and label. */
 export function MessageActionButton({
   children,
   leadingIcon,
@@ -31,7 +29,6 @@ export function MessageActionButton({
     >
       {leadingIcon}
       {children}
-      <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
     </button>
   )
 }

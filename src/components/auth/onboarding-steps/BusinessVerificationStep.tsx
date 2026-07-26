@@ -4,7 +4,7 @@ import { FileUploadDropzone } from "../FileUploadDropzone"
 import { OnboardingStepShell } from "../OnboardingStepShell"
 import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
 import type { OnboardingData } from "../../../pages/auth/types"
-import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
+import { authBodyTextClassName, authOnboardingPrimaryButtonClassName, pageTitleClassName } from "../../../lib/auth-form-styles"
 
 export function BusinessVerificationStep({
   data,
@@ -30,7 +30,7 @@ export function BusinessVerificationStep({
       }
       titleBlock={
         <div className="flex flex-col gap-3 tracking-[-0.1px]">
-          <h1 className="font-display text-2xl font-semibold leading-8 text-[#2c3237]">Verify your business information</h1>
+          <h1 className={pageTitleClassName}>Verify your business information</h1>
           <p className={authBodyTextClassName}>
             Provide the necessary documents to verify your basic business information
           </p>

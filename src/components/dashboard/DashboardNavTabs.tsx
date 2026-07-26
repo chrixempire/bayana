@@ -55,7 +55,6 @@ export function DashboardNavTabs({ activeTab }: { activeTab: DashboardTabId }) {
               >
                 <EventIcon name="award-fill-white" size={10} />
                 Pro
-                <EventIcon name="add-circle-fill" size={10} inverted />
               </span>
             ) : null}
           </NavLink>

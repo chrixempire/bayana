@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table"
-import { DataTableEmptyState, FilterDropdown } from "../../data-table"
+import { DataTableEmptyState, DataTablePagination, FilterDropdown } from "../../data-table"
 import type { Review, ReviewsData } from "../../../pages/dashboard/event-detail-types"
 import { PersonAvatar } from "./PersonAvatar"
 import { DetailTableSkeleton } from "./DetailTableSkeleton"
@@ -165,10 +165,8 @@ export function ReviewsTab({ data }: { data: ReviewsData }) {
                     <div className="flex items-center gap-3">
                       <PersonAvatar name={row.name} tone={row.avatarTone} imageUrl={row.avatarImage || undefined} size={36} />
                       <span className="flex min-w-0 flex-col">
-                        <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
-                          {row.name}
-                        </span>
-                        <span className="truncate text-xs leading-5 text-text-table-header">
+                        <span className="type-table-cell-primary truncate">{row.name}</span>
+                        <span className="type-table-cell-secondary truncate">
                           {row.name.toLowerCase().replace(/\s+/g, ".")}@email.com
                         </span>
                       </span>
@@ -178,11 +176,16 @@ export function ReviewsTab({ data }: { data: ReviewsData }) {
                     <StarRating rating={row.rating} />
                   </TableCell>
                   <TableCell>
-                    <span className={cn("block max-w-[260px] truncate", !row.comment && "text-text-table-header")}>
+                    <span
+                      className={cn(
+                        "block max-w-[260px] truncate",
+                        row.comment ? "type-table-cell-primary" : "type-table-cell-secondary",
+                      )}
+                    >
                       {row.comment || "No review"}
                     </span>
                   </TableCell>
-                  <TableCell className="text-text-table-header">{row.date}</TableCell>
+                  <TableCell className="type-table-cell-secondary">{row.date}</TableCell>
                   <TableCell className="pr-4 text-right">
                     <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="inline text-icon-neutral" />
                   </TableCell>
@@ -194,10 +197,18 @@ export function ReviewsTab({ data }: { data: ReviewsData }) {
         )}
 
         {rows.length > 0 && !loading ? (
-          <div className="flex flex-col gap-2 border-t border-border-default-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="type-table-cell-secondary">Showing 1 to {rows.length} of {rows.length}</p>
-            <p className="type-pagination">10 per page</p>
-          </div>
+          <DataTablePagination
+            className="border-t border-border-default-100"
+            from={1}
+            to={rows.length}
+            total={rows.length}
+            page={1}
+            pageSize={10}
+            totalPages={1}
+            pageSizeOptions={[10, 25, 50]}
+            onPageChange={() => {}}
+            onPageSizeChange={() => {}}
+          />
         ) : null}
       </div>
 

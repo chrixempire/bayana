@@ -4,6 +4,7 @@ import { CreateEventTypeModal } from "../../components/create-event/CreateEventT
 import { createEventPath } from "../../lib/create-event-paths"
 import type { CreateEventType } from "../../lib/create-event-paths"
 import { eventDetailPath } from "../../lib/event-detail-paths"
+import { parseEventsTab, withTabSearchParam } from "../../lib/dashboard-tab-params"
 import { EventsTable } from "../../components/events/EventsTable"
 import { EventsProgressBadge } from "../../components/events/EventsProgressBadge"
 import { EventsSubTabs } from "../../components/events/EventsSubTabs"
@@ -19,6 +20,7 @@ import {
   DashboardWideContent,
 } from "../../components/dashboard/DashboardLayout"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+import { pageTitleClassName } from "../../lib/auth-form-styles"
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { EventIcon } from "../../components/events/icons/EventIcon"
@@ -67,12 +69,18 @@ type DeleteTarget = { id: string; kind: "draft" | "event" } | null
 
 export function EventsPage() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [createModalOpen, setCreateModalOpen] = useState(false)
   // Default to the populated dataset so the list is testable; ?scenario=empty still works.
   const scenario = parseEventsTableScenario(searchParams.get("scenario") ?? "filled")
   const pageConfig = getEventsPageConfig()
   const scenarioData = getEventsScenarioData(scenario)
+  const defaultTab = scenarioData.activeTab
+  const activeTab = parseEventsTab(searchParams.get("tab"), defaultTab)
+
+  const goToTab = (tab: EventsTabId) => {
+    setSearchParams((prev) => withTabSearchParam(prev, tab, defaultTab), { replace: true })
+  }
 
   const [rows, setRows] = useState<EventTableRow[]>(scenarioData.rows)
   const [seededScenario, setSeededScenario] = useState(scenario)
@@ -81,7 +89,6 @@ export function EventsPage() {
     setRows(scenarioData.rows)
   }
 
-  const [activeTab, setActiveTab] = useState<EventsTabId>(scenarioData.activeTab)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [page, setPage] = useState(1)
@@ -341,7 +348,7 @@ export function EventsPage() {
 
       <DashboardWideContent flushBottom className="flex flex-col gap-6">
         <div className="flex shrink-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
+          <h1 className={pageTitleClassName}>
             {pageConfig.title}
           </h1>
 
@@ -355,7 +362,6 @@ export function EventsPage() {
               variant="primary"
               size="sm"
               className="h-10 min-h-10 rounded-xl px-3.5"
-              leftIcon={<EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />}
               onClick={() => setCreateModalOpen(true)}
             >
               {pageConfig.createButtonLabel}
@@ -381,7 +387,7 @@ export function EventsPage() {
                 }))}
                 activeTab={activeTab}
                 onTabChange={(id) => {
-                  setActiveTab(id)
+                  goToTab(id)
                   setPage(1)
                 }}
               />

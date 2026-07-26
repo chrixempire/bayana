@@ -6,6 +6,7 @@ import {
   getCountryByCode,
   type CountryDialCode,
 } from "../../lib/country-dial-codes"
+import { authInputClassName } from "../../lib/auth-form-styles"
 import { cn } from "../../lib/utils"
 import { EventIcon } from "../events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
@@ -17,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu"
 
-const dropdownTextClass = "text-sm leading-[22px] tracking-[-0.1px] text-text-default-500"
+const dropdownTextClass = cn(authInputClassName, "text-text-default-500")
 
 type CountryDialCodeDropdownProps = {
   countryCode: string

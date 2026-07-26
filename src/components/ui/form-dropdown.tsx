@@ -10,7 +10,7 @@ import {
 } from "./dropdown-menu"
 import { ChevronDownIcon } from "../auth/icons/ChevronDownIcon"
 
-const dropdownTextClass = "text-sm leading-[22px] tracking-[-0.1px] text-text-default-500"
+const dropdownTextClass = "type-small-regular text-text-default-500"
 
 export type FormDropdownOption<T extends string = string> = {
   value: T
@@ -51,7 +51,7 @@ export function FormDropdown<T extends string>({
         type="button"
         aria-label={ariaLabel}
         className={cn(
-          "flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl border bg-white px-4 py-2 text-left shadow-input-default outline-none transition-colors focus-visible:border-border-input-active focus-visible:ring-2 focus-visible:ring-[rgb(255,122,26,0.12)] data-[state=open]:border-border-input-active data-[state=open]:ring-2 data-[state=open]:ring-[rgb(255,122,26,0.12)]",
+          "flex h-10 min-h-10 w-full cursor-pointer items-center justify-between gap-2 rounded-xl border bg-white px-4 text-left shadow-input-default outline-none transition-colors focus-visible:border-border-input-active focus-visible:ring-2 focus-visible:ring-[rgb(255,122,26,0.12)] data-[state=open]:border-border-input-active data-[state=open]:ring-2 data-[state=open]:ring-[rgb(255,122,26,0.12)]",
           dropdownTextClass,
           invalid ? "border-border-input-negative bg-bg-negative-soft" : "border-border-input-default-200",
           className,

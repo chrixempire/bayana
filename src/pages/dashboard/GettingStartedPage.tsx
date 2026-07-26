@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom"
 import { GettingStartedIntroVideo } from "../../components/dashboard/GettingStartedIntroVideo"
 import { SetupTaskCard } from "../../components/dashboard/SetupTaskCard"
 import { DashboardContent, DashboardLayout } from "../../components/dashboard/DashboardLayout"
-import { authBodyTextClassName } from "../../lib/auth-form-styles"
+import { authBodyTextClassName, pageTitleClassName } from "../../lib/auth-form-styles"
 import {
   buildSetupTasks,
   parseGettingStartedScenario,
@@ -19,7 +19,7 @@ export function GettingStartedPage() {
     <DashboardLayout activeTab="getting-started" showOnboardingBanner={showBanner}>
       <DashboardContent className="flex flex-col gap-8">
         <div className="flex flex-col gap-3 text-center">
-          <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
+          <h1 className={pageTitleClassName}>
             Setup your organization
           </h1>
           <p className={authBodyTextClassName}>

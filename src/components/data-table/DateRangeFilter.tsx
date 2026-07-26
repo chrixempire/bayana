@@ -28,8 +28,10 @@ export type DateRangeFilterProps = {
   minDate?: Date | null
   /** Disable dates after this day (e.g. a Start date can't follow the End date). */
   maxDate?: Date | null
-  /** Figma events filter chip — add-circle + label + down-fill, 32px tall. */
+  /** Figma events filter chip — optional add-circle + label + down-fill, 32px tall. */
   appearance?: "default" | "events"
+  /** When `appearance` is `events`, hide the leading add-circle icon. */
+  showLeadingIcon?: boolean
 }
 
 export function DateRangeFilter({
@@ -41,11 +43,13 @@ export function DateRangeFilter({
   minDate,
   maxDate,
   appearance = "default",
+  showLeadingIcon = true,
 }: DateRangeFilterProps) {
   const [open, setOpen] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
   const [range, setRange] = useState<DateRange | undefined>()
   const isEvents = appearance === "events"
+  const showEventsLeadingIcon = isEvents && showLeadingIcon
 
   const anyOption = options[0]
   const isActive = value !== label && value !== anyOption
@@ -86,7 +90,11 @@ export function DateRangeFilter({
       <PopoverTrigger
         className={cn(
           isEvents
-            ? cn(dashboardNeutralDropdownTriggerClassName, dropdownTriggerOpenClassName)
+            ? cn(
+                dashboardNeutralDropdownTriggerClassName,
+                dropdownTriggerOpenClassName,
+                isActive && "border-border-input-active",
+              )
             : cn(
                 "type-events-filter inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border bg-input-surface px-3 shadow-input-default outline-none hover:bg-bg-on-canvas focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2",
                 dropdownTriggerOpenClassName,
@@ -97,8 +105,17 @@ export function DateRangeFilter({
       >
         {isEvents ? (
           <>
-            <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} />
+            {showEventsLeadingIcon ? (
+              <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} />
+            ) : null}
             <span className="max-w-[160px] truncate">{displayValue}</span>
+            {!showEventsLeadingIcon ? (
+              <EventIcon
+                name="down-fill"
+                size={EVENT_ICON_SIZE.buttonTrailing}
+                className="shrink-0 text-icon-neutral"
+              />
+            ) : null}
             {isActive ? (
               <span
                 role="button"

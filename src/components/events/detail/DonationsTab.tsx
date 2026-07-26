@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table"
-import { DataTableEmptyState, FilterDropdown, RowActionsDropdown } from "../../data-table"
+import { DataTableEmptyState, DataTablePagination, FilterDropdown, RowActionsDropdown } from "../../data-table"
 import type { RowActionConfig } from "../../data-table"
 import { toast } from "../../../hooks/use-toast"
 import { EventIcon, type EventIconName } from "../icons/EventIcon"
@@ -211,23 +211,21 @@ export function DonationsTab({ data }: { data: DonationsData }) {
                 const channel = CHANNEL_LABEL[row.channel]
                 return (
                   <TableRow key={row.id}>
-                    <TableCell className="pl-4 font-[510] text-text-events-strong">{row.id}</TableCell>
+                    <TableCell className="type-table-cell-primary pl-4">{row.id}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2.5">
                         <PersonAvatar name={row.donor} tone={row.avatarTone} size={28} />
-                        <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
-                          {row.donor}
-                        </span>
+                        <span className="type-table-cell-primary">{row.donor}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className="flex items-center gap-1.5 text-text-table-header">
+                      <span className="type-table-cell-secondary inline-flex items-center gap-1.5">
                         <EventIcon name={channel.icon} size={EVENT_ICON_SIZE.meta} />
                         {channel.label}
                       </span>
                     </TableCell>
-                    <TableCell className="font-[510] text-text-events-strong">{row.amount}</TableCell>
-                    <TableCell className="text-text-table-header">{row.date}</TableCell>
+                    <TableCell className="type-table-cell-primary">{row.amount}</TableCell>
+                    <TableCell className="type-table-cell-secondary">{row.date}</TableCell>
                     <TableCell className="pr-4 text-right">
                       <RowActionsDropdown
                         actions={ROW_ACTIONS}
@@ -243,10 +241,18 @@ export function DonationsTab({ data }: { data: DonationsData }) {
         )}
 
         {rows.length > 0 && !loading ? (
-          <div className="flex flex-col gap-2 border-t border-border-default-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="type-table-cell-secondary">Showing 1 to {rows.length} of {rows.length}</p>
-            <p className="type-pagination">10 per page</p>
-          </div>
+          <DataTablePagination
+            className="border-t border-border-default-100"
+            from={1}
+            to={rows.length}
+            total={rows.length}
+            page={1}
+            pageSize={10}
+            totalPages={1}
+            pageSizeOptions={[10, 25, 50]}
+            onPageChange={() => {}}
+            onPageSizeChange={() => {}}
+          />
         ) : null}
       </div>
 

@@ -75,17 +75,13 @@ export function SettingsPage() {
                         type="button"
                         onClick={() => go(item.id)}
                         className={cn(
-                          "flex h-8 items-center gap-1 rounded-lg p-2 transition-colors",
+                          "flex h-8 w-fit cursor-pointer items-center gap-1 rounded-lg p-2 transition-colors",
                           active
                             ? "type-small-semibold bg-bg-nav-tab-active text-text-nav-tab-active"
                             : "type-small-medium text-text-events-strong hover:bg-bg-default-100",
                         )}
                       >
-                        <EventIcon
-                          name={item.icon}
-                          size={EVENT_ICON_SIZE.nav}
-                          className={active ? "text-text-nav-tab-active" : "text-icon-neutral"}
-                        />
+                        <EventIcon name={item.icon} size={EVENT_ICON_SIZE.nav} accent={active} />
                         {item.label}
                       </button>
                     )

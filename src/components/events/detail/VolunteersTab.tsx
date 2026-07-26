@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table"
-import { DataTableEmptyState, FilterDropdown, RowActionsDropdown } from "../../data-table"
+import { DataTableEmptyState, DataTablePagination, FilterDropdown, RowActionsDropdown } from "../../data-table"
 import type { RowActionConfig } from "../../data-table"
 import { toast } from "../../../hooks/use-toast"
 import { useSimulatedLoading } from "../../../hooks/use-simulated-loading"
@@ -367,12 +367,10 @@ export function VolunteersTab({
                       <PersonAvatar name={row.name} tone={row.avatarTone} imageUrl={row.avatarImage || undefined} size={36} />
                       <span className="flex min-w-0 flex-col">
                         <span className="flex items-center gap-1.5">
-                          <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
-                            {row.name}
-                          </span>
+                          <span className="type-table-cell-primary truncate">{row.name}</span>
                           {row.isNew ? <NewVolunteerBadge /> : null}
                         </span>
-                        <span className="truncate text-xs leading-5 text-text-table-header">{row.email}</span>
+                        <span className="type-table-cell-secondary truncate">{row.email}</span>
                       </span>
                     </button>
                   </TableCell>
@@ -380,14 +378,19 @@ export function VolunteersTab({
                     <SkillsCell skills={row.skills} />
                   </TableCell>
                   <TableCell>
-                    <span className={cn("block max-w-[220px] truncate", !row.reason && "text-text-table-header")}>
+                    <span
+                      className={cn(
+                        "block max-w-[220px] truncate",
+                        row.reason ? "type-table-cell-primary" : "type-table-cell-secondary",
+                      )}
+                    >
                       {row.reason ?? "--"}
                     </span>
                   </TableCell>
                   <TableCell>
                     <VolunteerStatusTag status={row.status} />
                   </TableCell>
-                  <TableCell className="text-text-table-header">{row.dateApplied}</TableCell>
+                  <TableCell className="type-table-cell-secondary">{row.dateApplied}</TableCell>
                   <TableCell className="pr-4 text-right">
                     <RowActionsDropdown
                       actions={ROW_ACTIONS}
@@ -405,10 +408,18 @@ export function VolunteersTab({
         )}
 
         {rows.length > 0 && !loading ? (
-          <div className="flex flex-col gap-2 border-t border-border-default-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="type-table-cell-secondary">Showing 1 to {rows.length} of {rows.length}</p>
-            <p className="type-pagination">10 per page</p>
-          </div>
+          <DataTablePagination
+            className="border-t border-border-default-100"
+            from={1}
+            to={rows.length}
+            total={rows.length}
+            page={1}
+            pageSize={10}
+            totalPages={1}
+            pageSizeOptions={[10, 25, 50]}
+            onPageChange={() => {}}
+            onPageSizeChange={() => {}}
+          />
         ) : null}
       </div>
 

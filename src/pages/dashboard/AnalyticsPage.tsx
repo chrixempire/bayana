@@ -24,9 +24,18 @@ import { ExportReportModal } from "../../components/analytics/ExportReportModal"
 import { EventIcon } from "../../components/events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { elevatedCardSurfaceClassName } from "../../components/events/detail/detail-primitives"
+import { pageTitleClassName } from "../../lib/auth-form-styles"
 import { downloadImpactReport } from "../../lib/impact-report"
+import {
+  analyticsTableCellClassName,
+  analyticsTableHeadCellClassName,
+  analyticsTableHeaderRowClassName,
+  analyticsTablePaginationClassName,
+  analyticsTableRowClassName,
+} from "../../lib/table-styles"
 import { toast } from "../../hooks/use-toast"
 import { cn } from "../../lib/utils"
+import { parseAnalyticsTab, withTabSearchParam } from "../../lib/dashboard-tab-params"
 import {
   dashboardNeutralDropdownTriggerClassName,
   dropdownTriggerOpenClassName,
@@ -101,10 +110,15 @@ function InsightsButton() {
 }
 
 export function AnalyticsPage() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const isEmpty = searchParams.get("scenario") === "empty"
+  const tab = parseAnalyticsTab(searchParams.get("tab"))
 
-  const [tab, setTab] = useState<AnalyticsTab>("overview")
+  const goToTab = (nextTab: AnalyticsTab) => {
+    setSearchParams((prev) => withTabSearchParam(prev, nextTab, "overview"), { replace: true })
+    setPage(1)
+  }
+
   const [dateLabel, setDateLabel] = useState("This month")
   const [demographic, setDemographic] = useState("Volunteers")
   const [sortBy, setSortBy] = useState("Amount raised")
@@ -126,7 +140,7 @@ export function AnalyticsPage() {
       <DashboardWideContent flushBottom className="flex flex-col gap-6 pb-10">
         {/* Header — Figma 80px content header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
+          <h1 className={pageTitleClassName}>
             Analytics
           </h1>
           <div className="flex items-center gap-3">
@@ -163,17 +177,7 @@ export function AnalyticsPage() {
                   : "bg-button-primary text-text-on-solid-bg shadow-button-primary hover:opacity-90",
               )}
             >
-              <EventIcon
-                name="add-circle-fill"
-                size={EVENT_ICON_SIZE.buttonLeading}
-                inverted={!isEmpty}
-              />
               Download impact report
-              <EventIcon
-                name="add-circle-fill"
-                size={EVENT_ICON_SIZE.buttonTrailing}
-                inverted={!isEmpty}
-              />
             </button>
           </div>
         </div>
@@ -184,7 +188,7 @@ export function AnalyticsPage() {
             <button
               key={item.id}
               type="button"
-              onClick={() => setTab(item.id)}
+              onClick={() => goToTab(item.id)}
               className={cn(
                 "relative flex h-10 cursor-pointer items-center py-2 text-sm font-[510] leading-[22px]",
                 tab === item.id
@@ -239,6 +243,7 @@ export function AnalyticsPage() {
                     value={demographic}
                     onValueChange={setDemographic}
                     appearance="events"
+                    showLeadingIcon={false}
                     triggerClassName="h-7 min-h-7 px-2.5 text-xs"
                   />
                 }
@@ -265,34 +270,50 @@ export function AnalyticsPage() {
                     value={sortBy}
                     onValueChange={setSortBy}
                     appearance="events"
+                    showLeadingIcon={false}
                     triggerClassName="h-7 min-h-7 px-2.5 text-xs"
                   />
                 </div>
                 <Table contained={false} className="w-full">
                   <TableHeader>
-                    <TableRow className="hover:bg-transparent">
-                      <TableHead>Event</TableHead>
-                      <TableHead>Total raised</TableHead>
-                      <TableHead>No. of donors</TableHead>
-                      <TableHead>Average donation</TableHead>
+                    <TableRow className={analyticsTableHeaderRowClassName}>
+                      <TableHead className={analyticsTableHeadCellClassName}>Event</TableHead>
+                      <TableHead className={cn(analyticsTableHeadCellClassName, "text-right")}>
+                        Total raised
+                      </TableHead>
+                      <TableHead className={cn(analyticsTableHeadCellClassName, "text-right")}>
+                        No. of donors
+                      </TableHead>
+                      <TableHead className={cn(analyticsTableHeadCellClassName, "text-right")}>
+                        Average donation
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paged.length === 0 ? (
-                      <TableRow className="hover:bg-transparent">
-                        <TableCell colSpan={4} className="py-16 text-center text-sm leading-[22px] text-text-table-header">
+                      <TableRow className={cn(analyticsTableRowClassName, "hover:bg-bg-canvas")}>
+                        <TableCell
+                          colSpan={4}
+                          className={cn(analyticsTableCellClassName, "py-16 text-center type-table-cell-secondary")}
+                        >
                           No data yet
                         </TableCell>
                       </TableRow>
                     ) : (
                       paged.map((row, index) => (
-                        <TableRow key={index} className="hover:bg-transparent">
-                          <TableCell className="max-w-[200px] truncate type-table-cell-primary">
+                        <TableRow key={index} className={analyticsTableRowClassName}>
+                          <TableCell className={cn(analyticsTableCellClassName, "max-w-[236px] truncate")}>
                             {row.event}
                           </TableCell>
-                          <TableCell className="type-table-cell-primary">{row.totalRaised}</TableCell>
-                          <TableCell className="type-table-cell-primary">{row.donors}</TableCell>
-                          <TableCell className="type-table-cell-primary">{row.averageDonation}</TableCell>
+                          <TableCell className={cn(analyticsTableCellClassName, "text-right")}>
+                            {row.totalRaised}
+                          </TableCell>
+                          <TableCell className={cn(analyticsTableCellClassName, "text-right")}>
+                            {row.donors}
+                          </TableCell>
+                          <TableCell className={cn(analyticsTableCellClassName, "text-right")}>
+                            {row.averageDonation}
+                          </TableCell>
                         </TableRow>
                       ))
                     )}
@@ -300,7 +321,7 @@ export function AnalyticsPage() {
                 </Table>
                 {total > 0 ? (
                   <DataTablePagination
-                    className="border-t border-border-default-100 px-4 pb-4"
+                    className={analyticsTablePaginationClassName}
                     from={(safePage - 1) * pageSize + 1}
                     to={Math.min(safePage * pageSize, total)}
                     total={total}

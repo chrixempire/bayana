@@ -92,7 +92,6 @@ export function QuickActionMenu({ disabled = false, triggerClassName, align = "e
             triggerClassName,
           )}
         >
-          <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted={!disabled} />
           Quick action
         </button>
       </PopoverTrigger>

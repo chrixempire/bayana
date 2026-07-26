@@ -45,7 +45,7 @@ const NAV: NavItem[] = [
   { id: "inbox", label: "Inbox", icon: "inbox-fill-neutral", activeIcon: "inbox-fill", count: 5 },
   { id: "volunteers", label: "Volunteers", icon: "user-3-fill" },
   { id: "team", label: "Team members", icon: "user-group-fill" },
-  { id: "broadcast", label: "Broadcast message", icon: "horn-fill" },
+  { id: "broadcast", label: "Broadcast message", icon: "horn-fill-neutral", activeIcon: "horn-fill" },
   { id: "scheduled", label: "Scheduled", icon: "calendar-fill" },
 ]
 
@@ -89,7 +89,7 @@ function Bubble({ bubble }: { bubble: MessageBubble }) {
     return (
       <button
         type="button"
-        className="relative block w-[320px] max-w-full overflow-hidden rounded-2xl bg-bg-default-100 text-left"
+        className="relative block w-[320px] max-w-full cursor-pointer overflow-hidden rounded-2xl bg-bg-default-100 text-left"
       >
         <span className="block aspect-[320/168] w-full overflow-hidden">
           <img
@@ -259,7 +259,7 @@ function PersonRow({ person, onClick }: { person: MessagePerson; onClick: () => 
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-3 border-b border-border-default-100/70 px-6 py-3 text-left transition-colors hover:bg-bg-default-100/60"
+      className="flex w-full cursor-pointer items-center gap-3 border-b border-border-default-100/70 px-6 py-3 text-left transition-colors hover:bg-bg-default-100/60"
     >
       <PersonAvatar name={person.name} tone={person.avatarTone} imageUrl={person.avatarImage} size={40} />
       <div className="flex min-w-0 flex-col gap-0.5">
@@ -286,7 +286,7 @@ function GroupRow({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full items-start gap-3 px-6 py-3 text-left transition-colors",
+        "flex w-full cursor-pointer items-start gap-3 px-6 py-3 text-left transition-colors",
         active ? "bg-bg-nav-tab-active" : "hover:bg-bg-default-100/60",
       )}
     >
@@ -415,7 +415,7 @@ export function MessagesPage() {
           type="button"
           onClick={() => setSelectedId(c.id)}
           className={cn(
-            "flex w-full items-start gap-3 px-6 py-3 text-left transition-colors",
+            "flex w-full cursor-pointer items-start gap-3 px-6 py-3 text-left transition-colors",
             active ? "bg-bg-nav-tab-active" : "hover:bg-bg-default-100/60",
           )}
         >
@@ -459,11 +459,9 @@ export function MessagesPage() {
               <button
                 type="button"
                 onClick={() => setCreateOpen(true)}
-                className="inline-flex h-8 w-full cursor-pointer items-center justify-center gap-1.5 rounded-[10px] bg-button-primary px-3 text-sm font-semibold leading-[22px] text-text-on-solid-bg shadow-button-primary transition-opacity hover:opacity-90"
+                className="inline-flex h-8 w-fit cursor-pointer items-center justify-center rounded-[10px] bg-button-primary px-3 text-sm font-semibold leading-[22px] text-text-on-solid-bg shadow-button-primary transition-opacity hover:opacity-90"
               >
-                <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />
                 Create message
-                <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} inverted />
               </button>
             </div>
 
@@ -483,7 +481,7 @@ export function MessagesPage() {
                       type="button"
                       onClick={() => goToSection(item.id)}
                       className={cn(
-                        "flex h-8 items-center gap-1 rounded-lg p-2 text-sm transition-colors",
+                        "flex h-8 cursor-pointer items-center gap-1 rounded-lg p-2 text-sm transition-colors",
                         active
                           ? "bg-bg-nav-tab-active font-semibold text-text-nav-tab-active"
                           : "font-[510] text-text-events-strong hover:bg-bg-default-100",
@@ -514,10 +512,16 @@ export function MessagesPage() {
                     setSection("inbox")
                     setSelectedId(r.id)
                   }}
-                  className="flex h-8 items-center gap-1 rounded-lg p-2 text-sm font-[510] text-text-events-strong transition-colors hover:bg-bg-default-100"
+                  className="flex h-8 w-full cursor-pointer items-center gap-1 rounded-lg p-2 text-left text-sm font-[510] text-text-events-strong transition-colors hover:bg-bg-default-100"
                 >
-                  <PersonAvatar name={r.name} tone={r.avatarTone} imageUrl={r.avatarImage} size={20} />
-                  <span className="truncate px-1">{r.name}</span>
+                  <PersonAvatar
+                    name={r.name}
+                    tone={r.avatarTone}
+                    imageUrl={r.avatarImage}
+                    size={20}
+                    className="cursor-pointer"
+                  />
+                  <span className="cursor-pointer truncate px-1">{r.name}</span>
                 </button>
               ))}
             </div>

@@ -4,6 +4,10 @@ import { cn } from "../../lib/utils"
 import { EventIcon } from "../events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 
+/** Figma table pagination — 28px icon-only nav buttons with small shadow. */
+const paginationNavButtonClassName =
+  "inline-flex size-7 cursor-pointer items-center justify-center rounded-lg bg-button-neutral text-text-events-strong shadow-button-neutral transition-colors outline-none hover:bg-button-neutral-clicked disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2"
+
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
@@ -60,15 +64,10 @@ function PaginationPrevious({ className, disabled, ...props }: React.ComponentPr
       type="button"
       aria-label="Go to previous page"
       disabled={disabled}
-      className={cn(
-        "inline-flex size-7 cursor-pointer items-center justify-center rounded-lg border border-border-input-default-200 bg-bg-canvas text-text-events-strong transition-colors outline-none",
-        "hover:bg-bg-default-100 disabled:cursor-not-allowed disabled:opacity-50",
-        "focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2",
-        className,
-      )}
+      className={cn(paginationNavButtonClassName, className)}
       {...props}
     >
-      <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="rotate-180" />
+      <EventIcon name="left-fill" size={EVENT_ICON_SIZE.pagination} />
     </button>
   )
 }
@@ -79,15 +78,10 @@ function PaginationNext({ className, disabled, ...props }: React.ComponentProps<
       type="button"
       aria-label="Go to next page"
       disabled={disabled}
-      className={cn(
-        "inline-flex size-7 cursor-pointer items-center justify-center rounded-lg border border-border-input-default-200 bg-bg-canvas text-text-events-strong transition-colors outline-none",
-        "hover:bg-bg-default-100 disabled:cursor-not-allowed disabled:opacity-50",
-        "focus-visible:ring-2 focus-visible:ring-border-input-active focus-visible:ring-offset-2",
-        className,
-      )}
+      className={cn(paginationNavButtonClassName, className)}
       {...props}
     >
-      <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} />
+      <EventIcon name="right-fill" size={EVENT_ICON_SIZE.pagination} />
     </button>
   )
 }

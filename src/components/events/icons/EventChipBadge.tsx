@@ -48,7 +48,6 @@ const COLLAB_BADGE_CONFIG: Record<
   "new-request": {
     label: "New request",
     className: "bg-bg-accent text-text-on-solid-bg",
-    flankingChecks: true,
   },
   organizer: {
     label: "Organizer",

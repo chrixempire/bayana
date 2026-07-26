@@ -6,6 +6,8 @@ const ICONS = {
   "arrow-up-fill-neutral": "/events/icons/arrow-up-fill-neutral.svg",
   "arrow-right-fill": "/events/icons/arrow-right-fill.svg",
   "arrow-right-up-fill": "/events/icons/arrow-right-up-fill.svg",
+  "left-fill": "/events/icons/left-fill.svg",
+  "right-fill": "/events/icons/left-fill.svg",
   "attachment-fill": "/events/icons/attachment-fill.svg",
   "arrow-right-line": "/events/icons/arrow-right-line.svg",
   "award-fill": "/events/icons/award-fill.svg",
@@ -35,6 +37,7 @@ const ICONS = {
   "google-meet": "/events/icons/google-meet.svg",
   "group-fill": "/events/icons/group-fill.svg",
   "horn-fill": "/events/icons/horn-fill.svg",
+  "horn-fill-neutral": "/events/icons/horn-fill-neutral.svg",
   "inbox-fill": "/events/icons/inbox-fill.svg",
   "inbox-fill-neutral": "/events/icons/inbox-fill-neutral.svg",
   "info-fill": "/events/icons/info-fill.svg",
@@ -77,6 +80,8 @@ type EventIconProps = {
   className?: string
   /** Renders neutral gray Figma assets as white (primary buttons, cover placeholders). */
   inverted?: boolean
+  /** Tints neutral gray Figma assets with the nav-tab active accent color. */
+  accent?: boolean
 }
 
 type IconRenderStyle = {
@@ -87,13 +92,38 @@ type IconRenderStyle = {
 /** Figma exports corner-stroke assets; each icon needs its own rotation to render correctly. */
 const ICON_RENDER: Partial<Record<EventIconName, IconRenderStyle>> = {
   "down-fill": { imgClassName: "size-[45%] -rotate-[135deg]", noOverflowClip: true },
+  "left-fill": { imgClassName: "size-[45%] -rotate-45", noOverflowClip: true },
+  "right-fill": { imgClassName: "size-[45%] rotate-[135deg]", noOverflowClip: true },
   "arrow-right-line": { imgClassName: "size-[45%] rotate-[135deg]", noOverflowClip: true },
   "check-fill-white": { imgClassName: "size-[70%] rotate-45", noOverflowClip: true },
   "check-fill-grey": { imgClassName: "size-[70%] rotate-45", noOverflowClip: true },
 }
 
-export function EventIcon({ name, size = 16, className, inverted = false }: EventIconProps) {
+export function EventIcon({ name, size = 16, className, inverted = false, accent = false }: EventIconProps) {
   const renderStyle = ICON_RENDER[name]
+  const maskStyle = {
+    mask: `url(${ICONS[name]}) center / contain no-repeat`,
+    WebkitMask: `url(${ICONS[name]}) center / contain no-repeat`,
+  } as const
+
+  if (accent) {
+    return (
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center justify-center",
+          !renderStyle?.noOverflowClip && "overflow-hidden",
+          className,
+        )}
+        style={{ width: size, height: size }}
+        aria-hidden
+      >
+        <span
+          className={cn("bg-text-nav-tab-active", renderStyle?.imgClassName ?? "size-full")}
+          style={maskStyle}
+        />
+      </span>
+    )
+  }
 
   return (
     <span

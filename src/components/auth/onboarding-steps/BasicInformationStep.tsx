@@ -1,7 +1,7 @@
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { cn } from "../../../lib/utils"
-import { authBodyTextClassName, authPrimaryButtonClassName } from "../../../lib/auth-form-styles"
+import { authBodyTextClassName, authPrimaryButtonClassName, pageTitleClassName } from "../../../lib/auth-form-styles"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
 import { OnboardingStepShell } from "../OnboardingStepShell"
@@ -23,7 +23,7 @@ export function BasicInformationStep({
     <OnboardingStepShell
       titleBlock={
         <header className="flex flex-col gap-3 tracking-[-0.1px]">
-          <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
+          <h1 className={pageTitleClassName}>
             Let&apos;s get to know your business
           </h1>
           <p className={authBodyTextClassName}>

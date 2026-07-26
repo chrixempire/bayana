@@ -7,11 +7,15 @@ import {
   DataTablePagination,
   DateRangeFilter,
   MultiSelectFilter,
+  TableActionsHead,
+  TableNavCell,
+  TableSelectCell,
+  TableSelectHead,
 } from "../../components/data-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, tableHeaderRowClassName } from "../../components/ui/table"
 import { Checkbox } from "../../components/ui/checkbox"
 import { Input } from "../../components/ui/input"
-import { elevatedCardSurfaceClassName, OverviewCard } from "../../components/events/detail/detail-primitives"
+import { OverviewCard } from "../../components/events/detail/detail-primitives"
 import { EventIcon } from "../../components/events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import {
@@ -19,6 +23,8 @@ import {
   verificationRowShowsNavArrow,
 } from "../../components/verification/VerificationStatusTag"
 import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filters"
+import { tableSurfaceClassName } from "../../lib/table-styles"
+import { pageTitleClassName } from "../../lib/auth-form-styles"
 import { toast } from "../../hooks/use-toast"
 import {
   VERIFICATION_ROWS,
@@ -95,7 +101,7 @@ export function VerificationPage() {
   return (
     <DashboardLayout activeTab="verification">
       <DashboardWideContent flushBottom className="flex flex-col gap-6">
-        <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
+        <h1 className={pageTitleClassName}>
           Verification
         </h1>
 
@@ -109,6 +115,7 @@ export function VerificationPage() {
           <div className="flex flex-wrap items-center gap-2">
             <MultiSelectFilter
               appearance="events"
+              showLeadingIcon={false}
               label="Status"
               options={STATUS_OPTIONS}
               values={statusFilters}
@@ -119,6 +126,7 @@ export function VerificationPage() {
             />
             <DateRangeFilter
               appearance="events"
+              showLeadingIcon={false}
               label="Last updated"
               options={["Any date", "Today", "This week", "This month", "Custom range"]}
               value={dateLabel}
@@ -145,18 +153,18 @@ export function VerificationPage() {
           </div>
         </div>
 
-        <div className={cn(elevatedCardSurfaceClassName, "overflow-hidden")}>
+        <div className={tableSurfaceClassName}>
           <Table contained={false} className="w-full table-fixed">
             <colgroup>
-              <col style={{ width: "3rem" }} />
-              <col style={{ width: "auto" }} />
+              <col style={{ width: "48px" }} />
+              <col />
               <col style={{ width: "22%" }} />
               <col style={{ width: "22%" }} />
-              <col style={{ width: "3rem" }} />
+              <col style={{ width: "48px" }} />
             </colgroup>
             <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="w-12 px-0 text-center">
+              <TableRow className={tableHeaderRowClassName}>
+                <TableSelectHead>
                   <Checkbox
                     size="sm"
                     checked={allPagedSelected ? true : pagedSelected > 0 ? "indeterminate" : false}
@@ -164,11 +172,11 @@ export function VerificationPage() {
                     disabled={paged.length === 0}
                     aria-label="Select all"
                   />
-                </TableHead>
-                <TableHead className="min-w-[240px]">Verification</TableHead>
-                <TableHead className="min-w-[140px]">Status</TableHead>
-                <TableHead className="min-w-[160px]">Last updated</TableHead>
-                <TableHead className="w-12 px-0 text-center" />
+                </TableSelectHead>
+                <TableHead>Verification</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Last updated</TableHead>
+                <TableActionsHead />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -188,41 +196,31 @@ export function VerificationPage() {
                       className={cn(showArrow && "cursor-pointer")}
                       onClick={() => openRow(row)}
                     >
-                      <TableCell className="pl-4" onClick={(event) => event.stopPropagation()}>
+                      <TableSelectCell onClick={(event) => event.stopPropagation()}>
                         <Checkbox
                           size="sm"
                           checked={selectedIds.has(row.id)}
                           onCheckedChange={() => toggleOne(row.id)}
                           aria-label={`Select ${row.title}`}
                         />
-                      </TableCell>
+                      </TableSelectCell>
                       <TableCell>
                         <div className="flex min-w-0 flex-col gap-1">
-                          <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
-                            {row.title}
-                          </span>
-                          <span className="truncate text-sm font-normal leading-[22px] tracking-[-0.1px] text-text-table-header">
-                            {row.subtitle}
-                          </span>
+                          <span className="truncate type-table-cell-primary">{row.title}</span>
+                          <span className="truncate type-table-cell-secondary">{row.subtitle}</span>
                         </div>
                       </TableCell>
                       <TableCell>
                         <VerificationStatusTag status={row.status} />
                       </TableCell>
-                      <TableCell className="text-sm font-[510] leading-[22px] text-text-events-strong">
-                        {row.lastUpdated}
-                      </TableCell>
-                      <TableCell className="pr-4 text-right">
-                        <span
-                          className={cn(
-                            "inline-flex size-8 items-center justify-center",
-                            !showArrow && "invisible",
-                          )}
-                          aria-hidden={!showArrow}
-                        >
-                          <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.tableMore} />
-                        </span>
-                      </TableCell>
+                      <TableCell className="type-table-cell-primary">{row.lastUpdated}</TableCell>
+                      <TableNavCell>
+                        {showArrow ? (
+                          <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.tableMore} className="text-icon-neutral" />
+                        ) : (
+                          <span className="size-4" aria-hidden />
+                        )}
+                      </TableNavCell>
                     </TableRow>
                   )
                 })
@@ -232,7 +230,6 @@ export function VerificationPage() {
 
           {total > 0 ? (
             <DataTablePagination
-              className="border-t border-border-default-100 px-4 pb-4"
               from={(safePage - 1) * pageSize + 1}
               to={Math.min(safePage * pageSize, total)}
               total={total}

@@ -7,7 +7,7 @@ import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 /** Elevated surface for settings tables and list panels (Figma card shadow, no border). */
 export const settingsTableCardClassName = cn(elevatedCardSurfaceClassName, "overflow-hidden")
 
-/** Figma upload control — h-7, upload_2_fill + add-circle_fill, shadow-button-neutral. */
+/** Figma upload control — h-7, upload_2_fill, shadow-button-neutral. */
 export function SettingsUploadButton({
   children,
   className,
@@ -17,14 +17,13 @@ export function SettingsUploadButton({
     <button
       type="button"
       className={cn(
-        "inline-flex h-7 cursor-pointer items-center gap-1 rounded-lg bg-button-neutral px-2.5 text-xs font-semibold leading-5 text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-hover",
+        "inline-flex h-7 w-fit shrink-0 cursor-pointer items-center gap-1 rounded-lg bg-button-neutral px-2.5 text-xs font-semibold leading-5 text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-hover",
         className,
       )}
       {...props}
     >
       <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.buttonLeading} />
       {children}
-      <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
     </button>
   )
 }

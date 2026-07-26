@@ -228,7 +228,7 @@ export function ChoosePlanStep({
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center gap-1">
                       <RocketIcon className="size-4 shrink-0 text-icon-neutral" />
-                      <p className="text-base font-medium leading-6 tracking-[-0.1px] text-[#2c3237]">Free</p>
+                      <p className="type-small-medium text-[#2c3237]">Free</p>
                     </div>
                     <p className={authBodyTextClassName}>
                       Enjoy our basic features
@@ -267,7 +267,7 @@ export function ChoosePlanStep({
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center gap-1">
                       <PremiumMarkIcon className="size-4 shrink-0" />
-                      <p className="text-base font-medium leading-6 tracking-[-0.1px] text-[#2c3237]">Premium</p>
+                      <p className="type-small-medium text-[#2c3237]">Premium</p>
                     </div>
                     <p className={authBodyTextClassName}>
                       Enjoy our full features
@@ -280,7 +280,7 @@ export function ChoosePlanStep({
                           {premiumPlan.premium}
                         </p>
                         {compareAtPrice ? (
-                          <p className="text-base font-medium leading-6 tracking-[-0.1px] text-[#656f78] line-through decoration-solid [text-decoration-skip-ink:none]">
+                          <p className="type-small-medium text-[#656f78] line-through decoration-solid [text-decoration-skip-ink:none]">
                             {compareAtPrice}
                           </p>
                         ) : null}

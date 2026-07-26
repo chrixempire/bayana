@@ -1,7 +1,12 @@
 import { Button } from "../../ui/button"
 import { SpinnerIcon } from "../icons/SpinnerIcon"
 import { OnboardingStepShell } from "../OnboardingStepShell"
-import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
+import {
+  authBodyTextClassName,
+  authFieldLabelClassName,
+  authOnboardingPrimaryButtonClassName,
+  pageTitleClassName,
+} from "../../../lib/auth-form-styles"
 import type { OnboardingFlowStep } from "../../../pages/auth/types"
 
 const REVIEW_SECTIONS: { label: string; step: OnboardingFlowStep }[] = [
@@ -34,7 +39,7 @@ export function ReviewStep({
       }
       titleBlock={
         <div className="flex max-w-[520px] flex-col gap-3 tracking-[-0.1px]">
-          <h1 className="font-display text-2xl font-semibold leading-8 text-text-default-500">Review and submit</h1>
+          <h1 className={pageTitleClassName}>Review and submit</h1>
           <p className={authBodyTextClassName}>
             Kindly review the information you provided before you submit your business information for our onboarding
             verification
@@ -47,7 +52,7 @@ export function ReviewStep({
           {REVIEW_SECTIONS.map((section) => (
             <div key={section.label} className="flex items-start justify-between px-4 py-[13px]">
               <div className="space-y-1">
-                <p className="text-base font-medium leading-6 text-text-default-500">{section.label}</p>
+                <p className={authFieldLabelClassName}>{section.label}</p>
                 <p className="inline-flex items-center gap-1.5 text-xs leading-4 text-text-success">
                   <span className="size-2 rounded-full bg-[#2db94d]" />
                   Completed

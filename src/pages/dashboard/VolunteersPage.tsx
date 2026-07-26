@@ -6,6 +6,7 @@ import {
   DashboardWideContent,
 } from "../../components/dashboard/DashboardLayout"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+import { pageTitleClassName } from "../../lib/auth-form-styles"
 import {
   DataTableEmptyState,
   DataTablePagination,
@@ -33,6 +34,7 @@ import { EventIcon } from "../../components/events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { ReviewsTab } from "../../components/volunteers/ReviewsTab"
 import { ExportVolunteersModal } from "../../components/dashboard/ExportVolunteersModal"
+import { parseVolunteerSubTab, withTabSearchParam } from "../../lib/dashboard-tab-params"
 import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filters"
 import { downloadCsv } from "../../lib/csv"
 import { REVIEW_ROWS } from "./reviews-data"
@@ -71,11 +73,15 @@ type VolunteerTab = (typeof SUB_TABS)[number]["id"]
 
 export function VolunteersPage() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const isEmptyScenario = searchParams.get("scenario") === "empty"
+  const activeTab = parseVolunteerSubTab(searchParams.get("tab"))
+
+  const goToTab = (tab: VolunteerTab) => {
+    setSearchParams((prev) => withTabSearchParam(prev, tab, "volunteers"), { replace: true })
+  }
 
   const [rows, setRows] = useState<VolunteerListRow[]>(isEmptyScenario ? [] : VOLUNTEER_ROWS)
-  const [activeTab, setActiveTab] = useState<VolunteerTab>("volunteers")
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [skillsFilter, setSkillsFilter] = useState<string[]>([])
   const [statusFilter, setStatusFilter] = useState("All status")
@@ -165,7 +171,7 @@ export function VolunteersPage() {
     <DashboardLayout activeTab="volunteers">
       <DashboardWideContent flushBottom className="flex flex-col gap-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
+          <h1 className={pageTitleClassName}>
             Volunteers
           </h1>
           <button
@@ -187,7 +193,6 @@ export function VolunteersPage() {
           >
             <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.buttonLeading} />
             Export
-            <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
           </button>
         </div>
 
@@ -201,7 +206,7 @@ export function VolunteersPage() {
                   <button
                     key={tab.id}
                     type="button"
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => goToTab(tab.id)}
                     className={cn(
                       "type-events-tab relative cursor-pointer pb-3 transition-colors",
                       active
@@ -247,6 +252,7 @@ export function VolunteersPage() {
                     setStatusFilter(value)
                     setPage(1)
                   }}
+                  showLeadingIcon={false}
                 />
                 <DateRangeFilter
                   label="Date joined"

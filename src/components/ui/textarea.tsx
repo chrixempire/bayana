@@ -43,7 +43,7 @@ export function Textarea({
         <span className="pl-3 pt-3 text-[var(--color-icon-neutral)]">{leadingAdornment}</span>
       ) : null}
       <textarea
-        className="min-h-[96px] w-full resize-y border-0 bg-transparent p-4 text-sm outline-none placeholder:text-[var(--color-input-placeholder)] disabled:cursor-not-allowed"
+        className="min-h-[96px] w-full resize-y border-0 bg-transparent p-4 type-small-regular outline-none placeholder:text-[var(--color-input-placeholder)] disabled:cursor-not-allowed"
         disabled={disabled}
         {...props}
       />

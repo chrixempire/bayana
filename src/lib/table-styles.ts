@@ -23,8 +23,9 @@ export const tableHeadActionsClassName = "w-12 min-w-12 max-w-12 px-0 py-2"
 export const tableRowClassName =
   "h-20 border-b border-border-default-100 bg-bg-canvas transition-colors hover:bg-bg-table-header data-[state=selected]:bg-bg-accent-soft/40"
 
-/** Figma Events table — body cell (80px, 20px horizontal padding). */
-export const tableCellClassName = "h-20 px-5 py-3 align-middle bg-bg-canvas"
+/** Figma Events table — body cell (80px, 20px horizontal padding, primary body type). */
+export const tableCellClassName =
+  "h-20 px-5 py-3 align-middle bg-bg-canvas type-table-cell-primary"
 
 /** Figma Events table — checkbox column in body (48px, centered). */
 export const tableCellSelectClassName = "w-12 min-w-12 max-w-12 px-0 py-3 text-center align-middle"
@@ -37,6 +38,25 @@ export const tableSelectControlClassName = "flex items-center justify-center"
 
 /** Figma Events table — pagination footer bar. */
 export const tablePaginationClassName =
+  "flex flex-col gap-4 border-t border-border-default-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+
+/** Figma Analytics donations table — header row (40px). */
+export const analyticsTableHeaderRowClassName =
+  "h-10 border-0 bg-bg-table-header hover:bg-bg-table-header [&_th]:border-b [&_th]:border-border-default-100"
+
+/** Figma Analytics donations table — header cell (40px, 16px horizontal padding). */
+export const analyticsTableHeadCellClassName =
+  "h-10 bg-bg-table-header px-4 py-2.5 align-middle type-events-table-head"
+
+/** Figma Analytics donations table — body row (64px). */
+export const analyticsTableRowClassName =
+  "h-16 border-b border-border-default-100 bg-bg-canvas hover:bg-bg-canvas"
+
+/** Figma Analytics donations table — body cell (64px, 16px horizontal padding). */
+export const analyticsTableCellClassName = "h-16 px-4 py-3 align-middle type-table-cell-primary"
+
+/** Figma Analytics donations table — pagination footer (56px, 20px horizontal padding). */
+export const analyticsTablePaginationClassName =
   "flex flex-col gap-4 border-t border-border-default-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between"
 
 export function tableHeadClassName(className?: string) {

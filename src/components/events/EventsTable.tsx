@@ -18,7 +18,6 @@ import {
 import { cn } from "../../lib/utils"
 import {
   tableHeadCellClassName,
-  tableCellClassName,
 } from "../../lib/table-styles"
 import type {
   EventsColumnDef,
@@ -33,7 +32,7 @@ import {
 } from "./icons/VisibilityIcons"
 
 const EMPTY_CELL = "—"
-const TABLE_CLASS = "w-full table-fixed border-collapse caption-bottom text-sm"
+const TABLE_CLASS = "w-full table-fixed border-collapse caption-bottom"
 const TABLE_MIN_WIDTH_PX = 1024
 
 /** Column width by type — table-fixed relies on these. */
@@ -279,15 +278,16 @@ function renderCell(
 
     case "actions":
       return (
-        <RowActionsDropdown
-          className="mx-auto"
-          actions={
-            row.visibility.type === "drafts" && ctx.draftRowActions
-              ? ctx.draftRowActions
-              : ctx.rowActions
-          }
-          onAction={(actionId) => ctx.onRowAction?.(row.id, actionId)}
-        />
+        <div className={tableSelectControlClassName}>
+          <RowActionsDropdown
+            actions={
+              row.visibility.type === "drafts" && ctx.draftRowActions
+                ? ctx.draftRowActions
+                : ctx.rowActions
+            }
+            onAction={(actionId) => ctx.onRowAction?.(row.id, actionId)}
+          />
+        </div>
       )
 
     default:
@@ -457,7 +457,6 @@ export function EventsTable({
                     <TableCell
                       key={column.id}
                       className={cn(
-                        tableCellClassName,
                         column.type === "checkbox" && tableCellSelectClassName,
                         column.type === "actions" && tableCellActionsClassName,
                       )}

@@ -88,7 +88,7 @@ export function DataTablePagination({
               </select>
               <EventIcon
                 name="down-fill"
-                size={EVENT_ICON_SIZE.meta}
+                size={EVENT_ICON_SIZE.pagination}
                 className="pointer-events-none absolute right-0 text-icon-neutral"
               />
             </span>

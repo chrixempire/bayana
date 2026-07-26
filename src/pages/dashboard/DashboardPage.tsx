@@ -17,6 +17,7 @@ import {
 } from "../../components/ui/dropdown-menu"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
+import { sectionTitleClassName, pageTitleClassName } from "../../lib/auth-form-styles"
 import {
   dashboardNeutralDropdownTriggerClassName,
   dropdownTriggerOpenClassName,
@@ -66,9 +67,8 @@ function SeeAllButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-lg bg-button-neutral px-2.5 text-xs font-semibold leading-5 text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-hover"
+      className="inline-flex h-7 shrink-0 cursor-pointer items-center rounded-lg bg-button-neutral px-2.5 text-xs font-semibold leading-5 text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-hover"
     >
-      <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonLeading} />
       See all
     </button>
   )
@@ -167,7 +167,7 @@ function DashboardSectionCard({
   return (
     <div className={cn(elevatedCardSurfaceClassName, "flex flex-col")}>
       <div className={cn("flex items-center justify-between px-4 pt-4", headerClassName)}>
-        <h3 className="text-base font-semibold leading-6 text-text-events-strong">{title}</h3>
+        <h3 className={sectionTitleClassName}>{title}</h3>
         {onSeeAll ? <SeeAllButton onClick={onSeeAll} /> : null}
       </div>
       {children}
@@ -221,7 +221,7 @@ export function DashboardPage() {
         ) : null}
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.1px] text-text-default-500">
+          <h1 className={pageTitleClassName}>
             Dashboard
           </h1>
           <div className="flex items-center gap-3">
@@ -269,7 +269,7 @@ export function DashboardPage() {
             </div>
 
             <div className={cn(elevatedCardSurfaceClassName, "flex flex-col gap-4 p-4")}>
-              <h3 className="text-base font-semibold leading-6 text-text-events-strong">Active events</h3>
+              <h3 className={sectionTitleClassName}>Active events</h3>
               {isEmpty ? (
                 <div className="flex h-[300px] flex-col justify-between px-0 pb-0 text-sm leading-[22px] text-text-table-header">
                   <span>1000</span>
@@ -356,7 +356,7 @@ export function DashboardPage() {
                 <AnalyticsStatCard card={DASHBOARD_SIDE_STATS[1]} empty={isEmpty} embedded />
               </div>
               <div className="px-4 pb-4 pt-2">
-                <h3 className="mb-3 text-base font-semibold leading-6 text-text-events-strong">
+                <h3 className={cn("mb-3", sectionTitleClassName)}>
                   Recent reviews
                 </h3>
                 {isEmpty ? (

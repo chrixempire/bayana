@@ -23,4 +23,5 @@ export const EVENT_ICON_SIZE = {
   search: 16,
   nav: 16,
   composeAction: 12,
+  pagination: 12,
 } as const

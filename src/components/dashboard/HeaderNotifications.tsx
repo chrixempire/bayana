@@ -48,7 +48,7 @@ export function HeaderNotifications() {
             type="button"
             aria-label="Close"
             onClick={() => setOpen(false)}
-            className="inline-flex size-7 items-center justify-center rounded-full bg-bg-default-100 text-icon-neutral transition-colors hover:bg-bg-active-200"
+            className="inline-flex size-7 cursor-pointer items-center justify-center rounded-full bg-bg-default-100 text-icon-neutral transition-colors hover:bg-bg-active-200"
           >
             <EventIcon name="close-fill" size={EVENT_ICON_SIZE.meta} />
           </button>
@@ -60,7 +60,7 @@ export function HeaderNotifications() {
               type="button"
               onClick={() => setTab("all")}
               className={cn(
-                "type-events-tab relative flex items-center gap-1.5 pb-2.5 pt-2",
+                "type-events-tab relative flex cursor-pointer items-center gap-1.5 pb-2.5 pt-2",
                 tab === "all"
                   ? "text-text-events-strong after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-bg-accent"
                   : "text-text-table-header hover:text-text-neutral-400",
@@ -77,7 +77,7 @@ export function HeaderNotifications() {
               type="button"
               onClick={() => setTab("unread")}
               className={cn(
-                "type-events-tab relative pb-2.5 pt-2",
+                "type-events-tab relative cursor-pointer pb-2.5 pt-2",
                 tab === "unread"
                   ? "text-text-events-strong after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-bg-accent"
                   : "text-text-table-header hover:text-text-neutral-400",

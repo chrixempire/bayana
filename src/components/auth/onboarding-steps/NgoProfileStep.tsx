@@ -3,7 +3,7 @@ import { Button } from "../../ui/button"
 import { Textarea } from "../../ui/textarea"
 import { getCauseAreas } from "../../../lib/api/public"
 import { cn } from "../../../lib/utils"
-import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
+import { authBodyTextClassName, authOnboardingPrimaryButtonClassName, pageTitleClassName } from "../../../lib/auth-form-styles"
 import type { CauseAreaSelection, OnboardingData } from "../../../pages/auth/types"
 import { validateLogoFileSize } from "../../../pages/auth/onboarding-validation"
 import { FormField } from "../FormField"
@@ -104,7 +104,7 @@ export function NgoProfileStep({
       }
       titleBlock={
         <div className="flex flex-col gap-3 tracking-[-0.1px]">
-          <h1 className="font-display text-2xl font-semibold leading-8 text-text-default-500">Setup your NGO profile</h1>
+          <h1 className={pageTitleClassName}>Setup your NGO profile</h1>
           <p className={authBodyTextClassName}>
             Provide more information about your Non-governmental organisation for volunteers to see
           </p>

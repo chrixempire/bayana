@@ -4,7 +4,7 @@ import { FormDropdown } from "../../ui/form-dropdown"
 import { Input } from "../../ui/input"
 import { ID_TYPE_OPTIONS } from "../../../lib/id-types"
 import { cn } from "../../../lib/utils"
-import { authBodyTextClassName, authOnboardingPrimaryButtonClassName } from "../../../lib/auth-form-styles"
+import { authBodyTextClassName, authOnboardingPrimaryButtonClassName, pageTitleClassName } from "../../../lib/auth-form-styles"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { FormField } from "../FormField"
 import { OnboardingStepShell } from "../OnboardingStepShell"
@@ -59,7 +59,7 @@ export function BusinessOwnerStep({
       }
       titleBlock={
         <div className="flex flex-col gap-3 tracking-[-0.1px]">
-          <h1 className="font-display text-2xl font-semibold leading-8 text-text-default-500">Verify your business owner</h1>
+          <h1 className={pageTitleClassName}>Verify your business owner</h1>
           <p className={authBodyTextClassName}>
             Provide the information of your ultimate beneficial owner. The person that owns the highest stakes in your
             business
@@ -98,7 +98,7 @@ export function BusinessOwnerStep({
                 />
               </div>
               <input
-                className="h-10 min-h-10 min-w-0 flex-1 border-0 bg-transparent px-4 text-sm leading-[22px] tracking-[-0.1px] text-text-default-500 outline-none placeholder:text-input-placeholder"
+                className="h-10 min-h-10 min-w-0 flex-1 border-0 bg-transparent px-4 type-small-regular text-text-default-500 outline-none placeholder:text-input-placeholder"
                 placeholder="901 234 5678"
                 inputMode="tel"
                 autoComplete="tel-national"

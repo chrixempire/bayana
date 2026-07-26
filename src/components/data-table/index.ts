@@ -12,3 +12,10 @@ export { DataTablePagination } from "./DataTablePagination"
 export type { DataTablePaginationProps } from "./DataTablePagination"
 export { RowActionsDropdown } from "./RowActionsDropdown"
 export type { RowActionConfig, RowActionsDropdownProps } from "./RowActionsDropdown"
+export {
+  TableActionsCell,
+  TableActionsHead,
+  TableNavCell,
+  TableSelectCell,
+  TableSelectHead,
+} from "./table-select-columns"
