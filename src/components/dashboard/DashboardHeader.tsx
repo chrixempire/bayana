@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { SpinnerIcon } from "../auth/icons/SpinnerIcon"
 import { BayanaLogo } from "../brand/BayanaLogo"
 import {
   DropdownMenu,
@@ -34,8 +35,24 @@ export function DashboardHeader({
   const handleLogout = async () => {
     if (isLoggingOut) return
     setIsLoggingOut(true)
-    await performLogout(navigate)
+    try {
+      await performLogout(navigate)
+    } finally {
+      setIsLoggingOut(false)
+    }
   }
+
+  const navProfileAvatar = isLoggingOut ? (
+    <SpinnerIcon className="size-4 text-bg-nav" aria-hidden />
+  ) : (
+    userInitial
+  )
+
+  const menuProfileAvatar = isLoggingOut ? (
+    <SpinnerIcon className="size-4 text-text-nav-tab-active" aria-hidden />
+  ) : (
+    userInitial
+  )
 
   return (
     <header
@@ -90,13 +107,14 @@ export function DashboardHeader({
             type="button"
             className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-text-on-nav-search text-sm font-semibold leading-5 text-bg-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             aria-label="Account menu"
+            disabled={isLoggingOut}
           >
-            {userInitial}
+            {navProfileAvatar}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[15rem] p-1.5">
             <div className="flex items-center gap-2.5 px-2.5 py-2">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-bg-nav-tab-active text-sm font-semibold text-text-nav-tab-active">
-                {userInitial}
+                {menuProfileAvatar}
               </span>
               <div className="flex min-w-0 flex-col">
                 <span className="truncate text-sm font-semibold text-text-events-strong">Daniel Osonuga</span>
@@ -123,7 +141,11 @@ export function DashboardHeader({
               disabled={isLoggingOut}
               onSelect={() => void handleLogout()}
             >
-              <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
+              {isLoggingOut ? (
+                <SpinnerIcon className="size-4 text-text-negative" />
+              ) : (
+                <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.dropdownItem} negative />
+              )}
               {isLoggingOut ? "Signing out..." : "Sign out"}
             </DropdownMenuItem>
           </DropdownMenuContent>

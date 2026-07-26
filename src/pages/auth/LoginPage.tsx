@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { ContinueArrowIcon } from "../../components/auth/icons/ContinueArrowIcon"
 import { EyeIcon } from "../../components/auth/icons/EyeIcon"
 import { EyeOffIcon } from "../../components/auth/icons/EyeOffIcon"
@@ -13,7 +13,16 @@ import { login } from "../../lib/api/auth"
 import { ApiError } from "../../lib/api/types"
 import { redirectToGoogleAuth } from "../../lib/auth/google-oauth"
 import { invalidateEmailVerificationCache } from "../../lib/auth/email-verification-cache"
+import { completePendingEmailVerify } from "../../lib/auth/complete-pending-email-verify"
+import { finishEmailVerificationSuccess } from "../../lib/auth/email-verification-feedback"
 import { resolvePostAuthPath } from "../../lib/auth/post-auth-routing"
+import {
+  consumeAuthNextPath,
+  rememberAuthNextPath,
+  resolveSafeNextPath,
+} from "../../lib/auth/safe-next-path"
+import { markVerifyAfterLogin } from "../../lib/auth/verify-flow-state"
+import { AUTH_EMAIL_VERIFY_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import { setAuthSession } from "../../lib/auth/session"
 import { AUTH_CREATE_ACCOUNT_PATH, AUTH_FORGOT_PASSWORD_PATH } from "../../lib/auth-paths"
 import {
@@ -27,11 +36,17 @@ import { cn } from "../../lib/utils"
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const nextPath = resolveSafeNextPath(searchParams.get("next"))
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    rememberAuthNextPath(searchParams.get("next"))
+  }, [searchParams])
 
   const clearFieldError = (field: keyof LoginFieldErrors) => {
     setFieldErrors((prev) => {
@@ -64,11 +79,51 @@ export function LoginPage() {
       setAuthSession(response.data.token, response.data.user)
       invalidateEmailVerificationCache()
 
-      toast({
-        variant: "success",
-        title: "Welcome back",
-        description: response.message || "You are signed in.",
-      })
+      const returnPath = consumeAuthNextPath() ?? nextPath
+
+      if (returnPath?.startsWith(AUTH_EMAIL_VERIFY_PATH)) {
+        markVerifyAfterLogin()
+        navigate(returnPath, { replace: true })
+        return
+      }
+
+      if (returnPath?.startsWith(AUTH_ONBOARDING_PATH)) {
+        toast({
+          variant: "success",
+          title: "Welcome back",
+          description: response.message || "You are signed in.",
+        })
+        navigate(returnPath, { replace: true })
+        return
+      }
+
+      const pendingVerify = await completePendingEmailVerify()
+      if (pendingVerify.status === "success") {
+        await finishEmailVerificationSuccess(pendingVerify.message)
+        navigate(`${AUTH_ONBOARDING_PATH}/basic-information`, { replace: true })
+        return
+      }
+
+      if (pendingVerify.status === "error") {
+        toast({
+          variant: "destructive",
+          title: "Email verification failed",
+          description: pendingVerify.message,
+        })
+      }
+
+      if (pendingVerify.status === "none") {
+        toast({
+          variant: "success",
+          title: "Welcome back",
+          description: response.message || "You are signed in.",
+        })
+      }
+
+      if (returnPath) {
+        navigate(returnPath, { replace: true })
+        return
+      }
 
       navigate(resolvePostAuthPath(response.data.user), { replace: true })
     } catch (error) {
@@ -97,6 +152,7 @@ export function LoginPage() {
   }
 
   const handleGoogleSignIn = () => {
+    rememberAuthNextPath(nextPath ?? searchParams.get("next"))
     try {
       redirectToGoogleAuth("organisation")
     } catch {

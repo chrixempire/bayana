@@ -1,4 +1,5 @@
 import { getAuthToken } from "../auth/session"
+import { getApiFetchCredentials, isCookieAuthEnabled } from "../auth/auth-strategy"
 import { getApiBaseUrl } from "./config"
 import { normalizeApiError } from "./errors"
 import { ApiError } from "./types"
@@ -23,7 +24,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     requestHeaders.set("Content-Type", "application/json")
   }
 
-  if (auth) {
+  if (auth && !isCookieAuthEnabled()) {
     const token = getAuthToken()
     if (token) requestHeaders.set("Authorization", `Bearer ${token}`)
   }
@@ -32,6 +33,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     ...rest,
     headers: requestHeaders,
     body,
+    credentials: getApiFetchCredentials(),
   })
 
   const text = await response.text()
@@ -114,9 +116,9 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
 
     const token = getClientAuthToken?.()
     const hasExplicitAuthorization = headers.has("Authorization")
-    const usesManagedAuth = Boolean(token && !hasExplicitAuthorization)
+    const usesManagedAuth = Boolean(token && !hasExplicitAuthorization && !isCookieAuthEnabled())
 
-    if (token && !hasExplicitAuthorization) {
+    if (token && !hasExplicitAuthorization && !isCookieAuthEnabled()) {
       headers.set("Authorization", `Bearer ${token}`)
     }
 
@@ -124,6 +126,7 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
       fetch(`${baseURL}${path}`, {
         ...options,
         headers: requestHeaders,
+        credentials: getApiFetchCredentials(),
       })
 
     let response = await executeRequest(headers)

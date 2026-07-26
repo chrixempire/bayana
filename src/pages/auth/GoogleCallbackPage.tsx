@@ -11,9 +11,14 @@ import {
   getAuthUserProfile,
 } from "../../lib/api/auth"
 import type { AuthUser } from "../../lib/api/types"
-import { AUTH_CREATE_ACCOUNT_PATH, AUTH_LOGIN_PATH } from "../../lib/auth-paths"
+import { AUTH_CREATE_ACCOUNT_PATH, AUTH_EMAIL_VERIFY_PATH, AUTH_LOGIN_PATH } from "../../lib/auth-paths"
+import { completePendingEmailVerify } from "../../lib/auth/complete-pending-email-verify"
+import { finishEmailVerificationSuccess } from "../../lib/auth/email-verification-feedback"
 import { invalidateEmailVerificationCache } from "../../lib/auth/email-verification-cache"
 import { resolvePostAuthPath } from "../../lib/auth/post-auth-routing"
+import { consumeAuthNextPath } from "../../lib/auth/safe-next-path"
+import { markVerifyAfterLogin } from "../../lib/auth/verify-flow-state"
+import { AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import { setAuthSession, setAuthTokenOnly } from "../../lib/auth/session"
 import { cn } from "../../lib/utils"
 
@@ -57,6 +62,39 @@ export function GoogleCallbackPage() {
         const user = userFromResponse ?? extractAuthUser(await getAuthUserProfile())
         setAuthSession(token, user)
         invalidateEmailVerificationCache()
+
+        const returnPath = consumeAuthNextPath()
+
+        if (returnPath?.startsWith(AUTH_EMAIL_VERIFY_PATH)) {
+          setState("success")
+          markVerifyAfterLogin()
+          navigate(returnPath, { replace: true })
+          return
+        }
+
+        const pendingVerify = await completePendingEmailVerify()
+        if (pendingVerify.status === "success") {
+          setState("success")
+          await finishEmailVerificationSuccess(pendingVerify.message)
+          navigate(`${AUTH_ONBOARDING_PATH}/basic-information`, { replace: true })
+          return
+        }
+
+        if (pendingVerify.status === "error") {
+          toast({
+            variant: "destructive",
+            title: "Email verification failed",
+            description: pendingVerify.message,
+          })
+        }
+
+        if (returnPath) {
+          setState("success")
+          window.setTimeout(() => {
+            navigate(returnPath, { replace: true })
+          }, 800)
+          return
+        }
 
         setState("success")
         toast({

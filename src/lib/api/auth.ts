@@ -55,11 +55,18 @@ export function resendVerificationNotification() {
   })
 }
 
-export function verifyEmail(id: string, hash: string, expires: string, signature: string) {
+export function verifyEmail(
+  id: string,
+  hash: string,
+  expires: string,
+  signature: string,
+  options?: { auth?: boolean },
+) {
   const params = new URLSearchParams({ expires, signature })
 
   return apiRequest<ApiMessageResponse>(`/api/v1/auth/email/verify/${id}/${hash}?${params}`, {
     method: "GET",
+    auth: options?.auth ?? true,
   })
 }
 

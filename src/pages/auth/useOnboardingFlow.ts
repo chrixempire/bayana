@@ -10,7 +10,7 @@ import {
   invalidateEmailVerificationCache,
   markEmailAsVerified,
 } from "../../lib/auth/email-verification-cache"
-import { getAuthToken, getAuthUser } from "../../lib/auth/session"
+import { getAuthUser, hasAuthSession } from "../../lib/auth/session"
 import { AUTH_CREATE_ACCOUNT_PATH, AUTH_HOME_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import { getStepValidationErrors, getSubmitValidationErrors, type OnboardingStepErrors } from "./onboarding-validation"
 import { defaultData, onboardingFlowSteps, routeToSidebarIndex, type OnboardingData, type OnboardingFlowStep } from "./types"
@@ -62,7 +62,7 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const fromRegistration = (location.state as { fromRegistration?: boolean } | null)?.fromRegistration === true
 
   useEffect(() => {
-    if (getAuthToken()) return
+    if (hasAuthSession()) return
     navigate(AUTH_CREATE_ACCOUNT_PATH, { replace: true })
   }, [navigate])
 
@@ -267,7 +267,7 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
       toast({
         variant: "destructive",
         title: "Email not verified yet",
-        description: "Open your inbox and click the confirmation link in the same browser where you signed up.",
+        description: "Open your inbox and click the confirmation link on any device or browser, then sign in to finish verification.",
       })
     } catch (error) {
       toast({

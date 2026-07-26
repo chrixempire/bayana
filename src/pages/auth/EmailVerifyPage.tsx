@@ -1,18 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { SpinnerIcon } from "../../components/auth/icons/SpinnerIcon"
 import { BayanaLogo } from "../../components/brand/BayanaLogo"
 import { buttonVariants } from "../../components/ui/button-variants"
-import { toast } from "../../hooks/use-toast"
-import { verifyEmail } from "../../lib/api/auth"
-import { ApiError } from "../../lib/api/types"
-import { markEmailAsVerified } from "../../lib/auth/email-verification-cache"
+import { attemptEmailVerification } from "../../lib/auth/attempt-email-verification"
+import { finishEmailVerificationSuccess } from "../../lib/auth/email-verification-feedback"
 import {
   buildEmailVerifyPath,
   isMalformedEmailVerifySplat,
   resolveEmailVerifyParams,
 } from "../../lib/auth/parse-email-verify-link"
-import { getAuthToken } from "../../lib/auth/session"
+import { setPendingEmailVerify } from "../../lib/auth/pending-email-verify"
+import { consumeVerifyAfterLogin } from "../../lib/auth/verify-flow-state"
 import { AUTH_CREATE_ACCOUNT_PATH, AUTH_LOGIN_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import {
   authBodyTextClassName,
@@ -21,13 +20,14 @@ import {
 } from "../../lib/auth-form-styles"
 import { cn } from "../../lib/utils"
 
-type VerifyState = "loading" | "success" | "error" | "missing-session"
+type VerifyState = "loading" | "success" | "error" | "needs-sign-in"
+
+const ONBOARDING_ENTRY_PATH = `${AUTH_ONBOARDING_PATH}/basic-information`
 
 export function EmailVerifyPage() {
   const navigate = useNavigate()
   const { id, hash, "*": splat } = useParams<{ id?: string; hash?: string; "*"?: string }>()
   const [searchParams] = useSearchParams()
-  const hasStarted = useRef(false)
 
   const verifyParams = useMemo(
     () =>
@@ -42,13 +42,52 @@ export function EmailVerifyPage() {
 
   const linkComplete = verifyParams !== null
 
-  const [state, setState] = useState<VerifyState>(() => {
-    if (!getAuthToken()) return "missing-session"
-    return linkComplete ? "loading" : "error"
-  })
+  const loginHref = useMemo(() => {
+    if (!verifyParams) return AUTH_LOGIN_PATH
+    return `${AUTH_LOGIN_PATH}?next=${encodeURIComponent(buildEmailVerifyPath(verifyParams))}`
+  }, [verifyParams])
+
+  const [state, setState] = useState<VerifyState>(() => (linkComplete ? "loading" : "error"))
   const [errorMessage, setErrorMessage] = useState(() =>
-    getAuthToken() && !linkComplete ? "This verification link is incomplete or invalid." : "",
+    linkComplete ? "" : "This verification link is incomplete or invalid.",
   )
+  const [successMessage, setSuccessMessage] = useState("Your email has been confirmed.")
+
+  const runVerification = useCallback(async () => {
+    if (!verifyParams) return
+
+    setState("loading")
+
+    const result = await attemptEmailVerification(verifyParams)
+
+    if (result.status === "success") {
+      setSuccessMessage(result.message)
+      setState("success")
+      await finishEmailVerificationSuccess(result.message)
+
+      const verifiedAfterLogin = consumeVerifyAfterLogin()
+
+      if (verifiedAfterLogin) {
+        navigate(ONBOARDING_ENTRY_PATH, { replace: true })
+        return
+      }
+
+      navigate(
+        `${AUTH_LOGIN_PATH}?next=${encodeURIComponent(ONBOARDING_ENTRY_PATH)}`,
+        { replace: true },
+      )
+      return
+    }
+
+    if (result.status === "needs-auth") {
+      setPendingEmailVerify(verifyParams)
+      setState("needs-sign-in")
+      return
+    }
+
+    setState("error")
+    setErrorMessage(result.message)
+  }, [navigate, verifyParams])
 
   useEffect(() => {
     if (!verifyParams) return
@@ -64,40 +103,14 @@ export function EmailVerifyPage() {
   }, [hash, id, navigate, splat, verifyParams])
 
   useEffect(() => {
-    if (hasStarted.current) return
     if (!verifyParams) return
 
     const rawPath = (splat ?? "").replace(/^\/+/, "")
     if (rawPath && isMalformedEmailVerifySplat(rawPath)) return
     if (id && !hash && isMalformedEmailVerifySplat(id)) return
 
-    hasStarted.current = true
-
-    if (!getAuthToken()) return
-
-    const { id: userId, hash: userHash, expires, signature } = verifyParams
-
-    void verifyEmail(userId, userHash, expires, signature)
-      .then((response) => {
-        markEmailAsVerified()
-        setState("success")
-        toast({
-          variant: "success",
-          title: "Email verified",
-          description: response.message || "Your email has been confirmed.",
-        })
-
-        window.setTimeout(() => {
-          navigate(`${AUTH_ONBOARDING_PATH}/basic-information`, { replace: true })
-        }, 1200)
-      })
-      .catch((error) => {
-        setState("error")
-        setErrorMessage(
-          error instanceof ApiError ? error.message : "We could not verify your email. Please try again.",
-        )
-      })
-  }, [id, hash, navigate, splat, verifyParams])
+    void runVerification()
+  }, [id, hash, runVerification, splat, verifyParams])
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-bg-canvas px-6 py-8 text-text-default-500">
@@ -111,9 +124,7 @@ export function EmailVerifyPage() {
               <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px]">
                 Verifying your email
               </h1>
-              <p className={authBodyTextClassName}>
-                Please wait while we confirm your account.
-              </p>
+              <p className={authBodyTextClassName}>Please wait while we confirm your account.</p>
             </div>
           </div>
         ) : null}
@@ -121,23 +132,24 @@ export function EmailVerifyPage() {
         {state === "success" ? (
           <div className="flex flex-col gap-3">
             <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px]">Email verified</h1>
-            <p className={authBodyTextClassName}>Taking you to onboarding...</p>
+            <p className={authBodyTextClassName}>{successMessage}</p>
+            <p className={authBodyTextClassName}>Continuing...</p>
           </div>
         ) : null}
 
-        {state === "missing-session" ? (
+        {state === "needs-sign-in" ? (
           <div className="flex w-full flex-col items-center gap-6">
             <div className="flex flex-col gap-3">
               <h1 className="font-display text-[24px] font-semibold leading-8 tracking-[-0.1px]">
-                Open this link in the same browser
+                Sign in to verify your email
               </h1>
               <p className={authBodyTextClassName}>
-                Sign in on this device first, then open the verification link from your email again.
+                Sign in to the account that received this email. We&apos;ll verify it next.
               </p>
             </div>
             <div className="flex w-full flex-col gap-3">
               <Link
-                to={AUTH_LOGIN_PATH}
+                to={loginHref}
                 className={cn(buttonVariants({ variant: "primary", block: true }), authPrimaryButtonClassName)}
               >
                 Sign in

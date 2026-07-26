@@ -1,6 +1,8 @@
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { SpinnerIcon } from "../auth/icons/SpinnerIcon"
 import { BayanaLogo } from "../brand/BayanaLogo"
-import { AUTH_CREATE_ACCOUNT_PATH } from "../../lib/auth-paths"
+import { performLogout } from "../../lib/auth/logout"
 import { cn } from "../../lib/utils"
 
 type StepState = "default" | "active" | "completed"
@@ -91,7 +93,18 @@ function StepRow({ index, title, description, state }: StepItem & { index: numbe
 
 export function OnboardingSidebar({ activeStep }: { activeStep: number }) {
   const navigate = useNavigate()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
   const steps = buildStepItems(activeStep)
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+    try {
+      await performLogout(navigate)
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
 
   return (
     <aside className="sticky top-0 hidden h-dvh flex-col overflow-hidden bg-[#f9fafa] pt-14 min-[900px]:flex">
@@ -115,11 +128,16 @@ export function OnboardingSidebar({ activeStep }: { activeStep: number }) {
       <footer className="mt-auto flex items-center justify-between gap-4 px-14 pb-14 pt-8">
         <button
           type="button"
-          className="inline-flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-[#e1e5ea] bg-white px-3 text-sm font-semibold text-[#2c3237] shadow-[0_2px_2px_-1px_rgba(44,50,55,0.04),0_1px_1px_-0.5px_rgba(44,50,55,0.04),0_0_0_1px_rgba(44,50,55,0.12)] transition-colors hover:bg-[#fbfbfb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3695e6]/40"
-          onClick={() => navigate(AUTH_CREATE_ACCOUNT_PATH)}
+          className="inline-flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-[#e1e5ea] bg-white px-3 text-sm font-semibold text-[#2c3237] shadow-[0_2px_2px_-1px_rgba(44,50,55,0.04),0_1px_1px_-0.5px_rgba(44,50,55,0.04),0_0_0_1px_rgba(44,50,55,0.12)] transition-colors hover:bg-[#fbfbfb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3695e6]/40 disabled:cursor-not-allowed disabled:opacity-70"
+          disabled={isLoggingOut}
+          onClick={() => void handleLogout()}
         >
-          <LogOutDoorIcon className="size-3 text-[#2c3237]" />
-          Log out
+          {isLoggingOut ? (
+            <SpinnerIcon className="size-3 text-[#2c3237]" aria-hidden />
+          ) : (
+            <LogOutDoorIcon className="size-3 text-[#2c3237]" />
+          )}
+          {isLoggingOut ? "Signing out..." : "Log out"}
         </button>
         <a
           href="#terms"
