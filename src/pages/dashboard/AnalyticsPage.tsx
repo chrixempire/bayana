@@ -190,7 +190,7 @@ export function AnalyticsPage() {
               type="button"
               onClick={() => goToTab(item.id)}
               className={cn(
-                "relative flex h-10 cursor-pointer items-center py-2 text-sm font-[510] leading-[22px]",
+                "relative flex h-10 cursor-pointer items-center py-2 text-sm font-medium leading-[22px]",
                 tab === item.id
                   ? "border-b-2 border-border-input-active text-text-events-strong"
                   : "text-text-table-header hover:text-text-neutral-400",

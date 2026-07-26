@@ -79,7 +79,7 @@ function PostCard({
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold leading-[22px] text-text-events-strong">{post.author}</span>
             {pinned ? (
-              <span className="inline-flex items-center rounded bg-bg-nav-tab-active px-1.5 py-0.5 text-[10px] font-[510] leading-4 text-text-nav-tab-active">
+              <span className="inline-flex items-center rounded bg-bg-nav-tab-active px-1.5 py-0.5 text-[10px] font-medium leading-4 text-text-nav-tab-active">
                 Pinned
               </span>
             ) : null}
@@ -157,7 +157,7 @@ function PostCard({
         <button
           type="button"
           onClick={() => onOpenComments(post)}
-          className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
+          className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-medium text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
         >
           <EventIcon name="arrow-up-fill" size={EVENT_ICON_SIZE.meta} />
           Reply
@@ -165,7 +165,7 @@ function PostCard({
         <button
           type="button"
           onClick={() => onOpenComments(post)}
-          className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
+          className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-medium text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
         >
           <EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.meta} />
           Comments ({post.commentList.length})

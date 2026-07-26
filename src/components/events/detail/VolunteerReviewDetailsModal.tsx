@@ -55,7 +55,7 @@ export function VolunteerReviewDetailsModal({
       {review ? (
         <div className="flex flex-col gap-3 pb-2">
           <Field label="Event">
-            <span className="text-sm font-[510] leading-[22px] text-text-nav-tab-active">
+            <span className="text-sm font-medium leading-[22px] text-text-nav-tab-active">
               {review.eventTitle}
             </span>
           </Field>
@@ -68,7 +68,7 @@ export function VolunteerReviewDetailsModal({
             </p>
           </Field>
           <Field label="Date added">
-            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+            <span className="text-sm font-medium leading-[22px] text-text-events-strong">
               {review.dateAdded}
             </span>
           </Field>

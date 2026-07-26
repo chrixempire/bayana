@@ -26,7 +26,7 @@ export function CollaborationRequestBanner({
       <div className="flex h-6 items-center rounded bg-bg-nav-tab-active px-3">
         <div className="flex items-center gap-1">
           <EventIcon name="group-fill" size={EVENT_ICON_SIZE.bannerLabel} />
-          <span className="text-xs font-[510] leading-5 text-text-nav-tab-active">
+          <span className="text-xs font-medium leading-5 text-text-nav-tab-active">
             Collaboration request
           </span>
         </div>

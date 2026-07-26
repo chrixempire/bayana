@@ -112,14 +112,14 @@ export function VolunteerDetailsModal({
                 <EventIcon name="inbox-fill" size={EVENT_ICON_SIZE.meta} />
                 <span className="text-xs font-normal leading-5">Email</span>
               </span>
-              <p className="text-sm font-[510] leading-[22px] text-text-events-strong">{volunteer.email}</p>
+              <p className="text-sm font-medium leading-[22px] text-text-events-strong">{volunteer.email}</p>
             </div>
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1.5 text-text-table-header">
                 <EventIcon name="user-3-fill" size={EVENT_ICON_SIZE.meta} />
                 <span className="text-xs font-normal leading-5">Phone number</span>
               </span>
-              <p className="text-sm font-[510] leading-[22px] text-text-events-strong">{volunteer.phone}</p>
+              <p className="text-sm font-medium leading-[22px] text-text-events-strong">{volunteer.phone}</p>
             </div>
             <div className="flex flex-col gap-1.5">
               <span className="text-xs font-normal leading-5 text-text-table-header">Skills</span>
@@ -134,7 +134,7 @@ export function VolunteerDetailsModal({
                 <EventIcon name="calendar-fill" size={EVENT_ICON_SIZE.meta} />
                 <span className="text-xs font-normal leading-5">Date joined</span>
               </span>
-              <p className="text-sm font-[510] leading-[22px] text-text-events-strong">{volunteer.dateJoined}</p>
+              <p className="text-sm font-medium leading-[22px] text-text-events-strong">{volunteer.dateJoined}</p>
             </div>
           </div>
         </div>
@@ -152,7 +152,7 @@ export function VolunteerDetailsModal({
             </div>
             <div className="flex flex-col gap-1.5">
               <FieldLabel>Reason for joining</FieldLabel>
-              <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
+              <p className="text-sm font-medium leading-[22px] text-text-events-strong">
                 {volunteer.reason ?? "--"}
               </p>
             </div>
@@ -162,7 +162,7 @@ export function VolunteerDetailsModal({
             </div>
             <div className="flex flex-col gap-1.5">
               <FieldLabel>Date applied</FieldLabel>
-              <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
+              <p className="text-sm font-medium leading-[22px] text-text-events-strong">
                 {volunteer.dateApplied}
               </p>
             </div>
@@ -172,7 +172,7 @@ export function VolunteerDetailsModal({
             <div className="flex items-start gap-2">
               <EventIcon name="sparkles-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
               <div className="flex flex-col">
-                <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                <p className="text-sm font-medium leading-[22px] text-text-events-strong">
                   Requested to join cause
                 </p>
                 <p className="text-xs leading-5 text-text-table-header">{volunteer.dateApplied}</p>

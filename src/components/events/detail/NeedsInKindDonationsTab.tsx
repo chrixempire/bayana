@@ -35,7 +35,7 @@ export function InKindStatusTag({ status }: { status: InKindDonationStatus }) {
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center gap-1 rounded-lg px-2 text-xs font-[510] leading-4",
+        "inline-flex h-6 items-center gap-1 rounded-lg px-2 text-xs font-medium leading-4",
         className,
       )}
     >

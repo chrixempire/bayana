@@ -223,7 +223,7 @@ export function PayoutDetailsModal({ open, payout, onClose }: { open: boolean; p
             <span className="text-sm text-text-events-strong">{payout.transactionId}</span>
           </DetailField>
           <DetailField label="Status">
-            <span className="inline-flex h-6 w-fit items-center rounded-lg bg-bg-success-soft px-2 text-xs font-[510] text-text-success">
+            <span className="inline-flex h-6 w-fit items-center rounded-lg bg-bg-success-soft px-2 text-xs font-medium text-text-success">
               {payout.status}
             </span>
           </DetailField>

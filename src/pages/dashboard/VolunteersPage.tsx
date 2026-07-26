@@ -54,7 +54,7 @@ function StatusPill({ status }: { status: VolunteerListRow["status"] }) {
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center rounded-lg px-2 text-xs font-[510] leading-4",
+        "inline-flex h-6 items-center rounded-lg px-2 text-xs font-medium leading-4",
         status === "active"
           ? "bg-bg-success-soft text-text-success"
           : "bg-bg-negative-soft text-text-negative",
@@ -314,7 +314,7 @@ export function VolunteersPage() {
                               onCheckedChange={toggleAll}
                               aria-label="Select all volunteers"
                             />
-                            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                            <span className="text-sm font-medium leading-[22px] text-text-events-strong">
                               {selectionCount} of {total} selected
                             </span>
                           </div>
@@ -325,21 +325,23 @@ export function VolunteersPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="min-w-[11rem]">
                               <DropdownMenuItem
+                                className="text-text-negative focus:bg-bg-negative-soft"
                                 onSelect={() => {
                                   setBlacklist([...selectedIds], true)
                                   setSelectedIds(new Set())
                                 }}
                               >
-                                <EventIcon name="close-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
+                                <EventIcon name="stop-fill" size={EVENT_ICON_SIZE.dropdownItem} negative />
                                 Add to blacklist
                               </DropdownMenuItem>
                               <DropdownMenuItem
+                                className="text-text-success focus:bg-bg-success-soft"
                                 onSelect={() => {
                                   setBlacklist([...selectedIds], false)
                                   setSelectedIds(new Set())
                                 }}
                               >
-                                <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
+                                <EventIcon name="stop-fill" size={EVENT_ICON_SIZE.dropdownItem} success />
                                 Remove from blacklist
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -465,7 +467,7 @@ export function VolunteersPage() {
                                   className="text-text-success focus:bg-bg-success-soft"
                                   onSelect={() => setBlacklist([row.id], false)}
                                 >
-                                  <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-text-success" />
+                                  <EventIcon name="stop-fill" size={EVENT_ICON_SIZE.dropdownItem} success />
                                   Remove from blacklist
                                 </DropdownMenuItem>
                               ) : (
@@ -473,7 +475,7 @@ export function VolunteersPage() {
                                   className="text-text-negative focus:bg-bg-negative-soft"
                                   onSelect={() => setBlacklist([row.id], true)}
                                 >
-                                  <EventIcon name="close-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
+                                  <EventIcon name="stop-fill" size={EVENT_ICON_SIZE.dropdownItem} negative />
                                   Add to blacklist
                                 </DropdownMenuItem>
                               )}

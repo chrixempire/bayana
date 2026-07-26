@@ -32,7 +32,7 @@ export function OverviewCard({
   return (
     <div className={cn(elevatedCardSurfaceClassName, "flex flex-1 flex-col gap-3 p-4", className)}>
       <div className="flex items-center justify-between gap-2">
-        <span className="truncate text-sm font-[510] leading-[22px] text-text-table-header">
+        <span className="truncate text-sm font-medium leading-[22px] text-text-table-header">
           {label}
         </span>
         {headerExtra}
@@ -43,7 +43,7 @@ export function OverviewCard({
             {value}
           </span>
           {suffix ? (
-            <span className="text-xs font-[510] leading-5 text-text-table-header">{suffix}</span>
+            <span className="text-xs font-medium leading-5 text-text-table-header">{suffix}</span>
           ) : null}
         </div>
         {footerExtra}
@@ -59,7 +59,7 @@ export function OverviewCapacityBadge({ children }: { children: ReactNode }) {
   return (
     <span className="inline-flex h-[18px] shrink-0 items-center gap-0.5 rounded bg-bg-default-100 px-1 py-0.5">
       <EventIcon name="add-circle-fill" size={iconSize} />
-      <span className="px-0.5 text-[10px] font-[510] leading-[18px] tracking-[0.1px] text-text-events-strong">
+      <span className="px-0.5 text-[10px] font-medium leading-[18px] tracking-[0.1px] text-text-events-strong">
         {children}
       </span>
       <EventIcon name="add-circle-fill" size={iconSize} />
@@ -98,7 +98,7 @@ export function TableSkillTag({
   return (
     <span
       className={cn(
-        "inline-flex h-6 shrink-0 items-center rounded-lg bg-bg-default-100 px-2 py-1 text-xs font-[510] leading-5",
+        "inline-flex h-6 shrink-0 items-center rounded-lg bg-bg-default-100 px-2 py-1 text-xs font-medium leading-5",
         muted ? "text-text-table-header" : "text-text-events-strong",
       )}
     >
@@ -114,7 +114,7 @@ export function NewVolunteerBadge() {
   return (
     <span className="inline-flex h-[18px] shrink-0 items-center gap-0.5 rounded bg-bg-nav-tab-active px-1 py-0.5">
       <EventIcon name="add-circle-fill" size={iconSize} />
-      <span className="px-0.5 text-[10px] font-[510] leading-[18px] tracking-[0.1px] text-text-nav-tab-active">
+      <span className="px-0.5 text-[10px] font-medium leading-[18px] tracking-[0.1px] text-text-nav-tab-active">
         New volunteer!
       </span>
       <EventIcon name="add-circle-fill" size={iconSize} />
@@ -154,7 +154,7 @@ export function DetailCard({
 /** Read-only pill used for categories and skills. */
 export function DetailChip({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex h-7 shrink-0 items-center rounded-full bg-bg-canvas px-2.5 text-sm font-[510] leading-[22px] text-text-events-strong shadow-[0px_2px_2px_-1px_rgba(44,50,55,0.04),0px_1px_1px_-0.5px_rgba(44,50,55,0.04),0px_0px_0px_1px_rgba(44,50,55,0.12)]">
+    <span className="inline-flex h-7 shrink-0 items-center rounded-full bg-bg-canvas px-2.5 text-sm font-medium leading-[22px] text-text-events-strong shadow-[0px_2px_2px_-1px_rgba(44,50,55,0.04),0px_1px_1px_-0.5px_rgba(44,50,55,0.04),0px_0px_0px_1px_rgba(44,50,55,0.12)]">
       {children}
     </span>
   )
@@ -171,7 +171,7 @@ export function DetailSmallButton({
     <button
       type="button"
       className={cn(
-        "inline-flex h-7 cursor-pointer items-center justify-center gap-1 rounded-lg border border-border-default-100 bg-button-neutral text-xs font-[510] leading-5 text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-clicked focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-input-active",
+        "inline-flex h-7 cursor-pointer items-center justify-center gap-1 rounded-lg border border-border-default-100 bg-button-neutral text-xs font-medium leading-5 text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-clicked focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-input-active",
         iconOnly ? "w-7 min-w-7 px-0" : "px-2.5",
         className,
       )}

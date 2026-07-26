@@ -9,13 +9,10 @@ const STATUS_CONFIG: Record<
     className: string
     leadingIcon?: EventIconName
     flankingChecks?: boolean
-    trailingCheck?: boolean
   }
 > = {
   active: {
     className: "bg-bg-accent text-text-on-solid-bg",
-    leadingIcon: "live-location-fill",
-    trailingCheck: true,
   },
   upcoming: {
     className: "bg-[#f79e19] text-text-on-solid-bg",
@@ -49,7 +46,6 @@ export function EventStatusBadge({
       className={cn(config.className)}
       leadingIcon={config.leadingIcon}
       flankingChecks={config.flankingChecks}
-      trailingCheck={config.trailingCheck}
     >
       {label}
     </EventChipBadge>

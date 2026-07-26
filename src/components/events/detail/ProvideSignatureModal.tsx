@@ -9,7 +9,7 @@ import { EVENT_ICON_SIZE } from "../icons/event-icon-sizes"
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-[510] leading-[22px] text-input-label">
+      <label className="text-sm font-medium leading-[22px] text-input-label">
         {label} <span className="text-text-negative">*</span>
       </label>
       {children}
@@ -93,7 +93,7 @@ function SignaturePad({ onDrawnChange }: { onDrawnChange: (hasInk: boolean) => v
         <button
           type="button"
           onClick={clear}
-          className="absolute right-2 top-2 cursor-pointer rounded-md bg-bg-default-100 px-2 py-1 text-xs font-[510] text-text-table-header hover:bg-bg-active-200"
+          className="absolute right-2 top-2 cursor-pointer rounded-md bg-bg-default-100 px-2 py-1 text-xs font-medium text-text-table-header hover:bg-bg-active-200"
         >
           Clear
         </button>
@@ -155,7 +155,7 @@ export function ProvideSignatureModal({
               <span className="h-2 w-4/5 rounded-full bg-bg-default-100" />
             </div>
             <div className="mt-6 flex flex-col">
-              <span className="text-xs font-[510] leading-5 text-[#140425]">{name || "Name"}</span>
+              <span className="text-xs font-medium leading-5 text-[#140425]">{name || "Name"}</span>
               <span className="text-[10px] leading-4 text-[#513a69]">
                 {position ? `${position}, Acme Incorporation` : "Position, Company"}
               </span>
@@ -178,7 +178,7 @@ export function ProvideSignatureModal({
           <div className="flex items-start gap-2 rounded-xl bg-bg-on-canvas p-3">
             <EventIcon name="info-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0 text-icon-neutral" />
             <div className="flex flex-col">
-              <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
+              <p className="text-sm font-medium leading-[22px] text-text-events-strong">
                 Apply once, use everywhere
               </p>
               <p className="text-xs leading-5 text-text-table-header">

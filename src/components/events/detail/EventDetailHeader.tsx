@@ -34,7 +34,7 @@ function MetaRow({ row }: { row: EventDetailMetaRow }) {
             {row.avatarInitial}
           </span>
         ) : null}
-        <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
+        <span className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
           {row.value}
         </span>
       </div>
@@ -92,7 +92,7 @@ function menuIcon(name: EventIconName, destructive = false) {
     <EventIcon
       name={name}
       size={EVENT_ICON_SIZE.dropdownItem}
-      className={destructive ? "text-icon-negative" : undefined}
+      negative={destructive}
     />
   )
 }
@@ -296,7 +296,9 @@ export function EventDetailHeader({
               <Button
                 variant="primary"
                 className={HEADER_BUTTON}
-                leftIcon={<EventIcon name="horn-fill" size={EVENT_ICON_SIZE.buttonLeading} />}
+                leftIcon={
+                  <EventIcon name="horn-fill" size={EVENT_ICON_SIZE.buttonLeading} inverted />
+                }
                 onClick={onPostUpdate}
               >
                 Post update

@@ -30,7 +30,7 @@ export function EventDetailTabs({
             aria-selected={isActive}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              "flex h-12 cursor-pointer items-center justify-center border-b-2 py-2 text-sm font-[510] leading-[22px] transition-colors",
+              "flex h-12 cursor-pointer items-center justify-center border-b-2 py-2 text-sm font-medium leading-[22px] transition-colors",
               isActive
                 ? "border-border-input-active text-text-events-strong"
                 : "border-transparent text-text-table-header hover:text-text-events-strong",

@@ -1,6 +1,20 @@
 import { useMemo, useState } from "react"
 import { DataTableEmptyState, DataTablePagination, FilterDropdown } from "../data-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  tableCellActionsClassName,
+  tableCellSelectClassName,
+  tableHeadActionsClassName,
+  tableHeadSelectClassName,
+  tableHeaderRowClassName,
+  tableSelectControlClassName,
+} from "../ui/table"
+import { tableHeadCellClassName } from "../../lib/table-styles"
 import { Checkbox } from "../ui/checkbox"
 import { Input } from "../ui/input"
 import { PersonAvatar } from "../events/detail/PersonAvatar"
@@ -37,7 +51,7 @@ function ReviewsStatCard({
 }) {
   return (
     <div className={cn(elevatedCardSurfaceClassName, "flex min-w-0 flex-1 flex-col gap-3 p-4")}>
-      <span className="truncate text-sm font-[510] leading-[22px] text-text-table-header">{label}</span>
+      <span className="truncate text-sm font-medium leading-[22px] text-text-table-header">{label}</span>
       <div className="flex items-center gap-1">
         <span className="font-display text-xl font-semibold leading-7 text-text-events-strong">{value}</span>
         {star ? (
@@ -125,6 +139,7 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
         <div className="flex flex-wrap items-center gap-2">
           <FilterDropdown
             appearance="events"
+            showLeadingIcon={false}
             label="Ratings"
             options={RATING_OPTIONS}
             value={ratingFilter}
@@ -135,6 +150,7 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
           />
           <FilterDropdown
             appearance="events"
+            showLeadingIcon={false}
             label="Date"
             options={DATE_OPTIONS}
             value={dateSort}
@@ -177,21 +193,23 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
             <col style={{ width: "48px" }} />
           </colgroup>
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-12">
-                <Checkbox
-                  size="sm"
-                  checked={allPagedSelected ? true : pagedSelected > 0 ? "indeterminate" : false}
-                  onCheckedChange={toggleAll}
-                  disabled={paged.length === 0}
-                  aria-label="Select all reviews"
-                />
+            <TableRow className={tableHeaderRowClassName}>
+              <TableHead className={cn(tableHeadCellClassName, tableHeadSelectClassName)}>
+                <div className={tableSelectControlClassName}>
+                  <Checkbox
+                    size="sm"
+                    checked={allPagedSelected ? true : pagedSelected > 0 ? "indeterminate" : false}
+                    onCheckedChange={toggleAll}
+                    disabled={paged.length === 0}
+                    aria-label="Select all reviews"
+                  />
+                </div>
               </TableHead>
               <TableHead>Volunteer</TableHead>
               <TableHead>Rating</TableHead>
               <TableHead>Review</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="w-12" />
+              <TableHead className={cn(tableHeadCellClassName, tableHeadActionsClassName)} />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -205,16 +223,19 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
               paged.map((row) => (
                 <TableRow
                   key={row.id}
+                  data-state={selectedIds.has(row.id) ? "selected" : undefined}
                   className="cursor-pointer"
                   onClick={() => setSelectedReview(row)}
                 >
-                  <TableCell onClick={(event) => event.stopPropagation()}>
-                    <Checkbox
-                      size="sm"
-                      checked={selectedIds.has(row.id)}
-                      onCheckedChange={() => toggleOne(row.id)}
-                      aria-label={`Select review from ${row.name}`}
-                    />
+                  <TableCell className={tableCellSelectClassName} onClick={(event) => event.stopPropagation()}>
+                    <div className={tableSelectControlClassName}>
+                      <Checkbox
+                        size="sm"
+                        checked={selectedIds.has(row.id)}
+                        onCheckedChange={() => toggleOne(row.id)}
+                        aria-label={`Select review from ${row.name}`}
+                      />
+                    </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -234,15 +255,17 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
                     </span>
                   </TableCell>
                   <TableCell className="type-table-cell-primary">{row.date}</TableCell>
-                  <TableCell className="text-right" onClick={(event) => event.stopPropagation()}>
-                    <button
-                      type="button"
-                      aria-label={`Open review from ${row.name}`}
-                      onClick={() => setSelectedReview(row)}
-                      className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-icon-neutral outline-none transition-colors hover:bg-bg-default-100 focus-visible:ring-2 focus-visible:ring-border-input-active"
-                    >
-                      <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
-                    </button>
+                  <TableCell className={tableCellActionsClassName} onClick={(event) => event.stopPropagation()}>
+                    <div className={tableSelectControlClassName}>
+                      <button
+                        type="button"
+                        aria-label={`Open review from ${row.name}`}
+                        onClick={() => setSelectedReview(row)}
+                        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-icon-neutral outline-none transition-colors hover:bg-bg-default-100 focus-visible:ring-2 focus-visible:ring-border-input-active"
+                      >
+                        <EventIcon name="more-1-fill" size={EVENT_ICON_SIZE.tableMore} />
+                      </button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -252,7 +275,6 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
 
         {total > 0 ? (
           <DataTablePagination
-            className="border-t border-border-default-100 px-4 pb-4"
             from={(safePage - 1) * pageSize + 1}
             to={Math.min(safePage * pageSize, total)}
             total={total}

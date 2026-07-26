@@ -3,9 +3,23 @@ import { useNavigate, useParams } from "react-router-dom"
 import { DashboardLayout } from "../../components/dashboard/DashboardLayout"
 import { DASHBOARD_DETAIL_MAX_WIDTH_PX } from "../../lib/dashboard-layout"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
-import { tableSurfaceClassName } from "../../lib/table-styles"
+import { tableHeadCellClassName, tableSurfaceClassName } from "../../lib/table-styles"
 import { DataTablePagination, FilterDropdown } from "../../components/data-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  tableCellActionsClassName,
+  tableCellSelectClassName,
+  tableHeadActionsClassName,
+  tableHeadSelectClassName,
+  tableHeaderRowClassName,
+  tableSelectControlClassName,
+} from "../../components/ui/table"
+import { Checkbox } from "../../components/ui/checkbox"
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { StatusTag } from "../../components/ui/status-tag"
@@ -51,7 +65,7 @@ function StatusPill({ status }: { status: VolunteerDetail["status"] }) {
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center rounded-lg px-2 text-xs font-[510] leading-4",
+        "inline-flex h-6 items-center rounded-lg px-2 text-xs font-medium leading-4",
         status === "active" ? "bg-bg-success-soft text-text-success" : "bg-bg-negative-soft text-text-negative",
       )}
     >
@@ -104,16 +118,16 @@ function OverviewTab({ v }: { v: VolunteerDetail }) {
             About volunteer
           </h2>
           <InfoField icon="user-3-fill" label="Full name">
-            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.name}</span>
+            <span className="text-sm font-medium leading-[22px] text-text-events-strong">{v.name}</span>
           </InfoField>
           <InfoField icon="inbox-fill" label="Email">
-            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.email}</span>
+            <span className="text-sm font-medium leading-[22px] text-text-events-strong">{v.email}</span>
           </InfoField>
           <InfoField icon="user-3-fill" label="Phone number">
-            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.phone}</span>
+            <span className="text-sm font-medium leading-[22px] text-text-events-strong">{v.phone}</span>
           </InfoField>
           <InfoField icon="calendar-fill" label="Date of birth">
-            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.dateOfBirth}</span>
+            <span className="text-sm font-medium leading-[22px] text-text-events-strong">{v.dateOfBirth}</span>
           </InfoField>
           <InfoField icon="sparkles-fill" label="Skills">
             <Chips items={v.skills} />
@@ -122,7 +136,7 @@ function OverviewTab({ v }: { v: VolunteerDetail }) {
             <Chips items={v.interests} />
           </InfoField>
           <InfoField icon="calendar-fill" label="Account created">
-            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{v.accountCreated}</span>
+            <span className="text-sm font-medium leading-[22px] text-text-events-strong">{v.accountCreated}</span>
           </InfoField>
         </section>
       </div>
@@ -163,7 +177,7 @@ function OverviewTab({ v }: { v: VolunteerDetail }) {
               className="flex flex-wrap items-center justify-between gap-4 border-t border-border-default-100 px-4 py-3.5"
             >
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">{row.event}</p>
+                <p className="truncate text-sm font-medium leading-[22px] text-text-events-strong">{row.event}</p>
                 <p className="text-xs leading-5 text-text-table-header">{row.rate}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1.5">
@@ -176,15 +190,16 @@ function OverviewTab({ v }: { v: VolunteerDetail }) {
               </div>
             </div>
           ))}
-          <div className="border-t border-border-default-100 px-4 pb-4">
+          <div className="border-t border-border-default-100">
             <DataTablePagination
               from={1}
-              to={1}
-              total={1}
+              to={v.attendance.length}
+              total={v.attendance.length}
               page={1}
               pageSize={10}
               totalPages={1}
               onPageChange={() => {}}
+              onPageSizeChange={() => {}}
             />
           </div>
         </section>
@@ -195,23 +210,59 @@ function OverviewTab({ v }: { v: VolunteerDetail }) {
 
 type ShellFilter = { label: string; options: string[]; value: string; onChange: (value: string) => void }
 
-function TableShell({
-  filters,
-  query,
-  onQueryChange,
-  searchPlaceholder,
-  head,
-  children,
-  total,
-}: {
+type TableShellProps<T> = {
   filters: ShellFilter[]
   query: string
   onQueryChange: (value: string) => void
   searchPlaceholder: string
-  head: React.ReactNode
-  children: React.ReactNode
-  total: number
-}) {
+  colgroup: React.ReactNode
+  headerCells: React.ReactNode
+  rows: T[]
+  getRowId: (row: T, index: number) => string
+  renderRow: (row: T, index: number) => React.ReactNode
+  selectAllLabel: string
+}
+
+function TableShell<T>({
+  filters,
+  query,
+  onQueryChange,
+  searchPlaceholder,
+  colgroup,
+  headerCells,
+  rows,
+  getRowId,
+  renderRow,
+  selectAllLabel,
+}: TableShellProps<T>) {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
+
+  const total = rows.length
+  const totalPages = Math.max(1, Math.ceil(total / pageSize))
+  const safePage = Math.min(page, totalPages)
+  const paged = rows.slice((safePage - 1) * pageSize, safePage * pageSize)
+  const pagedIds = paged.map((row, index) => getRowId(row, (safePage - 1) * pageSize + index))
+  const pagedSelectedCount = pagedIds.filter((id) => selectedIds.has(id)).length
+  const allPagedSelected = paged.length > 0 && pagedSelectedCount === paged.length
+  const from = total === 0 ? 0 : (safePage - 1) * pageSize + 1
+  const to = total === 0 ? 0 : Math.min(safePage * pageSize, total)
+
+  const toggleAll = () => {
+    const next = new Set(selectedIds)
+    if (allPagedSelected) pagedIds.forEach((id) => next.delete(id))
+    else pagedIds.forEach((id) => next.add(id))
+    setSelectedIds(next)
+  }
+
+  const toggleOne = (id: string) => {
+    const next = new Set(selectedIds)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    setSelectedIds(next)
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -241,20 +292,59 @@ function TableShell({
         <div className="w-full overflow-x-auto">
           <div style={{ minWidth: 820 }}>
             <Table contained={false} className="w-full table-fixed">
-              {head}
-              <TableBody>{children}</TableBody>
+              {colgroup}
+              <TableHeader>
+                <TableRow className={tableHeaderRowClassName}>
+                  <TableHead className={cn(tableHeadCellClassName, tableHeadSelectClassName)}>
+                    <div className={tableSelectControlClassName}>
+                      <Checkbox
+                        size="sm"
+                        checked={allPagedSelected ? true : pagedSelectedCount > 0 ? "indeterminate" : false}
+                        onCheckedChange={toggleAll}
+                        disabled={paged.length === 0}
+                        aria-label={selectAllLabel}
+                      />
+                    </div>
+                  </TableHead>
+                  {headerCells}
+                  <TableHead className={cn(tableHeadCellClassName, tableHeadActionsClassName)} />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paged.map((row, index) => {
+                  const rowId = getRowId(row, (safePage - 1) * pageSize + index)
+                  return (
+                    <TableRow key={rowId} data-state={selectedIds.has(rowId) ? "selected" : undefined}>
+                      <TableCell className={tableCellSelectClassName} onClick={(event) => event.stopPropagation()}>
+                        <div className={tableSelectControlClassName}>
+                          <Checkbox
+                            size="sm"
+                            checked={selectedIds.has(rowId)}
+                            onCheckedChange={() => toggleOne(rowId)}
+                            aria-label={`Select row ${rowId}`}
+                          />
+                        </div>
+                      </TableCell>
+                      {renderRow(row, (safePage - 1) * pageSize + index)}
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
             </Table>
           </div>
         </div>
         <DataTablePagination
-          className="border-t border-border-default-100 px-4 pb-4"
-          from={1}
-          to={total}
+          from={from}
+          to={to}
           total={total}
-          page={1}
-          pageSize={10}
-          totalPages={1}
-          onPageChange={() => {}}
+          page={safePage}
+          pageSize={pageSize}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          onPageSizeChange={(size) => {
+            setPageSize(size)
+            setPage(1)
+          }}
         />
       </div>
     </div>
@@ -275,7 +365,9 @@ function EventsTab({ v }: { v: VolunteerDetail }) {
   })
   return (
     <TableShell
-      total={rows.length}
+      rows={rows}
+      getRowId={(row) => row.id}
+      selectAllLabel="Select all events"
       query={query}
       onQueryChange={setQuery}
       searchPlaceholder="Search events"
@@ -286,36 +378,30 @@ function EventsTab({ v }: { v: VolunteerDetail }) {
         { label: "Status", options: ["All status", "Upcoming", "Active", "Completed"], value: status, onChange: setStatus },
         { label: "Date", options: ["Any date", "Today", "This week", "This month"], value: "Any date", onChange: () => {} },
       ]}
-      head={
+      colgroup={
+        <colgroup>
+          <col style={{ width: "48px" }} />
+          <col style={{ width: "28%" }} />
+          <col style={{ width: "12%" }} />
+          <col style={{ width: "14%" }} />
+          <col style={{ width: "18%" }} />
+          <col style={{ width: "16%" }} />
+          <col style={{ width: "48px" }} />
+        </colgroup>
+      }
+      headerCells={
         <>
-          <colgroup>
-            <col style={{ width: "3rem" }} />
-            <col style={{ width: "28%" }} />
-            <col style={{ width: "12%" }} />
-            <col style={{ width: "14%" }} />
-            <col style={{ width: "18%" }} />
-            <col style={{ width: "16%" }} />
-            <col style={{ width: "3rem" }} />
-          </colgroup>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-12 px-0 text-center" />
-              <TableHead>Event</TableHead>
-              <TableHead>Event type</TableHead>
-              <TableHead>Visibility</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="w-12 px-0 text-center" />
-            </TableRow>
-          </TableHeader>
+          <TableHead>Event</TableHead>
+          <TableHead>Event type</TableHead>
+          <TableHead>Visibility</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Date</TableHead>
         </>
       }
-    >
-      {rows.map((row) => {
+      renderRow={(row) => {
         const VisIcon = row.visibility === "private" ? PrivateVisibilityIcon : PublicVisibilityIcon
         return (
-          <TableRow key={row.id}>
-            <TableCell />
+          <>
             <TableCell>
               <div className="flex items-center gap-3">
                 <span className="size-10 shrink-0 overflow-hidden rounded-lg bg-bg-default-100">
@@ -351,7 +437,7 @@ function EventsTab({ v }: { v: VolunteerDetail }) {
                 <span className="type-table-cell-secondary">{row.time}</span>
               </div>
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className={cn(tableCellActionsClassName, "text-right")} onClick={(event) => event.stopPropagation()}>
               <RowMenu
                 items={[
                   { icon: "eye-fill", label: "View details" },
@@ -360,20 +446,20 @@ function EventsTab({ v }: { v: VolunteerDetail }) {
                 ]}
               />
             </TableCell>
-          </TableRow>
+          </>
         )
-      })}
-    </TableShell>
+      }}
+    />
   )
 }
 
 function DonationStatusTag({ status }: { status: "in-transit" | "completed" }) {
   return status === "completed" ? (
-    <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-[#e7f7ed] px-2 text-xs font-[510] leading-4 text-[#2f9e57]">
+    <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-[#e7f7ed] px-2 text-xs font-medium leading-4 text-[#2f9e57]">
       <EventIcon name="check-circle-fill" size={12} /> Completed
     </span>
   ) : (
-    <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-bg-accent-soft px-2 text-xs font-[510] leading-4 text-[#b25e09]">
+    <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-bg-accent-soft px-2 text-xs font-medium leading-4 text-[#b25e09]">
       <EventIcon name="box-3-fill" size={12} /> In transit
     </span>
   )
@@ -393,7 +479,9 @@ function DonationsTab({ v }: { v: VolunteerDetail }) {
   })
   return (
     <TableShell
-      total={rows.length}
+      rows={rows}
+      getRowId={(row, index) => `${row.id}-${index}`}
+      selectAllLabel="Select all donations"
       query={query}
       onQueryChange={setQuery}
       searchPlaceholder="Search donations"
@@ -402,32 +490,26 @@ function DonationsTab({ v }: { v: VolunteerDetail }) {
         { label: "Status", options: ["All status", "In transit", "Completed"], value: status, onChange: setStatus },
         { label: "Date", options: ["Any date", "Today", "This week", "This month"], value: "Any date", onChange: () => {} },
       ]}
-      head={
+      colgroup={
+        <colgroup>
+          <col style={{ width: "48px" }} />
+          <col style={{ width: "26%" }} />
+          <col style={{ width: "26%" }} />
+          <col style={{ width: "18%" }} />
+          <col style={{ width: "18%" }} />
+          <col style={{ width: "48px" }} />
+        </colgroup>
+      }
+      headerCells={
         <>
-          <colgroup>
-            <col style={{ width: "3rem" }} />
-            <col style={{ width: "26%" }} />
-            <col style={{ width: "26%" }} />
-            <col style={{ width: "18%" }} />
-            <col style={{ width: "18%" }} />
-            <col style={{ width: "3rem" }} />
-          </colgroup>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-12 px-0 text-center" />
-              <TableHead>Donation id</TableHead>
-              <TableHead>Donation type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="w-12 px-0 text-center" />
-            </TableRow>
-          </TableHeader>
+          <TableHead>Donation id</TableHead>
+          <TableHead>Donation type</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Date</TableHead>
         </>
       }
-    >
-      {rows.map((row, index) => (
-        <TableRow key={`${row.id}-${index}`}>
-          <TableCell />
+      renderRow={(row) => (
+        <>
           <TableCell>
             <span className="inline-flex items-center rounded-md bg-bg-default-100 px-2 py-0.5 text-xs font-medium text-text-table-header">
               {row.id}
@@ -443,7 +525,7 @@ function DonationsTab({ v }: { v: VolunteerDetail }) {
             <DonationStatusTag status={row.status} />
           </TableCell>
           <TableCell className="type-table-cell-secondary">{row.date}</TableCell>
-          <TableCell className="text-right">
+          <TableCell className={cn(tableCellActionsClassName, "text-right")} onClick={(event) => event.stopPropagation()}>
             <RowMenu
               items={[
                 { icon: "eye-fill", label: "View details" },
@@ -452,9 +534,9 @@ function DonationsTab({ v }: { v: VolunteerDetail }) {
               ]}
             />
           </TableCell>
-        </TableRow>
-      ))}
-    </TableShell>
+        </>
+      )}
+    />
   )
 }
 
@@ -481,9 +563,18 @@ function ReviewsTab({ v, onOpenReview }: { v: VolunteerDetail; onOpenReview: (re
     if (query.trim() && !`${row.eventTitle} ${row.review}`.toLowerCase().includes(query.trim().toLowerCase())) return false
     return true
   })
+  const openReview = (row: (typeof rows)[number]) =>
+    onOpenReview({
+      eventTitle: "Weekend teaching program at Makoko community",
+      rating: row.rating,
+      review: row.review,
+      dateAdded: "7 Jan 2025 12:20 PM",
+    })
   return (
     <TableShell
-      total={rows.length}
+      rows={rows}
+      getRowId={(row) => row.id}
+      selectAllLabel="Select all reviews"
       query={query}
       onQueryChange={setQuery}
       searchPlaceholder="Search reviews"
@@ -491,44 +582,27 @@ function ReviewsTab({ v, onOpenReview }: { v: VolunteerDetail; onOpenReview: (re
         { label: "Ratings", options: ["All ratings", "5 stars", "4 stars", "3 stars"], value: rating, onChange: setRating },
         { label: "Date", options: ["Any date", "Today", "This week", "This month"], value: "Any date", onChange: () => {} },
       ]}
-      head={
+      colgroup={
+        <colgroup>
+          <col style={{ width: "48px" }} />
+          <col style={{ width: "24%" }} />
+          <col style={{ width: "16%" }} />
+          <col style={{ width: "34%" }} />
+          <col style={{ width: "16%" }} />
+          <col style={{ width: "48px" }} />
+        </colgroup>
+      }
+      headerCells={
         <>
-          <colgroup>
-            <col style={{ width: "3rem" }} />
-            <col style={{ width: "24%" }} />
-            <col style={{ width: "16%" }} />
-            <col style={{ width: "34%" }} />
-            <col style={{ width: "16%" }} />
-            <col style={{ width: "3rem" }} />
-          </colgroup>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-12 px-0 text-center" />
-              <TableHead>Event</TableHead>
-              <TableHead>Rating</TableHead>
-              <TableHead>Review</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="w-12 px-0 text-center" />
-            </TableRow>
-          </TableHeader>
+          <TableHead>Event</TableHead>
+          <TableHead>Rating</TableHead>
+          <TableHead>Review</TableHead>
+          <TableHead>Date</TableHead>
         </>
       }
-    >
-      {rows.map((row) => (
-        <TableRow
-          key={row.id}
-          className="cursor-pointer"
-          onClick={() =>
-            onOpenReview({
-              eventTitle: "Weekend teaching program at Makoko community",
-              rating: row.rating,
-              review: row.review,
-              dateAdded: "7 Jan 2025 12:20 PM",
-            })
-          }
-        >
-          <TableCell />
-          <TableCell>
+      renderRow={(row) => (
+        <>
+          <TableCell className="cursor-pointer" onClick={() => openReview(row)}>
             <div className="flex items-center gap-3">
               <span className="size-10 shrink-0 overflow-hidden rounded-lg bg-bg-default-100">
                 <img src={row.thumbnailUrl} alt="" className="size-full object-cover" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
@@ -539,19 +613,23 @@ function ReviewsTab({ v, onOpenReview }: { v: VolunteerDetail; onOpenReview: (re
               </div>
             </div>
           </TableCell>
-          <TableCell>
+          <TableCell className="cursor-pointer" onClick={() => openReview(row)}>
             <StarRating rating={row.rating} />
           </TableCell>
-          <TableCell className="type-table-cell-secondary">
+          <TableCell className="type-table-cell-secondary cursor-pointer" onClick={() => openReview(row)}>
             <span className="line-clamp-1">&ldquo;{row.review}&rdquo;</span>
           </TableCell>
-          <TableCell className="type-table-cell-secondary">{row.date}</TableCell>
-          <TableCell className="text-right">
-            <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="ml-auto text-icon-neutral" />
+          <TableCell className="type-table-cell-secondary cursor-pointer" onClick={() => openReview(row)}>
+            {row.date}
           </TableCell>
-        </TableRow>
-      ))}
-    </TableShell>
+          <TableCell className={cn(tableCellActionsClassName, "cursor-pointer")} onClick={() => openReview(row)}>
+            <div className={tableSelectControlClassName}>
+              <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" />
+            </div>
+          </TableCell>
+        </>
+      )}
+    />
   )
 }
 
@@ -631,7 +709,7 @@ export function VolunteerDetailPage() {
           >
             Volunteers
           </button>
-          <EventIcon name="arrow-right-fill" size={12} className="shrink-0" />
+          <EventIcon name="arrow-right-line" size={12} className="shrink-0 text-icon-neutral" />
           <span className="text-text-events-strong">{v.name}</span>
         </nav>
 
@@ -670,12 +748,12 @@ export function VolunteerDetailPage() {
               <DropdownMenuContent align="end" className="min-w-[11rem]">
                 {v.status === "blacklisted" ? (
                   <DropdownMenuItem className="text-text-success focus:bg-bg-success-soft" onSelect={() => setBlacklistOpen(true)}>
-                    <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-text-success" />
+                    <EventIcon name="stop-fill" size={EVENT_ICON_SIZE.dropdownItem} success />
                     Remove from blacklist
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem className="text-text-negative focus:bg-bg-negative-soft" onSelect={() => setBlacklistOpen(true)}>
-                    <EventIcon name="close-circle-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-negative" />
+                    <EventIcon name="stop-fill" size={EVENT_ICON_SIZE.dropdownItem} negative />
                     Add to blacklist
                   </DropdownMenuItem>
                 )}

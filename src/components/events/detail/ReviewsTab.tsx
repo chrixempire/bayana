@@ -37,7 +37,7 @@ function StarRating({ rating, className }: { rating: number; className?: string 
 function StatCard({ label, value, star }: { label: string; value: string; star?: boolean }) {
   return (
     <div className="flex flex-1 flex-col gap-3 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-      <span className="text-sm font-[510] leading-[22px] text-text-table-header">{label}</span>
+      <span className="text-sm font-medium leading-[22px] text-text-table-header">{label}</span>
       <span className="flex items-center gap-1.5 font-display text-2xl font-semibold leading-8 text-text-events-strong">
         {value}
         {star ? <EventIcon name="star-fill-accent" size={20} className="shrink-0" /> : null}
@@ -73,7 +73,7 @@ function ReviewDetailsModal({ review, onClose }: { review: Review | null; onClos
         <ReviewField label="Volunteer">
           <div className="flex items-center gap-2.5">
             <PersonAvatar name={review.name} tone={review.avatarTone} imageUrl={review.avatarImage || undefined} size={28} />
-            <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{review.name}</span>
+            <span className="text-sm font-medium leading-[22px] text-text-events-strong">{review.name}</span>
           </div>
         </ReviewField>
         <ReviewField label="Ratings">
@@ -83,7 +83,7 @@ function ReviewDetailsModal({ review, onClose }: { review: Review | null; onClos
           <p className="text-sm leading-[22px] text-text-events-strong">{review.comment || "No review"}</p>
         </ReviewField>
         <ReviewField label="Date added">
-          <p className="text-sm font-[510] leading-[22px] text-text-events-strong">{review.date}</p>
+          <p className="text-sm font-medium leading-[22px] text-text-events-strong">{review.date}</p>
         </ReviewField>
       </div>
     </Modal>

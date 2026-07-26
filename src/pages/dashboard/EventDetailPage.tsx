@@ -205,7 +205,7 @@ function Breadcrumb({ items, onHome }: { items: string[]; onHome: () => void }) 
   return (
     <nav
       aria-label="Breadcrumb"
-      className="flex items-center gap-1.5 text-xs font-[510] leading-5 text-text-table-header"
+      className="flex items-center gap-1.5 text-xs font-medium leading-5 text-text-table-header"
     >
       {items.map((item, index) => {
         const isLast = index === items.length - 1
@@ -548,7 +548,7 @@ export function EventDetailPage() {
             >
               <div className="flex w-10 shrink-0 flex-col overflow-hidden rounded-lg shadow-button-neutral">
                 <div className="flex h-3 items-center justify-center bg-bg-active-200">
-                  <span className="text-[10px] font-[510] leading-3 tracking-[0.5px] text-text-table-header">
+                  <span className="text-[10px] font-medium leading-3 tracking-[0.5px] text-text-table-header">
                     {session.month}
                   </span>
                 </div>
@@ -563,7 +563,7 @@ export function EventDetailPage() {
                   <EventIcon name="time-fill" size={12} className="shrink-0" />
                   <span className="text-xs leading-5">{session.time}</span>
                 </div>
-                <p className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
+                <p className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
                   {session.title}
                 </p>
                 <div className="flex items-center gap-1">

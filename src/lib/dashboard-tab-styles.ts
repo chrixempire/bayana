@@ -13,7 +13,7 @@ export function dashboardTabClassName(isActive: boolean) {
 /** Numeric badge beside a dashboard nav tab label. */
 export function dashboardTabBadgeClassName(tabIsActive: boolean) {
   return cn(
-    "inline-flex h-5 min-w-5 items-center justify-center rounded-[6px] px-1 text-[11px] font-[590] leading-none",
+    "inline-flex h-5 min-w-5 items-center justify-center rounded-[6px] px-1 text-[11px] font-semibold leading-none",
     tabIsActive
       ? "bg-text-nav-tab-active text-text-on-solid-bg"
       : "bg-bg-nav-tab-active text-text-nav-tab-active",

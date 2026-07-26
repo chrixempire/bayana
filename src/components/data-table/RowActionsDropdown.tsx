@@ -21,7 +21,7 @@ const ICON_MAP: Record<string, EventIconName> = {
   eye: "eye-fill",
   pencil: "pen-fill",
   user: "user-3-fill",
-  megaphone: "horn-fill",
+  megaphone: "horn-fill-neutral",
   share: "share-2-fill",
   trash: "delete-fill",
 }
@@ -73,7 +73,7 @@ export function RowActionsDropdown({
                 <EventIcon
                   name={iconName}
                   size={EVENT_ICON_SIZE.dropdownItem}
-                  className={action.destructive ? "text-icon-negative" : "text-icon-neutral"}
+                  negative={action.destructive}
                 />
               ) : null}
               <span>{action.label}</span>

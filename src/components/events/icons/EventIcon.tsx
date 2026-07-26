@@ -61,6 +61,7 @@ const ICONS = {
   "seal-fill": "/events/icons/seal-fill.svg",
   "share-2-fill": "/events/icons/share-2-fill.svg",
   "sparkles-fill": "/events/icons/sparkles-fill.svg",
+  "stop-fill": "/events/icons/stop-fill.svg",
   "star-fill": "/events/icons/star-fill.svg",
   "star-fill-accent": "/events/icons/star-fill-accent.svg",
   "time-fill": "/events/icons/time-fill.svg",
@@ -82,6 +83,10 @@ type EventIconProps = {
   inverted?: boolean
   /** Tints neutral gray Figma assets with the nav-tab active accent color. */
   accent?: boolean
+  /** Tints neutral gray Figma assets to match destructive menu label text. */
+  negative?: boolean
+  /** Tints neutral gray Figma assets to match success menu label text. */
+  success?: boolean
 }
 
 type IconRenderStyle = {
@@ -99,7 +104,7 @@ const ICON_RENDER: Partial<Record<EventIconName, IconRenderStyle>> = {
   "check-fill-grey": { imgClassName: "size-[70%] rotate-45", noOverflowClip: true },
 }
 
-export function EventIcon({ name, size = 16, className, inverted = false, accent = false }: EventIconProps) {
+export function EventIcon({ name, size = 16, className, inverted = false, accent = false, negative = false, success = false }: EventIconProps) {
   const renderStyle = ICON_RENDER[name]
   const maskStyle = {
     mask: `url(${ICONS[name]}) center / contain no-repeat`,
@@ -119,6 +124,44 @@ export function EventIcon({ name, size = 16, className, inverted = false, accent
       >
         <span
           className={cn("bg-text-nav-tab-active", renderStyle?.imgClassName ?? "size-full")}
+          style={maskStyle}
+        />
+      </span>
+    )
+  }
+
+  if (negative) {
+    return (
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center justify-center",
+          !renderStyle?.noOverflowClip && "overflow-hidden",
+          className,
+        )}
+        style={{ width: size, height: size }}
+        aria-hidden
+      >
+        <span
+          className={cn("bg-text-negative", renderStyle?.imgClassName ?? "size-full")}
+          style={maskStyle}
+        />
+      </span>
+    )
+  }
+
+  if (success) {
+    return (
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center justify-center",
+          !renderStyle?.noOverflowClip && "overflow-hidden",
+          className,
+        )}
+        style={{ width: size, height: size }}
+        aria-hidden
+      >
+        <span
+          className={cn("bg-text-success", renderStyle?.imgClassName ?? "size-full")}
           style={maskStyle}
         />
       </span>

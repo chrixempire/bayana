@@ -100,7 +100,7 @@ function Bubble({ bubble }: { bubble: MessageBubble }) {
           />
         </span>
         <span className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/70 to-transparent px-3 pb-2.5 pt-6">
-          <span className="truncate text-sm font-[510] text-white">{bubble.eventTitle}</span>
+          <span className="truncate text-sm font-medium text-white">{bubble.eventTitle}</span>
           <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.nav} inverted />
         </span>
       </button>
@@ -111,7 +111,7 @@ function Bubble({ bubble }: { bubble: MessageBubble }) {
     <div className={cn("flex", mine ? "justify-end" : "justify-start")}>
       <div
         className={cn(
-          "max-w-[70%] rounded-xl px-4 py-2.5 text-sm font-[510] leading-[22px] shadow-button-neutral",
+          "max-w-[70%] rounded-xl px-4 py-2.5 text-sm font-medium leading-[22px] shadow-button-neutral",
           mine ? "bg-bg-canvas text-text-events-strong" : "bg-bg-default-100 text-text-events-strong",
         )}
       >
@@ -168,7 +168,7 @@ function ThreadView({ conversation, onViewProfile }: { conversation: Conversatio
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-6 py-4">
         <div className="mb-1 flex items-center gap-2">
           <PersonAvatar name={conversation.name} tone={conversation.avatarTone} imageUrl={conversation.avatarImage} size={24} />
-          <span className="text-xs font-[510] text-text-events-strong">{conversation.name}</span>
+          <span className="text-xs font-medium text-text-events-strong">{conversation.name}</span>
           <span className="text-xs text-text-table-header">{conversation.messages[0]?.time ?? ""}</span>
         </div>
         {messages.map((bubble) => (
@@ -236,12 +236,12 @@ function GroupThreadView({
 
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-6 py-4">
         <div className="mb-1 flex items-center justify-end gap-2">
-          <span className="text-xs font-[510] text-text-events-strong">You</span>
+          <span className="text-xs font-medium text-text-events-strong">You</span>
           <span className="text-xs text-text-table-header">{group.time}</span>
           <PersonAvatar name={MESSAGES_USER.name} tone={MESSAGES_USER.tone} size={24} />
         </div>
         <div className="flex justify-end">
-          <div className="max-w-[70%] whitespace-pre-line rounded-xl bg-bg-canvas px-4 py-2.5 text-sm font-[510] leading-[22px] text-text-events-strong shadow-button-neutral">
+          <div className="max-w-[70%] whitespace-pre-line rounded-xl bg-bg-canvas px-4 py-2.5 text-sm font-medium leading-[22px] text-text-events-strong shadow-button-neutral">
             {group.body}
           </div>
         </div>
@@ -263,7 +263,7 @@ function PersonRow({ person, onClick }: { person: MessagePerson; onClick: () => 
     >
       <PersonAvatar name={person.name} tone={person.avatarTone} imageUrl={person.avatarImage} size={40} />
       <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="truncate text-sm font-[510] text-text-events-strong">{person.name}</span>
+        <span className="truncate text-sm font-medium text-text-events-strong">{person.name}</span>
         <span className="text-xs leading-5 text-text-table-header">Start a conversation</span>
       </div>
     </button>
@@ -293,7 +293,7 @@ function GroupRow({
       <AvatarStack members={group.members} extra={group.extra} />
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-sm font-[510] text-text-events-strong">{group.title}</span>
+          <span className="truncate text-sm font-medium text-text-events-strong">{group.title}</span>
           <span className="flex shrink-0 items-center gap-1 text-xs text-text-table-header">
             {scheduled ? <EventIcon name="time-fill" size={EVENT_ICON_SIZE.composeAction} /> : null}
             {group.time}
@@ -402,7 +402,7 @@ export function MessagesPage() {
         <NoResult />
       ) : (
         <div className="flex flex-col items-center gap-1 px-6 pt-24 text-center">
-          <p className="text-sm font-[510] text-text-events-strong">No inbox yet</p>
+          <p className="text-sm font-medium text-text-events-strong">No inbox yet</p>
           <p className="text-xs leading-5 text-text-table-header">Once there&apos;s an inbox, it will appear here</p>
         </div>
       )
@@ -422,7 +422,7 @@ export function MessagesPage() {
           <PersonAvatar name={c.name} tone={c.avatarTone} imageUrl={c.avatarImage} size={40} />
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <div className="flex items-center justify-between gap-2">
-              <span className="truncate text-sm font-[510] text-text-events-strong">{c.name}</span>
+              <span className="truncate text-sm font-medium text-text-events-strong">{c.name}</span>
               <span className="shrink-0 text-xs text-text-table-header">{c.time}</span>
             </div>
             <div className="flex items-center justify-between gap-2">
@@ -470,7 +470,7 @@ export function MessagesPage() {
             </div>
 
             <div className="flex flex-col gap-3">
-              <p className="px-2 text-xs font-[510] leading-5 text-text-table-header">General</p>
+              <p className="px-2 text-xs font-medium leading-5 text-text-table-header">General</p>
               <nav className="flex flex-col gap-1">
                 {NAV.map((item) => {
                   const active = item.id === section
@@ -484,7 +484,7 @@ export function MessagesPage() {
                         "flex h-8 cursor-pointer items-center gap-1 rounded-lg p-2 text-sm transition-colors",
                         active
                           ? "bg-bg-nav-tab-active font-semibold text-text-nav-tab-active"
-                          : "font-[510] text-text-events-strong hover:bg-bg-default-100",
+                          : "font-medium text-text-events-strong hover:bg-bg-default-100",
                       )}
                     >
                       <EventIcon name={iconName} size={EVENT_ICON_SIZE.nav} />
@@ -502,7 +502,7 @@ export function MessagesPage() {
           </div>
 
           <div className="mt-6 flex flex-col gap-3 px-10">
-            <p className="px-2 text-xs font-[510] leading-5 text-text-table-header">Recent messages</p>
+            <p className="px-2 text-xs font-medium leading-5 text-text-table-header">Recent messages</p>
             <div className="flex flex-col gap-1">
               {RECENT_MESSAGES.map((r) => (
                 <button
@@ -512,7 +512,7 @@ export function MessagesPage() {
                     setSection("inbox")
                     setSelectedId(r.id)
                   }}
-                  className="flex h-8 w-full cursor-pointer items-center gap-1 rounded-lg p-2 text-left text-sm font-[510] text-text-events-strong transition-colors hover:bg-bg-default-100"
+                  className="flex h-8 w-full cursor-pointer items-center gap-1 rounded-lg p-2 text-left text-sm font-medium text-text-events-strong transition-colors hover:bg-bg-default-100"
                 >
                   <PersonAvatar
                     name={r.name}
@@ -539,7 +539,7 @@ export function MessagesPage() {
                 type="button"
                 onClick={() => setTab("all")}
                 className={cn(
-                  "relative flex h-10 cursor-pointer items-center py-2 text-sm font-[510] leading-[22px]",
+                  "relative flex h-10 cursor-pointer items-center py-2 text-sm font-medium leading-[22px]",
                   tab === "all"
                     ? "border-b-2 border-border-input-active text-text-events-strong"
                     : "text-text-table-header hover:text-text-neutral-400",
@@ -552,7 +552,7 @@ export function MessagesPage() {
                   type="button"
                   onClick={() => setTab("unread")}
                   className={cn(
-                    "relative flex h-10 cursor-pointer items-center gap-2 py-2 text-sm font-[510] leading-[22px]",
+                    "relative flex h-10 cursor-pointer items-center gap-2 py-2 text-sm font-medium leading-[22px]",
                     tab === "unread"
                       ? "border-b-2 border-border-input-active text-text-events-strong"
                       : "text-text-table-header hover:text-text-neutral-400",
@@ -655,7 +655,7 @@ export function MessagesPage() {
 function NoResult() {
   return (
     <div className="flex flex-col items-center gap-1 px-6 pt-24 text-center">
-      <p className="text-sm font-[510] text-text-events-strong">No result found</p>
+      <p className="text-sm font-medium text-text-events-strong">No result found</p>
       <p className="text-xs leading-5 text-text-table-header">We couldn&apos;t find any result based on the filter</p>
     </div>
   )

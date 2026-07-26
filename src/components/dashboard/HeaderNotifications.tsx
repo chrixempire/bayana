@@ -118,7 +118,7 @@ export function HeaderNotifications() {
                       </span>
                       <div className="flex min-w-0 flex-1 flex-col">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="truncate text-sm font-[510] text-text-events-strong">{item.title}</span>
+                          <span className="truncate text-sm font-medium text-text-events-strong">{item.title}</span>
                           <span className="shrink-0 text-xs text-text-table-header">{item.time}</span>
                         </div>
                         <span className="text-xs leading-5 text-text-table-header">{item.description}</span>
@@ -134,7 +134,7 @@ export function HeaderNotifications() {
           })}
           {visible.length === 0 ? (
             <div className="flex flex-col items-center gap-1 px-4 py-16 text-center">
-              <p className="text-sm font-[510] text-text-events-strong">No notifications</p>
+              <p className="text-sm font-medium text-text-events-strong">No notifications</p>
               <p className="text-xs leading-5 text-text-table-header">You&apos;re all caught up</p>
             </div>
           ) : null}

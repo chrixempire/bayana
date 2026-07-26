@@ -50,7 +50,7 @@ function FauxQr() {
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-1 flex-col gap-2 rounded-xl border border-border-default-100 bg-bg-canvas p-3">
-      <span className="text-xs font-[510] leading-5 text-text-table-header">{label}</span>
+      <span className="text-xs font-medium leading-5 text-text-table-header">{label}</span>
       <span className="font-display text-xl font-semibold leading-7 text-text-events-strong">
         {value}
       </span>
@@ -83,7 +83,7 @@ export function AttendanceModal({
                 type="button"
                 onClick={() => setMode(value)}
                 className={cn(
-                  "-mb-px border-b-2 pb-2 text-sm font-[510] transition-colors",
+                  "-mb-px border-b-2 pb-2 text-sm font-medium transition-colors",
                   mode === value
                     ? "border-border-input-active text-text-events-strong"
                     : "border-transparent text-text-table-header hover:text-text-events-strong",
@@ -105,7 +105,7 @@ export function AttendanceModal({
           <button
             type="button"
             onClick={() => toast({ title: "QR code downloaded" })}
-            className="inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
+            className="inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral text-sm font-medium text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
           >
             <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.meta} />
             Download
@@ -118,7 +118,7 @@ export function AttendanceModal({
           </div>
 
           <div className="flex h-10 items-center gap-2 rounded-lg border border-border-input-default-200 bg-input-surface px-3">
-            <span className="min-w-0 flex-1 truncate text-sm font-[510] text-text-events-strong">123456</span>
+            <span className="min-w-0 flex-1 truncate text-sm font-medium text-text-events-strong">123456</span>
             <button
               type="button"
               onClick={() => {
@@ -178,7 +178,7 @@ export function AttendanceModal({
                       <div className="flex items-center gap-2.5">
                         <PersonAvatar name={row.name} tone={row.avatarTone} size={28} />
                         <span className="flex min-w-0 flex-col">
-                          <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
+                          <span className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
                             {row.name}
                           </span>
                           <span className="truncate text-xs leading-5 text-text-table-header">
@@ -191,7 +191,7 @@ export function AttendanceModal({
                     <TableCell className="text-text-table-header">--</TableCell>
                     <TableCell className="text-text-table-header">--</TableCell>
                     <TableCell>
-                      <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-bg-warning-soft px-2 text-xs font-[510] leading-4 text-text-warning">
+                      <span className="inline-flex h-6 items-center gap-1 rounded-lg bg-bg-warning-soft px-2 text-xs font-medium leading-4 text-text-warning">
                         Awaiting
                         <EventIcon name="down-fill" size={EVENT_ICON_SIZE.composeAction} />
                       </span>

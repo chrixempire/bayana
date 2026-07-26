@@ -28,7 +28,7 @@ export function VolunteerStatusTag({ status }: { status: VolunteerStatus }) {
   return (
     <span
       className={cn(
-        "inline-flex h-6 shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-[510] leading-5",
+        "inline-flex h-6 shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium leading-5",
         className,
       )}
     >

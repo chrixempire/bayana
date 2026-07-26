@@ -26,10 +26,10 @@ export function CapacityBreakdownModal({
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-sm font-[510] leading-[22px] text-text-table-header">
+            <span className="text-sm font-medium leading-[22px] text-text-table-header">
               Total volunteers
             </span>
-            <span className="inline-flex h-6 items-center rounded-md bg-bg-default-100 px-2 text-xs font-[510] leading-4 text-text-table-header">
+            <span className="inline-flex h-6 items-center rounded-md bg-bg-default-100 px-2 text-xs font-medium leading-4 text-text-table-header">
               {data.totals.spotsLeft} spot left
             </span>
           </div>
@@ -37,7 +37,7 @@ export function CapacityBreakdownModal({
             <span className="font-display text-2xl font-semibold leading-8 text-text-events-strong">
               {data.totals.volunteers.current}
             </span>
-            <span className="text-sm font-[510] leading-[22px] text-text-table-header">
+            <span className="text-sm font-medium leading-[22px] text-text-table-header">
               / {data.totals.volunteers.max}
             </span>
           </div>
@@ -50,7 +50,7 @@ export function CapacityBreakdownModal({
             return (
               <div key={item.skill} className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                  <span className="text-sm font-medium leading-[22px] text-text-events-strong">
                     {item.skill} ({item.filled} / {item.total})
                   </span>
                   <span className="shrink-0 text-xs leading-5 text-text-table-header">

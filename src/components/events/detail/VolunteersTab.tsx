@@ -285,7 +285,7 @@ export function VolunteersTab({
                 onCheckedChange={toggleAll}
                 aria-label="Select all volunteers"
               />
-              <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+              <span className="text-sm font-medium leading-[22px] text-text-events-strong">
                 {selectionCount} of {data.rows.length} selected
               </span>
             </div>

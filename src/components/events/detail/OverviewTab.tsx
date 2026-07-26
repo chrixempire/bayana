@@ -15,7 +15,7 @@ function AboutCard({ about }: { about: EventDetail["about"] }) {
     <DetailCard title={about.label}>
       <div className="flex flex-col gap-1.5">
         <DetailFieldLabel>Description</DetailFieldLabel>
-        <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
+        <p className="text-sm font-medium leading-[22px] text-text-events-strong">
           {about.description}
         </p>
       </div>
@@ -31,7 +31,7 @@ function AboutCard({ about }: { about: EventDetail["about"] }) {
 
       <div className="flex flex-col gap-1.5">
         <DetailFieldLabel>Requirements</DetailFieldLabel>
-        <ul className="list-disc pl-[21px] text-sm font-[510] leading-[22px] text-text-events-strong">
+        <ul className="list-disc pl-[21px] text-sm font-medium leading-[22px] text-text-events-strong">
           {about.requirements.map((requirement) => (
             <li key={requirement}>{requirement}</li>
           ))}

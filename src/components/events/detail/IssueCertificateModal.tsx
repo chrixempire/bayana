@@ -140,7 +140,7 @@ export function IssueCertificateModal({
           />
         </div>
         {multiSelect ? (
-          <label className="flex shrink-0 cursor-pointer items-center gap-2 text-sm font-[510] text-text-events-strong">
+          <label className="flex shrink-0 cursor-pointer items-center gap-2 text-sm font-medium text-text-events-strong">
             <Checkbox size="sm" checked={allSelected} onCheckedChange={toggleAll} aria-label="Select all" />
             Select all
           </label>
@@ -184,12 +184,12 @@ export function IssueCertificateModal({
             ) : null}
             <PersonAvatar name={row.name} tone={row.avatarTone} imageUrl={row.avatarImage || undefined} size={36} />
             <div className="flex min-w-0 flex-1 flex-col">
-              <span className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
+              <span className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
                 {row.name}
               </span>
               <span className="text-xs leading-5 text-text-table-header">
                 Reliability score:{" "}
-                <span className={cn("font-[510]", reliabilityColor(row.reliability ?? 0))}>
+                <span className={cn("font-medium", reliabilityColor(row.reliability ?? 0))}>
                   {row.reliability ?? 0}%
                 </span>
               </span>

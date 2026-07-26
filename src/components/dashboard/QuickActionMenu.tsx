@@ -145,7 +145,7 @@ export function QuickActionMenu({ disabled = false, triggerClassName, align = "e
           ))
         ) : (
           <div className="flex flex-col items-center gap-1 px-4 py-8 text-center">
-            <p className="text-sm font-[510] text-text-events-strong">No result found</p>
+            <p className="text-sm font-medium text-text-events-strong">No result found</p>
             <p className="text-xs leading-5 text-text-table-header">We couldn&apos;t find any result based on your search</p>
           </div>
         )}

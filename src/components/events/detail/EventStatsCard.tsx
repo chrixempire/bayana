@@ -31,10 +31,10 @@ function StatCell({
           {value}
         </span>
         {suffix ? (
-          <span className="text-xs font-[510] leading-5 text-text-table-header">{suffix}</span>
+          <span className="text-xs font-medium leading-5 text-text-table-header">{suffix}</span>
         ) : null}
       </div>
-      <span className="text-sm font-[510] leading-[22px] text-text-table-header">{label}</span>
+      <span className="text-sm font-medium leading-[22px] text-text-table-header">{label}</span>
     </div>
   )
 }
@@ -119,7 +119,7 @@ function DateBadge({ session }: { session: EventSession }) {
       >
         <span
           className={cn(
-            "text-[10px] font-[510] leading-[18px] tracking-[0.5px]",
+            "text-[10px] font-medium leading-[18px] tracking-[0.5px]",
             highlighted ? "text-text-on-solid-bg" : "text-text-table-header",
           )}
         >
@@ -149,7 +149,7 @@ function SessionRow({ session, onAction }: { session: EventSession; onAction?: (
           </div>
         </div>
 
-        <p className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
+        <p className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
           {session.title}
         </p>
 

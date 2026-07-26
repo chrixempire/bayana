@@ -37,7 +37,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-[510] leading-[22px] text-input-label">
+      <label className="text-sm font-medium leading-[22px] text-input-label">
         {label} {required ? <span className="text-text-negative">*</span> : null}
       </label>
       {children}
@@ -127,7 +127,7 @@ export function EditEventModal({
               type="button"
               onClick={() => setSection(item.id)}
               className={cn(
-                "cursor-pointer rounded-lg px-3 py-2 text-left text-sm font-[510] transition-colors",
+                "cursor-pointer rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors",
                 section === item.id
                   ? "bg-bg-nav-tab-active text-text-nav-tab-active"
                   : "text-text-table-header hover:bg-bg-default-100",
@@ -143,7 +143,7 @@ export function EditEventModal({
             <>
               <Field label="Title" required>
                 <Input density="compact" value={title} onChange={(e) => setTitle(e.target.value)} />
-                <span className="flex items-center gap-1 text-xs font-[510] text-text-success">
+                <span className="flex items-center gap-1 text-xs font-medium text-text-success">
                   <EventIcon name="check-circle-fill" size={EVENT_ICON_SIZE.fieldHint} />
                   {wordCount}/{wordCount} words
                 </span>

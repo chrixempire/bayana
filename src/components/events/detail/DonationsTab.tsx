@@ -75,14 +75,14 @@ export function DonationsTab({ data }: { data: DonationsData }) {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="flex flex-1 flex-col gap-2 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-          <span className="text-sm font-[510] leading-[22px] text-text-table-header">Donation goal</span>
+          <span className="text-sm font-medium leading-[22px] text-text-table-header">Donation goal</span>
           <span className="font-display text-2xl font-semibold leading-8 text-text-events-strong">
             {data.goal}
           </span>
         </div>
 
         <div className="flex flex-1 flex-col gap-3 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
-          <span className="text-sm font-[510] leading-[22px] text-text-table-header">Donation progress</span>
+          <span className="text-sm font-medium leading-[22px] text-text-table-header">Donation progress</span>
           <div className="flex flex-col gap-1.5">
             <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-bg-default-100">
               <div
@@ -93,7 +93,7 @@ export function DonationsTab({ data }: { data: DonationsData }) {
               />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-[510] leading-5 text-text-events-strong">{data.raised}</span>
+              <span className="text-xs font-medium leading-5 text-text-events-strong">{data.raised}</span>
               <span className="text-xs leading-5 text-text-table-header">of {data.goal}</span>
             </div>
           </div>
@@ -102,7 +102,7 @@ export function DonationsTab({ data }: { data: DonationsData }) {
         <div className="flex flex-1 flex-col gap-2 rounded-2xl border border-border-default-100 bg-bg-canvas p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex flex-col gap-2">
-              <span className="text-sm font-[510] leading-[22px] text-text-table-header">
+              <span className="text-sm font-medium leading-[22px] text-text-table-header">
                 Available for withdrawal
               </span>
               <span className="font-display text-2xl font-semibold leading-8 text-text-events-strong">
@@ -154,7 +154,7 @@ export function DonationsTab({ data }: { data: DonationsData }) {
             <button
               type="button"
               onClick={clearFilters}
-              className="cursor-pointer px-1 text-sm font-[510] text-bg-accent hover:underline"
+              className="cursor-pointer px-1 text-sm font-medium text-bg-accent hover:underline"
             >
               Clear filters
             </button>

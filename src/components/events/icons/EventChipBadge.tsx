@@ -9,32 +9,38 @@ export function EventChipBadge({
   className,
   leadingIcon,
   flankingChecks = false,
-  trailingCheck = false,
 }: {
   children: ReactNode
   className?: string
   leadingIcon?: EventIconName
   flankingChecks?: boolean
-  trailingCheck?: boolean
 }) {
   const checkSize = EVENT_ICON_SIZE.statusBadge
+
+  function ChipCheckIcon({ name }: { name: "check-fill-white" | "check-fill-grey" }) {
+    return (
+      <span className="inline-flex size-3 rotate-45 items-center justify-center overflow-hidden">
+        <EventIcon name={name} size={checkSize} />
+      </span>
+    )
+  }
 
   return (
     <span
       className={cn(
-        "inline-flex h-6 w-fit items-center gap-1 self-start rounded-lg px-2 py-1 text-xs font-[510] leading-5",
+        "inline-flex h-6 w-fit items-center gap-1 self-start rounded-lg px-2 py-1 text-xs font-medium leading-5",
         className,
       )}
     >
       {flankingChecks ? (
-        <EventIcon name="check-fill-white" size={checkSize} />
+        <ChipCheckIcon name="check-fill-white" />
+      ) : leadingIcon === "check-fill-white" || leadingIcon === "check-fill-grey" ? (
+        <ChipCheckIcon name={leadingIcon} />
       ) : leadingIcon ? (
         <EventIcon name={leadingIcon} size={checkSize} />
       ) : null}
       {children}
-      {flankingChecks || trailingCheck ? (
-        <EventIcon name="check-fill-white" size={checkSize} />
-      ) : null}
+      {flankingChecks ? <ChipCheckIcon name="check-fill-white" /> : null}
     </span>
   )
 }

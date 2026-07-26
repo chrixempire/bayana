@@ -27,7 +27,7 @@ export function VerificationStatusTag({ status }: { status: VerificationStatus }
   return (
     <span
       className={cn(
-        "inline-flex h-7 w-fit shrink-0 items-center rounded-lg px-2 py-1.5 text-sm font-[510] leading-[22px]",
+        "inline-flex h-7 w-fit shrink-0 items-center rounded-lg px-2 py-1.5 text-sm font-medium leading-[22px]",
         className,
       )}
     >

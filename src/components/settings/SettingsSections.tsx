@@ -71,7 +71,7 @@ function ToggleRow({
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex flex-col">
-        <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{label}</span>
+        <span className="text-sm font-medium leading-[22px] text-text-events-strong">{label}</span>
         <span className="text-sm leading-[22px] text-text-table-header">{helper}</span>
       </div>
       <Switch checked={checked} onCheckedChange={onChange} />
@@ -94,7 +94,7 @@ function CheckboxRow({
     <label className="flex cursor-pointer items-start gap-3">
       <Checkbox size="sm" checked={checked} onCheckedChange={onChange} className="mt-0.5" />
       <div className="flex flex-col">
-        <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{label}</span>
+        <span className="text-sm font-medium leading-[22px] text-text-events-strong">{label}</span>
         <span className="text-sm leading-[22px] text-text-table-header">{helper}</span>
       </div>
     </label>
@@ -298,7 +298,7 @@ export function NgoProfileSection() {
               <span className="flex size-9 items-center justify-center rounded-lg bg-bg-default-100 text-icon-neutral">
                 <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.meta} />
               </span>
-              <span className="text-sm font-[510] text-text-events-strong">Drag & drop or choose file</span>
+              <span className="text-sm font-medium text-text-events-strong">Drag & drop or choose file</span>
               <span className="text-xs text-text-table-header">JPG, PNG, Max file size: 1MB at least 390px by 140px</span>
             </>
           )}
@@ -340,7 +340,7 @@ export function NgoProfileSection() {
       <div className="flex flex-col gap-2">
         <FieldLabel>Past activities</FieldLabel>
         <div className={cn(elevatedCardSurfaceClassName, "max-h-[140px] overflow-hidden p-4 text-sm leading-[22px] text-text-events-strong")}>
-          <p className="font-[510]">1. Job Readiness Workshops</p>
+          <p className="font-medium">1. Job Readiness Workshops</p>
           <p className="mt-2 text-text-table-header">Hosted monthly training sessions covering:</p>
           <ul className="mt-1 list-disc pl-5 text-text-table-header">
             <li>CV and cover-letter writing</li>
@@ -432,7 +432,7 @@ function StatusBadge({ status }: { status: "active" | "pending" }) {
   return (
     <span
       className={cn(
-        "inline-flex h-6 w-fit items-center rounded-lg px-2 text-xs font-[510]",
+        "inline-flex h-6 w-fit items-center rounded-lg px-2 text-xs font-medium",
         status === "active" ? "bg-bg-success-soft text-text-success" : "bg-bg-warning-soft text-text-warning",
       )}
     >
@@ -547,7 +547,7 @@ export function TeamMembersSection() {
                       <span className="flex items-center gap-1.5 type-table-cell-primary">
                         {row.name}
                         {row.isYou ? (
-                          <span className="inline-flex h-5 items-center rounded-md bg-bg-nav-tab-active px-1.5 text-[11px] font-[510] text-text-nav-tab-active">
+                          <span className="inline-flex h-5 items-center rounded-md bg-bg-nav-tab-active px-1.5 text-[11px] font-medium text-text-nav-tab-active">
                             You
                           </span>
                         ) : null}
@@ -825,7 +825,7 @@ export function PayoutsSection() {
                 <EventIcon name="bank-fill" size={24} />
               </span>
               <div className="flex flex-col gap-1">
-                <p className="text-sm font-[510] text-text-events-strong">No payout account yet</p>
+                <p className="text-sm font-medium text-text-events-strong">No payout account yet</p>
                 <p className="text-xs text-text-table-header">
                   Add your bank account. Once your bank account is added, it will appear here
                 </p>
@@ -848,10 +848,10 @@ export function PayoutsSection() {
                     <EventIcon name="bank-fill" size={EVENT_ICON_SIZE.meta} />
                   </span>
                   <div className="flex flex-col">
-                    <span className="flex items-center gap-1.5 text-sm font-[510] text-text-events-strong">
+                    <span className="flex items-center gap-1.5 text-sm font-medium text-text-events-strong">
                       {acc.name}
                       {acc.primary ? (
-                        <span className="inline-flex h-5 items-center rounded-md bg-bg-nav-tab-active px-1.5 text-[11px] font-[510] text-text-nav-tab-active">
+                        <span className="inline-flex h-5 items-center rounded-md bg-bg-nav-tab-active px-1.5 text-[11px] font-medium text-text-nav-tab-active">
                           Primary
                         </span>
                       ) : null}
@@ -892,7 +892,7 @@ export function PayoutsSection() {
               <button
                 type="button"
                 onClick={() => setAddOpen(true)}
-                className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-sm font-[510] text-text-events-strong transition-colors hover:text-text-neutral-400"
+                className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-sm font-medium text-text-events-strong transition-colors hover:text-text-neutral-400"
               >
                 Add account
               </button>
@@ -946,7 +946,7 @@ export function PayoutsSection() {
                     </TableCell>
                     <TableCell className="type-table-cell-primary">{p.amount}</TableCell>
                     <TableCell>
-                      <span className="inline-flex h-6 w-fit items-center rounded-lg bg-bg-success-soft px-2 text-xs font-[510] text-text-success">
+                      <span className="inline-flex h-6 w-fit items-center rounded-lg bg-bg-success-soft px-2 text-xs font-medium text-text-success">
                         {p.status}
                       </span>
                     </TableCell>
@@ -1052,7 +1052,7 @@ function UpgradeModal({ open, onClose, onUpgrade }: { open: boolean; onClose: ()
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className={cn(elevatedCardSurfaceClassName, "flex flex-col gap-3 p-4")}>
-              <span className="flex items-center gap-1.5 text-sm font-[510] text-text-events-strong">
+              <span className="flex items-center gap-1.5 text-sm font-medium text-text-events-strong">
                 <EventIcon name="rocket-2-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" /> Free
               </span>
               <span className="text-xs text-text-table-header">Enjoy our basic features</span>
@@ -1071,7 +1071,7 @@ function UpgradeModal({ open, onClose, onUpgrade }: { open: boolean; onClose: ()
               </ul>
             </div>
             <div className={cn(elevatedCardSurfaceClassName, "flex flex-col gap-3 border border-border-input-active p-4")}>
-              <span className="flex items-center gap-1.5 text-sm font-[510] text-text-events-strong">
+              <span className="flex items-center gap-1.5 text-sm font-medium text-text-events-strong">
                 <EventIcon name="rocket-2-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" /> Premium
               </span>
               <span className="text-xs text-text-table-header">Enjoy our full features</span>
@@ -1086,7 +1086,7 @@ function UpgradeModal({ open, onClose, onUpgrade }: { open: boolean; onClose: ()
                     <span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-bg-accent-soft text-bg-accent">✓</span>
                     {f}
                     {f === "NGO collaborators" ? (
-                      <span className="rounded-md bg-bg-default-100 px-1.5 text-[11px] font-[510] text-text-table-header">Soon</span>
+                      <span className="rounded-md bg-bg-default-100 px-1.5 text-[11px] font-medium text-text-table-header">Soon</span>
                     ) : null}
                   </li>
                 ))}
@@ -1158,13 +1158,13 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
                 <EventIcon name="bank-card-fill" size={EVENT_ICON_SIZE.meta} />
               </span>
               <div className="flex flex-col">
-                <span className="text-sm font-[510] text-text-events-strong">•••• •••• •••• 0977</span>
+                <span className="text-sm font-medium text-text-events-strong">•••• •••• •••• 0977</span>
                 <span className="text-xs text-text-table-header">Visa · 07 / 21</span>
               </div>
             </div>
           ) : (
             <div className="rounded-xl bg-bg-default-100 p-3">
-              <p className="text-sm font-[510] text-text-events-strong">No card added yet</p>
+              <p className="text-sm font-medium text-text-events-strong">No card added yet</p>
               <p className="text-xs text-text-table-header">Once you&apos;ve used a card, it will appear here</p>
             </div>
           )}
@@ -1242,7 +1242,7 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
                   <TableCell>
                     <span
                       className={cn(
-                        "inline-flex h-6 w-fit items-center rounded-lg px-2 text-xs font-[510]",
+                        "inline-flex h-6 w-fit items-center rounded-lg px-2 text-xs font-medium",
                         inv.status === "Paid" ? "bg-bg-success-soft text-text-success" : "bg-bg-default-100 text-text-table-header",
                       )}
                     >
@@ -1257,7 +1257,7 @@ export function BillingSection({ initialPlan = "free" }: { initialPlan?: "free" 
             ) : (
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={5} className="py-20 text-center">
-                  <p className="text-sm font-[510] text-text-events-strong">No invoice yet</p>
+                  <p className="text-sm font-medium text-text-events-strong">No invoice yet</p>
                   <p className="text-xs text-text-table-header">Once there&apos;s an invoice, it will appear here</p>
                 </TableCell>
               </TableRow>

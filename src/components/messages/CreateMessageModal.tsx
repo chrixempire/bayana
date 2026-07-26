@@ -118,7 +118,7 @@ export function CreateMessageModal({
               {recipients.map((name) => (
                 <span
                   key={name}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border-default-100 bg-bg-canvas py-1 pl-1 pr-2 text-sm font-[510] text-text-events-strong shadow-input-default"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border-default-100 bg-bg-canvas py-1 pl-1 pr-2 text-sm font-medium text-text-events-strong shadow-input-default"
                 >
                   <PersonAvatar name={name} tone="orange" size={20} />
                   {name}

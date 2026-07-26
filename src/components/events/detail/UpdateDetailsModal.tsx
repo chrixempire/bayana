@@ -88,7 +88,7 @@ export function UpdateDetailsModal({
             </div>
           </div>
 
-          <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
+          <p className="text-sm font-medium leading-[22px] text-text-events-strong">
             {post.commentList.length} comments
           </p>
 
@@ -130,7 +130,7 @@ export function UpdateDetailsModal({
                       setReplyingTo((current) => (current === comment.id ? null : comment.id))
                       setReplyDraft("")
                     }}
-                    className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral px-2.5 py-1 text-xs font-[510] text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
+                    className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-lg border border-border-default-100 bg-button-neutral px-2.5 py-1 text-xs font-medium text-text-events-strong shadow-button-neutral hover:bg-button-neutral-clicked"
                   >
                     <EventIcon name="arrow-up-fill" size={EVENT_ICON_SIZE.fieldHint} />
                     Reply

@@ -79,7 +79,7 @@ export function ImageUploader({
         )}
       >
         <EventIcon name="upload-2-fill" size={20} className="text-icon-neutral" />
-        <p className="text-sm font-[510] text-text-events-strong">
+        <p className="text-sm font-medium text-text-events-strong">
           {remaining === 0 ? "Maximum of 4 images added" : "Drag & drop or choose image"}
         </p>
         <p className="text-xs text-text-table-header">JPEG or PNG, 1280 by 620, Max file size: 1MB</p>
@@ -125,7 +125,7 @@ export function ImageUploader({
                 </DropdownMenuContent>
               </DropdownMenu>
               {coverIndex === index ? (
-                <span className="absolute inset-x-1 bottom-1 rounded bg-bg-accent px-1 py-0.5 text-center text-[10px] font-[510] leading-4 text-text-on-solid-bg">
+                <span className="absolute inset-x-1 bottom-1 rounded bg-bg-accent px-1 py-0.5 text-center text-[10px] font-medium leading-4 text-text-on-solid-bg">
                   Cover
                 </span>
               ) : null}

@@ -13,7 +13,7 @@ function InfoRow({ icon, label, value }: { icon: EventIconName; label: string; v
         <EventIcon name={icon} size={EVENT_ICON_SIZE.fieldHint} />
         {label}
       </span>
-      <span className="text-sm font-[510] leading-[22px] text-text-events-strong">{value}</span>
+      <span className="text-sm font-medium leading-[22px] text-text-events-strong">{value}</span>
     </div>
   )
 }
@@ -101,7 +101,7 @@ export function DonorDetailsModal({
                           <EventIcon name="pic-fill" size={EVENT_ICON_SIZE.meta} />
                         )}
                       </span>
-                      <span className="flex-1 truncate text-sm font-[510] text-text-events-strong">
+                      <span className="flex-1 truncate text-sm font-medium text-text-events-strong">
                         {item.name}
                       </span>
                       <span className="text-sm font-semibold text-text-events-strong">
@@ -113,7 +113,7 @@ export function DonorDetailsModal({
               </div>
               <div className="flex flex-col gap-1">
                 <FieldLabel>Delivery type</FieldLabel>
-                <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                <span className="text-sm font-medium leading-[22px] text-text-events-strong">
                   {donation.deliveryType}
                 </span>
               </div>
@@ -123,13 +123,13 @@ export function DonorDetailsModal({
               </div>
               <div className="flex flex-col gap-1">
                 <FieldLabel>Preferred delivery date</FieldLabel>
-                <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                <span className="text-sm font-medium leading-[22px] text-text-events-strong">
                   {donation.preferredDate}
                 </span>
               </div>
               <div className="flex flex-col gap-1">
                 <FieldLabel>Date pledged</FieldLabel>
-                <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                <span className="text-sm font-medium leading-[22px] text-text-events-strong">
                   {donation.datePledged}
                 </span>
               </div>
@@ -140,7 +140,7 @@ export function DonorDetailsModal({
               <div className="flex items-start gap-2">
                 <EventIcon name="sparkles-fill" size={EVENT_ICON_SIZE.meta} className="mt-0.5 shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-sm font-[510] leading-[22px] text-text-events-strong">
+                  <span className="text-sm font-medium leading-[22px] text-text-events-strong">
                     Pledged {donation.itemsCount} items
                   </span>
                   <span className="text-xs leading-5 text-text-table-header">

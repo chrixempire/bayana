@@ -62,7 +62,7 @@ export function DashboardHeader({
           <EventIcon name="selector-vertical-line" size={EVENT_ICON_SIZE.meta} className="shrink-0 opacity-90" />
         </button>
 
-        <span className="inline-flex h-[18px] shrink-0 items-center rounded bg-bg-accent px-1 py-0.5 text-[10px] font-[510] leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
+        <span className="inline-flex h-[18px] shrink-0 items-center rounded bg-bg-accent px-1 py-0.5 text-[10px] font-medium leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
           {planLabel}
         </span>
       </div>

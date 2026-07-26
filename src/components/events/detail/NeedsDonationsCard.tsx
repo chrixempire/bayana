@@ -27,10 +27,10 @@ function StatCell({
           {value}
         </span>
         {suffix ? (
-          <span className="text-xs font-[510] leading-5 text-text-table-header">{suffix}</span>
+          <span className="text-xs font-medium leading-5 text-text-table-header">{suffix}</span>
         ) : null}
       </div>
-      <span className="text-sm font-[510] leading-[22px] text-text-table-header">{label}</span>
+      <span className="text-sm font-medium leading-[22px] text-text-table-header">{label}</span>
     </div>
   )
 }
@@ -84,14 +84,14 @@ function RecentDonationRow({ donation }: { donation: NeedsRecentDonation }) {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <p className="truncate text-sm font-[510] leading-[22px] text-text-events-strong">
+        <p className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
           {donation.donor} donated
         </p>
         <p className="text-xs font-normal leading-5 text-text-table-header">{donation.timeAgo}</p>
       </div>
 
       <div className="flex shrink-0 flex-col items-end gap-1">
-        <span className="text-sm font-[510] leading-[22px] text-[#087629]">{donation.amount}</span>
+        <span className="text-sm font-medium leading-[22px] text-[#087629]">{donation.amount}</span>
         <span className="text-xs font-normal leading-5 text-text-table-header">{donation.left}</span>
       </div>
     </div>
@@ -148,7 +148,7 @@ export function NeedsDonationsCard({
         </div>
       ) : (
         <div className="flex h-[356px] flex-col items-center justify-center gap-2 px-4 text-center">
-          <p className="text-sm font-[510] leading-[22px] text-text-events-strong">
+          <p className="text-sm font-medium leading-[22px] text-text-events-strong">
             No donations yet
           </p>
           <p className="text-xs font-normal leading-5 text-text-table-header">

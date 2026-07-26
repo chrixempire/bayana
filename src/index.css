@@ -300,7 +300,7 @@ input:-webkit-autofill:active {
 @utility type-small-medium {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -308,7 +308,7 @@ input:-webkit-autofill:active {
 @utility type-small-semibold {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 590;
+  font-weight: 600;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -341,7 +341,7 @@ input:-webkit-autofill:active {
 @utility type-events-tab {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -350,7 +350,7 @@ input:-webkit-autofill:active {
 @utility type-create-event-dropdown {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -358,7 +358,7 @@ input:-webkit-autofill:active {
 @utility type-create-event-field-label {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -385,7 +385,7 @@ input:-webkit-autofill:active {
 @utility type-create-event-step-label {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -393,7 +393,7 @@ input:-webkit-autofill:active {
 @utility type-create-event-step-number {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 20px;
   letter-spacing: 0;
   text-align: center;
@@ -402,7 +402,7 @@ input:-webkit-autofill:active {
 @utility type-events-filter {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 590;
+  font-weight: 600;
   line-height: 22px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -411,7 +411,7 @@ input:-webkit-autofill:active {
 @utility type-events-table-head {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 20px;
   letter-spacing: 0;
   color: var(--color-text-table-header);
@@ -420,7 +420,7 @@ input:-webkit-autofill:active {
 @utility type-pagination {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 20px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -429,7 +429,7 @@ input:-webkit-autofill:active {
 @utility type-events-progress {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 20px;
   letter-spacing: 0;
   color: var(--color-text-progress);
@@ -438,7 +438,7 @@ input:-webkit-autofill:active {
 @utility type-events-empty-title {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
   text-align: center;
@@ -448,7 +448,7 @@ input:-webkit-autofill:active {
 @utility type-table-cell-primary {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -463,11 +463,11 @@ input:-webkit-autofill:active {
   color: var(--color-text-table-header);
 }
 
-/** Figma Tags & Chip in table cells — Micro/Medium 12px / 510 / 20px. */
+/** Figma Tags & Chip in table cells — Micro/Medium 12px / 500 / 20px. */
 @utility type-table-cell-tag {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 510;
+  font-weight: 500;
   line-height: 20px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);

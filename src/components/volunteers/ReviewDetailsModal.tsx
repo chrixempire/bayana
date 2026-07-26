@@ -52,7 +52,7 @@ export function ReviewDetailsModal({
       {review ? (
         <div className="flex flex-col gap-4 pb-2">
           <Field label="Event">
-            <span className="text-sm font-[510] text-bg-accent">{review.event}</span>
+            <span className="text-sm font-medium text-bg-accent">{review.event}</span>
           </Field>
           <Field label="Volunteer">
             <span className="flex items-center gap-2 text-sm text-text-events-strong">
