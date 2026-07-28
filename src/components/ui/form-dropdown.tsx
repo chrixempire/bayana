@@ -28,6 +28,8 @@ type FormDropdownProps<T extends string> = {
   triggerClassName?: string
   contentClassName?: string
   showChevron?: boolean
+  /** When false, selected items in the menu are highlighted without a leading icon. */
+  showSelectedCheck?: boolean
   renderValue?: (selected: FormDropdownOption<T> | undefined) => ReactNode
 }
 
@@ -41,6 +43,7 @@ export function FormDropdown<T extends string>({
   triggerClassName,
   contentClassName,
   showChevron = true,
+  showSelectedCheck = true,
   renderValue,
 }: FormDropdownProps<T>) {
   const selected = options.find((option) => option.value === value)
@@ -80,9 +83,13 @@ export function FormDropdown<T extends string>({
               )}
               onSelect={() => onValueChange(option.value)}
             >
-              <span className="flex size-4 shrink-0 items-center justify-center">
-                {isSelected ? <EventIcon name="check-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" aria-hidden /> : null}
-              </span>
+              {showSelectedCheck ? (
+                <span className="flex size-4 shrink-0 items-center justify-center">
+                  {isSelected ? (
+                    <EventIcon name="check-fill" size={EVENT_ICON_SIZE.meta} className="text-bg-accent" aria-hidden />
+                  ) : null}
+                </span>
+              ) : null}
               {option.leading}
               <span className="min-w-0 truncate">{option.label}</span>
             </DropdownMenuItem>

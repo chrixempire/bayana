@@ -94,7 +94,8 @@ export function HeaderSearch() {
           <EventIcon
             name="search-line"
             size={EVENT_ICON_SIZE.search}
-            className="pointer-events-none absolute left-3 text-text-on-nav-search"
+            navSearch
+            className="pointer-events-none absolute left-3"
           />
           Search..
           <kbd className="pointer-events-none absolute right-3 hidden rounded-md bg-bg-on-on-nav/60 px-1.5 py-0.5 text-[10px] font-medium text-text-on-nav-search/80 sm:inline">

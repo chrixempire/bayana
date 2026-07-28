@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { cn } from "../../lib/utils"
+import { ONBOARDING_FILE_MAX_SIZE_BYTES } from "../../pages/auth/onboarding-validation"
 
 type UploadStatus = "idle" | "uploading" | "uploaded"
 
@@ -15,17 +16,26 @@ export function FileUploadDropzone({
   onChange,
   accept = ".jpg,.jpeg,.png,.pdf",
   maxSizeHint = "JPG, PDF,& PNG file size up to 2MB",
+  maxSizeBytes = ONBOARDING_FILE_MAX_SIZE_BYTES,
+  sizeErrorMessage = "File must not be greater than 2048 kilobytes.",
+  onSizeErrorChange,
 }: {
   value: File | null
   onChange: (file: File | null) => void
   accept?: string
   maxSizeHint?: string
+  maxSizeBytes?: number
+  sizeErrorMessage?: string
+  onSizeErrorChange?: (message: string) => void
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [status, setStatus] = useState<UploadStatus>(value ? "uploaded" : "idle")
   const [progress, setProgress] = useState(value ? 100 : 0)
   const [fileSize, setFileSize] = useState<string>(value ? formatFileSize(value.size) : "")
+  const reportSizeError = (message: string) => {
+    onSizeErrorChange?.(message)
+  }
 
   // Sync internal upload state when the controlled `value` changes from outside
   // (e.g. the parent form clears or presets the file). Adjusting during render is
@@ -43,6 +53,20 @@ export function FileUploadDropzone({
       setFileSize("")
     }
   }
+
+  useEffect(() => {
+    if (!value) {
+      reportSizeError("")
+      return
+    }
+
+    if (value.size > maxSizeBytes) {
+      reportSizeError(sizeErrorMessage)
+      return
+    }
+
+    reportSizeError("")
+  }, [value, maxSizeBytes, sizeErrorMessage])
 
   useEffect(() => {
     if (status !== "uploading") return
@@ -73,6 +97,14 @@ export function FileUploadDropzone({
   const onFiles = (files: FileList | null) => {
     const file = files?.[0]
     if (!file) return
+
+    if (file.size > maxSizeBytes) {
+      reportSizeError(sizeErrorMessage)
+      if (inputRef.current) inputRef.current.value = ""
+      return
+    }
+
+    reportSizeError("")
     startUpload(file)
   }
 
@@ -81,6 +113,7 @@ export function FileUploadDropzone({
     setProgress(0)
     setStatus("idle")
     setFileSize("")
+    reportSizeError("")
     if (inputRef.current) inputRef.current.value = ""
   }
 

@@ -56,7 +56,7 @@ export function buildOrganisationOnboardingFormData(data: OnboardingData): FormD
 }
 
 export function submitOrganisationOnboarding(data: OnboardingData) {
-  return apiRequest<ApiMessageResponse>("/organisation/onboard/organisation", {
+  return apiRequest<ApiMessageResponse>("/api/v1/organisation/onboard/organisation", {
     method: "POST",
     body: buildOrganisationOnboardingFormData(data),
   })

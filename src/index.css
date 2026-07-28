@@ -87,9 +87,9 @@
   --color-bg-success-soft: #ddf2e5;
   --color-bg-warning-soft: #f8f0e2;
   --color-bg-info-soft: #dde5ff;
-  --color-bg-nav: #1a0b35;
-  --color-bg-on-nav: #5d467d;
-  --color-bg-on-on-nav: #755d95;
+  --color-bg-nav: #120528;
+  --color-bg-on-nav: #4a3768;
+  --color-bg-on-on-nav: #5d467d;
 
   --color-border-default-100: #ebeef2;
   --color-border-on-bg-200: #dde2e8;
@@ -179,9 +179,9 @@
   --color-bg-success-soft: #ddf2e5;
   --color-bg-warning-soft: #f8f0e2;
   --color-bg-info-soft: #dde5ff;
-  --color-bg-nav: #1a0b35;
-  --color-bg-on-nav: #5d467d;
-  --color-bg-on-on-nav: #755d95;
+  --color-bg-nav: #120528;
+  --color-bg-on-nav: #4a3768;
+  --color-bg-on-on-nav: #5d467d;
 
   --color-border-default-100: #ebeef2;
   --color-border-on-bg-200: #dde2e8;
@@ -269,10 +269,15 @@ h6 {
 }
 
 button,
-input,
 textarea,
 select {
-  font: inherit;
+  font-family: inherit;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]) {
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 22px;
 }
 
 input:-webkit-autofill,
@@ -308,7 +313,7 @@ input:-webkit-autofill:active {
 @utility type-small-semibold {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -316,7 +321,7 @@ input:-webkit-autofill:active {
 @utility type-small-bold {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -332,7 +337,7 @@ input:-webkit-autofill:active {
 @utility type-button-large {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 22px;
   letter-spacing: 0;
 }

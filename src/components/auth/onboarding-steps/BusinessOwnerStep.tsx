@@ -114,6 +114,7 @@ export function BusinessOwnerStep({
               value={data.idType}
               invalid={Boolean(errors.idType)}
               options={ID_TYPE_OPTIONS}
+              showSelectedCheck={false}
               onValueChange={(idType) => onChange({ ...data, idType })}
             />
           </FormField>

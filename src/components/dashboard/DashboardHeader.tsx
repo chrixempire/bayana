@@ -23,6 +23,11 @@ type DashboardHeaderProps = {
   userInitial?: string
 }
 
+const ORGANIZATION_OPTIONS = [
+  { name: "Acme Incorporation", initial: "A", plan: "Free" },
+  { name: "Bayana Foundation", initial: "B", plan: "Pro" },
+] as const
+
 export function DashboardHeader({
   organizationName = "Acme Incorporation",
   organizationInitial = "A",
@@ -31,6 +36,11 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const navigate = useNavigate()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [activeOrg, setActiveOrg] = useState({
+    name: organizationName,
+    initial: organizationInitial,
+    plan: planLabel,
+  })
 
   const handleLogout = async () => {
     if (isLoggingOut) return
@@ -43,7 +53,7 @@ export function DashboardHeader({
   }
 
   const navProfileAvatar = isLoggingOut ? (
-    <SpinnerIcon className="size-4 text-bg-nav" aria-hidden />
+    <SpinnerIcon className="size-4 text-text-nav-tab-active" aria-hidden />
   ) : (
     userInitial
   )
@@ -64,23 +74,44 @@ export function DashboardHeader({
 
         <span className="mx-0.5 hidden h-3 w-px shrink-0 bg-bg-on-nav sm:block" aria-hidden />
 
-        <button
-          type="button"
-          className="inline-flex h-9 min-w-0 max-w-[220px] cursor-pointer items-center gap-2 rounded-lg bg-bg-on-nav pl-1 pr-1.5 text-left transition-colors hover:bg-bg-on-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:max-w-none"
-          aria-label="Switch organization"
-        >
-          <span
-            aria-hidden
-            className="flex size-6 shrink-0 items-center justify-center rounded bg-bg-accent text-[11px] font-bold leading-[18px] text-text-on-solid-bg"
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            type="button"
+            className="inline-flex h-9 min-w-0 max-w-[220px] cursor-pointer items-center gap-2 rounded-lg bg-bg-on-nav pl-1 pr-1.5 text-left transition-colors hover:bg-bg-on-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:max-w-none"
+            aria-label="Switch organization"
           >
-            {organizationInitial}
-          </span>
-          <span className="truncate type-small-medium text-text-on-solid-bg">{organizationName}</span>
-          <EventIcon name="selector-vertical-line" size={EVENT_ICON_SIZE.meta} className="shrink-0 opacity-90" />
-        </button>
+            <span
+              aria-hidden
+              className="flex size-6 shrink-0 items-center justify-center rounded bg-bg-accent text-[11px] font-bold leading-[18px] text-text-on-solid-bg"
+            >
+              {activeOrg.initial}
+            </span>
+            <span className="truncate type-small-medium text-text-on-solid-bg">{activeOrg.name}</span>
+            <EventIcon
+              name="selector-vertical-line"
+              size={EVENT_ICON_SIZE.meta}
+              navSearch
+              className="shrink-0 opacity-90"
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="min-w-[14rem] p-1.5">
+            {ORGANIZATION_OPTIONS.map((org) => (
+              <DropdownMenuItem
+                key={org.name}
+                className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
+                onSelect={() => setActiveOrg(org)}
+              >
+                <span className="flex size-6 shrink-0 items-center justify-center rounded bg-bg-accent text-[11px] font-bold text-text-on-solid-bg">
+                  {org.initial}
+                </span>
+                <span className="truncate">{org.name}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <span className="inline-flex h-[18px] shrink-0 items-center rounded bg-bg-accent px-1 py-0.5 text-[10px] font-medium leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
-          {planLabel}
+          {activeOrg.plan}
         </span>
       </div>
 
@@ -91,11 +122,16 @@ export function DashboardHeader({
       <div className="flex shrink-0 items-center gap-2 justify-self-end lg:col-start-3">
         <button
           type="button"
-          className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-lg bg-bg-accent px-2.5 text-xs font-medium leading-5 text-text-on-solid-bg shadow-[inset_0px_-2px_1px_0px_rgba(140,64,12,0.5)] transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-lg bg-bg-accent px-2.5 type-button-large text-text-on-solid-bg shadow-[inset_0px_-2px_1px_0px_rgba(140,64,12,0.5)] transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          onClick={() =>
+            toast({
+              title: "Coming soon",
+              description: "Upgrade options will be available soon.",
+            })
+          }
         >
           <EventIcon name="award-fill-white" size={EVENT_ICON_SIZE.buttonLeading} />
           Upgrade
-          <EventIcon name="down-fill" size={EVENT_ICON_SIZE.buttonTrailing} inverted />
         </button>
 
         <HeaderNotifications />
@@ -105,7 +141,7 @@ export function DashboardHeader({
         <DropdownMenu>
           <DropdownMenuTrigger
             type="button"
-            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-text-on-nav-search text-sm font-semibold leading-5 text-bg-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-bg-nav-tab-active text-sm font-semibold leading-5 text-text-nav-tab-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             aria-label="Account menu"
             disabled={isLoggingOut}
           >

@@ -54,7 +54,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         ref={ref}
         type={type}
         className={cn(
-          "w-full min-w-0 border-0 bg-transparent [border-radius:inherit] type-small-regular outline-none placeholder:text-input-placeholder disabled:cursor-not-allowed",
+          "w-full min-w-0 border-0 bg-transparent [border-radius:inherit] type-small-regular text-[14px] leading-[22px] tracking-[-0.1px] outline-none placeholder:text-input-placeholder disabled:cursor-not-allowed",
           density === "compact" ? "h-10 min-h-10 px-4 py-2" : "h-[44px] px-4 py-2",
           isNumber && "tabular-nums",
         )}

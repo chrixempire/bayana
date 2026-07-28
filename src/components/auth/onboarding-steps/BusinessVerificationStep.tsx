@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react"
 import { Button } from "../../ui/button"
 import { FormField } from "../FormField"
 import { FileUploadDropzone } from "../FileUploadDropzone"
@@ -5,6 +6,19 @@ import { OnboardingStepShell } from "../OnboardingStepShell"
 import { ContinueArrowIcon } from "../icons/ContinueArrowIcon"
 import type { OnboardingData } from "../../../pages/auth/types"
 import { authBodyTextClassName, authOnboardingPrimaryButtonClassName, pageTitleClassName } from "../../../lib/auth-form-styles"
+import {
+  ONBOARDING_FILE_SIZE_ERRORS,
+  validateOnboardingFileSize,
+} from "../../../pages/auth/onboarding-validation"
+
+type VerificationUploadField = keyof OnboardingData["verification"]
+
+const VERIFICATION_UPLOAD_FIELDS = [
+  { field: "cacDocument", label: "CAC document *" },
+  { field: "ngoRegistrationCertificate", label: "NGO Registration certificate *" },
+  { field: "proofOfAddress", label: "Proof of address *" },
+  { field: "scumlDocument", label: "Scuml document *" },
+] as const satisfies ReadonlyArray<{ field: VerificationUploadField; label: string }>
 
 export function BusinessVerificationStep({
   data,
@@ -21,6 +35,44 @@ export function BusinessVerificationStep({
   onContinue: () => void
   onSkip: () => void
 }) {
+  const [uploadErrors, setUploadErrors] = useState<Partial<Record<VerificationUploadField, string>>>({})
+
+  const setFieldUploadError = (field: VerificationUploadField, message: string) => {
+    setUploadErrors((prev) => {
+      const file = data[field]
+      const fileIsValid = file ? !validateOnboardingFileSize(field, file) : false
+
+      if (message && fileIsValid) {
+        return prev
+      }
+
+      if (!message) {
+        if (!(field in prev)) return prev
+        const next = { ...prev }
+        delete next[field]
+        return next
+      }
+
+      return { ...prev, [field]: message }
+    })
+  }
+
+  const fieldErrors = useMemo(() => {
+    const merged: Record<string, string> = { ...errors, ...uploadErrors }
+
+    for (const { field } of VERIFICATION_UPLOAD_FIELDS) {
+      const file = data[field]
+      if (!file) continue
+
+      const sizeError = validateOnboardingFileSize(field, file)
+      if (sizeError) merged[field] = sizeError
+    }
+
+    return merged
+  }, [data, errors, uploadErrors])
+
+  const hasUploadErrors = VERIFICATION_UPLOAD_FIELDS.some(({ field }) => Boolean(fieldErrors[field]))
+
   return (
     <OnboardingStepShell
       frameStart={
@@ -39,33 +91,16 @@ export function BusinessVerificationStep({
     >
       <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-4">
-          <FormField label="CAC document *" error={errors.cacDocument}>
-            <FileUploadDropzone
-              value={data.cacDocument}
-              onChange={(file) => onChange({ ...data, cacDocument: file })}
-            />
-          </FormField>
-
-          <FormField label="NGO Registration certificate *" error={errors.ngoRegistrationCertificate}>
-            <FileUploadDropzone
-              value={data.ngoRegistrationCertificate}
-              onChange={(file) => onChange({ ...data, ngoRegistrationCertificate: file })}
-            />
-          </FormField>
-
-          <FormField label="Proof of address *" error={errors.proofOfAddress}>
-            <FileUploadDropzone
-              value={data.proofOfAddress}
-              onChange={(file) => onChange({ ...data, proofOfAddress: file })}
-            />
-          </FormField>
-
-          <FormField label="Scuml document *" error={errors.scumlDocument}>
-            <FileUploadDropzone
-              value={data.scumlDocument}
-              onChange={(file) => onChange({ ...data, scumlDocument: file })}
-            />
-          </FormField>
+          {VERIFICATION_UPLOAD_FIELDS.map(({ field, label }) => (
+            <FormField key={field} label={label} error={fieldErrors[field]}>
+              <FileUploadDropzone
+                value={data[field]}
+                sizeErrorMessage={ONBOARDING_FILE_SIZE_ERRORS[field]}
+                onSizeErrorChange={(message) => setFieldUploadError(field, message)}
+                onChange={(file) => onChange({ ...data, [field]: file })}
+              />
+            </FormField>
+          ))}
         </div>
 
         <div className="flex flex-col gap-3">
@@ -73,6 +108,7 @@ export function BusinessVerificationStep({
             className={authOnboardingPrimaryButtonClassName}
             variant="primary"
             block
+            disabled={hasUploadErrors}
             rightIcon={<ContinueArrowIcon className="text-white" />}
             onClick={onContinue}
           >

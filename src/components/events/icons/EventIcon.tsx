@@ -87,6 +87,8 @@ type EventIconProps = {
   negative?: boolean
   /** Tints neutral gray Figma assets to match success menu label text. */
   success?: boolean
+  /** Tints icons for the dark nav search field (#EBD9FF). */
+  navSearch?: boolean
 }
 
 type IconRenderStyle = {
@@ -104,7 +106,7 @@ const ICON_RENDER: Partial<Record<EventIconName, IconRenderStyle>> = {
   "check-fill-grey": { imgClassName: "size-[70%] rotate-45", noOverflowClip: true },
 }
 
-export function EventIcon({ name, size = 16, className, inverted = false, accent = false, negative = false, success = false }: EventIconProps) {
+export function EventIcon({ name, size = 16, className, inverted = false, accent = false, negative = false, success = false, navSearch = false }: EventIconProps) {
   const renderStyle = ICON_RENDER[name]
   const maskStyle = {
     mask: `url(${ICONS[name]}) center / contain no-repeat`,
@@ -162,6 +164,25 @@ export function EventIcon({ name, size = 16, className, inverted = false, accent
       >
         <span
           className={cn("bg-text-success", renderStyle?.imgClassName ?? "size-full")}
+          style={maskStyle}
+        />
+      </span>
+    )
+  }
+
+  if (navSearch) {
+    return (
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center justify-center",
+          !renderStyle?.noOverflowClip && "overflow-hidden",
+          className,
+        )}
+        style={{ width: size, height: size }}
+        aria-hidden
+      >
+        <span
+          className={cn("bg-text-on-nav-search", renderStyle?.imgClassName ?? "size-full")}
           style={maskStyle}
         />
       </span>

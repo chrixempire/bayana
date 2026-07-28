@@ -2,13 +2,31 @@ import type { OnboardingData, OnboardingFlowStep } from "./types"
 
 export type OnboardingStepErrors = Record<string, string>
 
-export const LOGO_MAX_SIZE_BYTES = 2048 * 1024
+export const ONBOARDING_FILE_MAX_SIZE_BYTES = 2048 * 1024
 
-export const LOGO_MAX_SIZE_ERROR = "The logo field must not be greater than 2048 kilobytes."
+/** @deprecated Use ONBOARDING_FILE_MAX_SIZE_BYTES */
+export const LOGO_MAX_SIZE_BYTES = ONBOARDING_FILE_MAX_SIZE_BYTES
+
+export const ONBOARDING_FILE_SIZE_ERRORS = {
+  cacDocument: "The cac doc field must not be greater than 2048 kilobytes.",
+  ngoRegistrationCertificate: "The org certificate doc field must not be greater than 2048 kilobytes.",
+  proofOfAddress: "The proof of add doc field must not be greater than 2048 kilobytes.",
+  scumlDocument: "The scuml doc field must not be greater than 2048 kilobytes.",
+  logo: "The logo field must not be greater than 2048 kilobytes.",
+} as const
+
+export type OnboardingFileField = keyof typeof ONBOARDING_FILE_SIZE_ERRORS
+
+/** @deprecated Use ONBOARDING_FILE_SIZE_ERRORS.logo */
+export const LOGO_MAX_SIZE_ERROR = ONBOARDING_FILE_SIZE_ERRORS.logo
+
+export function validateOnboardingFileSize(field: OnboardingFileField, file: File): string | null {
+  if (file.size > ONBOARDING_FILE_MAX_SIZE_BYTES) return ONBOARDING_FILE_SIZE_ERRORS[field]
+  return null
+}
 
 export function validateLogoFileSize(file: File): string | null {
-  if (file.size > LOGO_MAX_SIZE_BYTES) return LOGO_MAX_SIZE_ERROR
-  return null
+  return validateOnboardingFileSize("logo", file)
 }
 
 type StepValidator = (data: OnboardingData) => OnboardingStepErrors
@@ -56,20 +74,25 @@ const validators: Partial<Record<OnboardingFlowStep, StepValidator>> = {
   "business-verification": (data) => {
     const errors: OnboardingStepErrors = {}
 
-    if (!data.verification.cacDocument) {
-      errors.cacDocument = "CAC document is required"
-    }
+    const documentFields = [
+      ["cacDocument", data.verification.cacDocument, "CAC document is required"] as const,
+      [
+        "ngoRegistrationCertificate",
+        data.verification.ngoRegistrationCertificate,
+        "NGO registration certificate is required",
+      ] as const,
+      ["proofOfAddress", data.verification.proofOfAddress, "Proof of address is required"] as const,
+      ["scumlDocument", data.verification.scumlDocument, "Scuml document is required"] as const,
+    ]
 
-    if (!data.verification.ngoRegistrationCertificate) {
-      errors.ngoRegistrationCertificate = "NGO registration certificate is required"
-    }
+    for (const [field, file, requiredMessage] of documentFields) {
+      if (!file) {
+        errors[field] = requiredMessage
+        continue
+      }
 
-    if (!data.verification.proofOfAddress) {
-      errors.proofOfAddress = "Proof of address is required"
-    }
-
-    if (!data.verification.scumlDocument) {
-      errors.scumlDocument = "Scuml document is required"
+      const sizeError = validateOnboardingFileSize(field, file)
+      if (sizeError) errors[field] = sizeError
     }
 
     return errors
