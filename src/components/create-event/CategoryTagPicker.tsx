@@ -23,9 +23,11 @@ const DEFAULT_SUGGESTED_CATEGORIES = [
 export function CategoryTagPicker({
   value,
   onChange,
+  options = CREATE_EVENT_CATEGORY_OPTIONS,
 }: {
   value: string[]
   onChange: (categories: string[]) => void
+  options?: readonly string[]
 }) {
   const [showPicker, setShowPicker] = useState(false)
   const [query, setQuery] = useState("")
@@ -43,11 +45,9 @@ export function CategoryTagPicker({
 
   const visibleOptions = useMemo(() => {
     const normalized = query.trim().toLowerCase()
-    if (!normalized) return CREATE_EVENT_CATEGORY_OPTIONS
-    return CREATE_EVENT_CATEGORY_OPTIONS.filter((option) =>
-      option.toLowerCase().includes(normalized),
-    )
-  }, [query])
+    if (!normalized) return options
+    return options.filter((option) => option.toLowerCase().includes(normalized))
+  }, [options, query])
 
   const toggleCategory = useCallback(
     (category: string) => {

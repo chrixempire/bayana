@@ -19,12 +19,14 @@ export function CreateEventSummary({
   canCreate,
   isPremium = false,
   eventType = "cause",
+  isSubmitting = false,
   onCreate,
 }: {
   form: CreateEventFormState
   canCreate: boolean
   isPremium?: boolean
   eventType?: CreateEventType
+  isSubmitting?: boolean
   onCreate: () => void
 }) {
   const isNeeds = eventType === "needs"
@@ -227,11 +229,11 @@ export function CreateEventSummary({
         type="button"
         variant="primary"
         block
-        disabled={!canCreate}
+        disabled={!canCreate || isSubmitting}
         onClick={onCreate}
         className={cn("mt-4 rounded-xl")}
       >
-        Create event
+        {isSubmitting ? "Creating..." : "Create event"}
       </Button>
     </aside>
   )

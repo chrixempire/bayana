@@ -19,11 +19,15 @@ export function CreateEventStepAbout({
   form,
   onChange,
   onBack,
+  categoryOptions,
+  skillOptions,
 }: {
   eventType: CreateEventType
   form: CreateEventFormState
   onChange: (patch: Partial<CreateEventFormState>) => void
   onBack: () => void
+  categoryOptions?: string[]
+  skillOptions?: string[]
 }) {
   const [skillInput, setSkillInput] = useState("")
   const [skillsFocused, setSkillsFocused] = useState(false)
@@ -36,10 +40,11 @@ export function CreateEventStepAbout({
 
   const skillSuggestions = useMemo(() => {
     const query = skillInput.trim().toLowerCase()
-    const pool = CREATE_EVENT_SKILL_SUGGESTIONS.filter((skill) => !form.skills.includes(skill))
+    const poolSource = skillOptions?.length ? skillOptions : CREATE_EVENT_SKILL_SUGGESTIONS
+    const pool = poolSource.filter((skill) => !form.skills.includes(skill))
     if (!query) return pool
     return pool.filter((skill) => skill.toLowerCase().includes(query))
-  }, [form.skills, skillInput])
+  }, [form.skills, skillInput, skillOptions])
 
   const resetSkillHighlight = () => {
     setHighlightedSkillIndex(-1)
@@ -145,7 +150,11 @@ export function CreateEventStepAbout({
 
       <div className="flex flex-col gap-2">
         <CreateEventFieldLabel label="Category" required />
-        <CategoryTagPicker value={form.categories} onChange={(categories) => onChange({ categories })} />
+        <CategoryTagPicker
+          value={form.categories}
+          options={categoryOptions}
+          onChange={(categories) => onChange({ categories })}
+        />
       </div>
 
       <div className="flex flex-col gap-2">

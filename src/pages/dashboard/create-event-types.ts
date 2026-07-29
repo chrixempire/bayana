@@ -5,6 +5,7 @@ export type CreateEventImage = {
   previewUrl: string
   name: string
   isCover: boolean
+  file?: File
 }
 
 export type VolunteeringType = "in-person" | "virtual"

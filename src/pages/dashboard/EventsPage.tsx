@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { CreateEventTypeModal } from "../../components/create-event/CreateEventTypeModal"
 import { createEventPath } from "../../lib/create-event-paths"
@@ -30,6 +30,13 @@ import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filt
 import { tableSurfaceClassName } from "../../lib/table-styles"
 import { toast } from "../../hooks/use-toast"
 import { useSimulatedLoading } from "../../hooks/use-simulated-loading"
+import {
+  deleteOrganisationCause,
+  extractCausesFromResponse,
+  getOrganisationCauses,
+} from "../../lib/api/causes"
+import { ApiError } from "../../lib/api/types"
+import { mapCausesToTableRows } from "../../lib/map-cause-to-table-row"
 import {
   getEventsPageConfig,
   getEventsScenarioData,
@@ -83,11 +90,47 @@ export function EventsPage() {
   }
 
   const [rows, setRows] = useState<EventTableRow[]>(scenarioData.rows)
+  const [causesLoading, setCausesLoading] = useState(false)
   const [seededScenario, setSeededScenario] = useState(scenario)
   if (seededScenario !== scenario) {
     setSeededScenario(scenario)
     setRows(scenarioData.rows)
   }
+
+  useEffect(() => {
+    if (activeTab !== "causes") return
+
+    let cancelled = false
+
+    void (async () => {
+      setCausesLoading(true)
+
+      try {
+        const response = await getOrganisationCauses()
+        if (cancelled) return
+
+        const apiCauseRows = mapCausesToTableRows(extractCausesFromResponse(response))
+        setRows((previous) => {
+          const otherRows = previous.filter((row) => (row.kind ?? "cause") !== "cause")
+          return [...apiCauseRows, ...otherRows]
+        })
+      } catch (error) {
+        if (cancelled) return
+
+        toast({
+          variant: "destructive",
+          title: "Unable to load causes",
+          description: error instanceof ApiError ? error.message : "Please try again.",
+        })
+      } finally {
+        if (!cancelled) setCausesLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [activeTab])
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -103,7 +146,7 @@ export function EventsPage() {
     endDate: null,
   })
 
-  const loading = useSimulatedLoading()
+  const loading = useSimulatedLoading() || (activeTab === "causes" && causesLoading)
   const activeTabConfig = pageConfig.tabs.find((tab) => tab.id === activeTab) ?? pageConfig.tabs[0]
   const activeKind = KIND_BY_TAB[activeTab]
   const kindCount = rows.filter((row) => (row.kind ?? "cause") === activeKind).length
@@ -296,11 +339,31 @@ export function EventsPage() {
 
   const confirmDelete = () => {
     if (!deleteTarget) return
-    setRows((prev) => prev.filter((row) => row.id !== deleteTarget.id))
-    toast({
-      variant: "success",
-      title: deleteTarget.kind === "draft" ? "Draft deleted" : "Event deleted",
-    })
+
+    const row = rows.find((item) => item.id === deleteTarget.id)
+    const isCauseRow = (row?.kind ?? "cause") === "cause"
+
+    void (async () => {
+      if (isCauseRow) {
+        try {
+          await deleteOrganisationCause(deleteTarget.id)
+        } catch (error) {
+          toast({
+            variant: "destructive",
+            title: "Unable to delete cause",
+            description: error instanceof ApiError ? error.message : "Please try again.",
+          })
+          return
+        }
+      }
+
+      setRows((prev) => prev.filter((row) => row.id !== deleteTarget.id))
+      toast({
+        variant: "success",
+        title: deleteTarget.kind === "draft" ? "Draft deleted" : "Event deleted",
+      })
+      setDeleteTarget(null)
+    })()
   }
 
   const setFilterValue = (filterId: string, value: string) => {

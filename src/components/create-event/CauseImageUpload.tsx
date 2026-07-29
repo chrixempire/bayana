@@ -23,6 +23,7 @@ function createImageFromFile(file: File): CreateEventImage {
     previewUrl: URL.createObjectURL(file),
     name: file.name,
     isCover: false,
+    file,
   }
 }
 

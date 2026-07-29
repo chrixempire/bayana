@@ -18,6 +18,7 @@ import {
   DASHBOARD_PAGE_GUTTER_PX,
 } from "../../lib/dashboard-layout"
 import { toast } from "../../hooks/use-toast"
+import { useCauseLookups } from "../../hooks/use-cause-lookups"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
 import {
   createEventPath,
@@ -25,6 +26,9 @@ import {
   parseCreateEventType,
 } from "../../lib/create-event-paths"
 import { isCreateEventStepValid } from "../../lib/create-event-validation"
+import { buildCauseFormData, createOrganisationCause, getCauseUuid } from "../../lib/api/causes"
+import { ApiError } from "../../lib/api/types"
+import { eventDetailPath } from "../../lib/event-detail-paths"
 import {
   createInitialFormState,
   getCreateEventSteps,
@@ -40,6 +44,10 @@ export function CreateEventPage() {
   const [form, setForm] = useState<CreateEventFormState>(createInitialFormState)
   const [isPremium, setIsPremium] = useState(false)
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const isCauseFlow = eventType === "cause"
+  const { lookups, categoryOptions, skillOptions, isLoading: lookupsLoading, error: lookupsError } =
+    useCauseLookups(isCauseFlow)
 
   const stepId = parseCreateEventStep(searchParams.get("step"))
   const activeStepIndex = Math.max(
@@ -75,7 +83,12 @@ export function CreateEventPage() {
     goToStep(activeStepIndex + 1)
   }
 
-  const handleSaveDraft = () => {
+  const handleSaveDraft = async () => {
+    if (isCauseFlow) {
+      await submitCause("draft")
+      return
+    }
+
     toast({
       variant: "success",
       title: "Draft saved",
@@ -84,7 +97,74 @@ export function CreateEventPage() {
     navigate(DASHBOARD_TAB_PATHS.events)
   }
 
+  const submitCause = async (status: "active" | "draft") => {
+    if (!isCauseFlow || isSubmitting) return
+
+    if (lookupsLoading) {
+      toast({
+        variant: "destructive",
+        title: "Still loading options",
+        description: "Please wait for categories and skills to finish loading.",
+      })
+      return
+    }
+
+    if (lookupsError) {
+      toast({
+        variant: "destructive",
+        title: "Unable to create cause",
+        description: lookupsError,
+      })
+      return
+    }
+
+    if (status === "active" && !canCreate) return
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await createOrganisationCause(
+        buildCauseFormData(form, {
+          status,
+          lookups,
+        }),
+      )
+
+      const causeUuid = getCauseUuid(response.data)
+      toast({
+        variant: "success",
+        title: status === "draft" ? "Draft saved" : "Cause created successfully",
+        description: response.message,
+      })
+
+      if (status === "draft" || !causeUuid) {
+        navigate(DASHBOARD_TAB_PATHS.events)
+        return
+      }
+
+      navigate(eventDetailPath(causeUuid))
+    } catch (error) {
+      const description =
+        error instanceof ApiError
+          ? error.message
+          : "Something went wrong while saving your cause."
+
+      toast({
+        variant: "destructive",
+        title: status === "draft" ? "Unable to save draft" : "Unable to create cause",
+        description,
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const handleCreate = () => {
+    if (isCauseFlow) {
+      void submitCause("active")
+      return
+    }
+
     if (!canCreate) return
     toast({
       variant: "success",
@@ -130,6 +210,8 @@ export function CreateEventPage() {
                   form={form}
                   onChange={patchForm}
                   onBack={handleBack}
+                  categoryOptions={isCauseFlow ? categoryOptions : undefined}
+                  skillOptions={isCauseFlow ? skillOptions : undefined}
                 />
               ) : null}
               {activeStep.id === "settings" ? (
@@ -159,8 +241,9 @@ export function CreateEventPage() {
                 <CreateEventFormActions
                   canContinue={canContinue}
                   onContinue={handleContinue}
-                  onSaveDraft={handleSaveDraft}
+                  onSaveDraft={() => void handleSaveDraft()}
                   showSaveDraft={eventType !== "needs"}
+                  isSaving={isSubmitting}
                 />
               ) : null}
             </CreateEventFormColumn>
@@ -168,9 +251,10 @@ export function CreateEventPage() {
             {isLastStep ? (
               <CreateEventSummary
                 form={form}
-                canCreate={canCreate}
+                canCreate={canCreate && !lookupsLoading && !lookupsError}
                 isPremium={isPremium}
                 eventType={eventType}
+                isSubmitting={isSubmitting}
                 onCreate={handleCreate}
               />
             ) : null}
