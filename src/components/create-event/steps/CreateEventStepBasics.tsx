@@ -1,5 +1,3 @@
-import { EventIcon } from "../../events/icons/EventIcon"
-import { EVENT_ICON_SIZE } from "../../events/icons/event-icon-sizes"
 import { Input } from "../../ui/input"
 import { CauseImageUpload } from "../CauseImageUpload"
 import { CreateEventFieldLabel } from "../CreateEventFieldLabel"
@@ -50,8 +48,7 @@ export function CreateEventStepBasics({
             Title must be {CREATE_EVENT_TITLE_MAX_WORDS} words or fewer
           </p>
         ) : titleValid ? (
-          <p className="flex items-center gap-1.5 text-xs leading-5 text-[#36b55c]">
-            <EventIcon name="check-fill" size={EVENT_ICON_SIZE.fieldHint} />
+          <p className="text-xs leading-5 text-[#36b55c]">
             {wordCount}/{CREATE_EVENT_TITLE_MAX_WORDS} words
           </p>
         ) : (

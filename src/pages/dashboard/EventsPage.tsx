@@ -28,6 +28,10 @@ import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { ConfirmModal } from "../../components/ui/confirm-modal"
 import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filters"
 import { tableSurfaceClassName } from "../../lib/table-styles"
+import {
+  featureSearchInputClassName,
+  featureSearchWrapperClassName,
+} from "../../lib/feature-search-styles"
 import { toast } from "../../hooks/use-toast"
 import { useSimulatedLoading } from "../../hooks/use-simulated-loading"
 import {
@@ -72,14 +76,32 @@ function rowRequestStatusLabel(row: EventTableRow): string {
   return "Accepted"
 }
 
+function buildEventDetailUrl(row: EventTableRow) {
+  if (row.kind === "collaboration") {
+    const params = new URLSearchParams()
+    if (row.eventType === "needs") params.set("kind", "needs")
+    const collab = row.requestBadges?.includes("new-request")
+      ? "new-request"
+      : row.requestBadges?.includes("pending")
+        ? "pending"
+        : row.requestBadges?.includes("organizer")
+          ? "accepted"
+          : null
+    if (collab) params.set("collab", collab)
+    const query = params.toString()
+    return `${eventDetailPath(row.id)}${query ? `?${query}` : ""}`
+  }
+  return eventDetailPath(row.id)
+}
+
 type DeleteTarget = { id: string; kind: "draft" | "event" } | null
 
 export function EventsPage() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const [createModalOpen, setCreateModalOpen] = useState(false)
-  // Default to the populated dataset so the list is testable; ?scenario=empty still works.
-  const scenario = parseEventsTableScenario(searchParams.get("scenario") ?? "filled")
+  // Causes come from the API only — no static/mock table rows.
+  const scenario = parseEventsTableScenario(searchParams.get("scenario") ?? "empty")
   const pageConfig = getEventsPageConfig()
   const scenarioData = getEventsScenarioData(scenario)
   const defaultTab = scenarioData.activeTab
@@ -89,13 +111,8 @@ export function EventsPage() {
     setSearchParams((prev) => withTabSearchParam(prev, tab, defaultTab), { replace: true })
   }
 
-  const [rows, setRows] = useState<EventTableRow[]>(scenarioData.rows)
+  const [rows, setRows] = useState<EventTableRow[]>([])
   const [causesLoading, setCausesLoading] = useState(false)
-  const [seededScenario, setSeededScenario] = useState(scenario)
-  if (seededScenario !== scenario) {
-    setSeededScenario(scenario)
-    setRows(scenarioData.rows)
-  }
 
   useEffect(() => {
     if (activeTab !== "causes") return
@@ -304,22 +321,7 @@ export function EventsPage() {
     }
     if (actionId === "view-details" || actionId === "edit-event") {
       const row = rows.find((item) => item.id === rowId)
-      if (row?.kind === "collaboration") {
-        const params = new URLSearchParams()
-        if (row.eventType === "needs") params.set("kind", "needs")
-        const collab = row.requestBadges?.includes("new-request")
-          ? "new-request"
-          : row.requestBadges?.includes("pending")
-            ? "pending"
-            : row.requestBadges?.includes("organizer")
-              ? "accepted"
-              : null
-        if (collab) params.set("collab", collab)
-        const query = params.toString()
-        navigate(`${eventDetailPath(rowId)}${query ? `?${query}` : ""}`)
-        return
-      }
-      navigate(eventDetailPath(rowId))
+      navigate(row ? buildEventDetailUrl(row) : eventDetailPath(rowId))
       return
     }
     if (actionId === "view-volunteers") {
@@ -510,7 +512,7 @@ export function EventsPage() {
               ) : null}
             </div>
 
-            <div className="w-full xl:max-w-[280px]">
+            <div className={featureSearchWrapperClassName}>
               <Input
                 density="compact"
                 value={searchQuery}
@@ -521,6 +523,7 @@ export function EventsPage() {
                 placeholder={activeTabConfig.searchPlaceholder}
                 leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
                 aria-label={activeTabConfig.searchPlaceholder}
+                className={featureSearchInputClassName}
               />
             </div>
           </div>
@@ -536,6 +539,7 @@ export function EventsPage() {
             selectedIds={selectedIds}
             onSelectedIdsChange={setSelectedIds}
             onRowAction={handleRowAction}
+            onRowClick={(row) => navigate(buildEventDetailUrl(row))}
             loading={loading}
           />
 

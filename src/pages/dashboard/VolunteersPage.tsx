@@ -16,6 +16,10 @@ import {
 } from "../../components/data-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, tableCellSelectClassName, tableHeadActionsClassName, tableHeadSelectClassName, tableHeaderRowClassName, tableSelectControlClassName } from "../../components/ui/table"
 import { tableHeadCellClassName } from "../../lib/table-styles"
+import {
+  featureSearchInputClassName,
+  featureSearchWrapperClassName,
+} from "../../lib/feature-search-styles"
 import { Checkbox } from "../../components/ui/checkbox"
 import { Input } from "../../components/ui/input"
 import { StatusTag } from "../../components/ui/status-tag"
@@ -274,7 +278,7 @@ export function VolunteersPage() {
                   </button>
                 ) : null}
               </div>
-              <div className="w-full xl:max-w-[300px]">
+              <div className={featureSearchWrapperClassName}>
                 <Input
                   density="compact"
                   value={query}
@@ -285,7 +289,7 @@ export function VolunteersPage() {
                   placeholder="Search volunteers"
                   leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
                   aria-label="Search volunteers"
-                  className="h-8 min-h-8 rounded-[10px] border-0 bg-bg-default-100 px-3 shadow-none"
+                  className={featureSearchInputClassName}
                 />
               </div>
             </div>

@@ -1,3 +1,5 @@
+import { normalizeApiDateInput } from "./create-event-format"
+
 export type ResolvedDateRange = { from: Date | null; to: Date | null }
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -47,7 +49,7 @@ export function resolveDatePreset(preset: string): ResolvedDateRange | null {
 export function isDateInRange(iso: string | null | undefined, range: ResolvedDateRange | null) {
   if (!range || (!range.from && !range.to)) return true
   if (!iso) return false
-  const date = new Date(`${iso}T12:00:00`)
+  const date = new Date(`${normalizeApiDateInput(iso)}T12:00:00`)
   if (range.from && date < startOfDay(range.from)) return false
   if (range.to && date > endOfDay(range.to)) return false
   return true

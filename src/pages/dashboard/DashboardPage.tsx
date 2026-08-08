@@ -101,7 +101,7 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }, (_, i) => (
         <EventIcon
           key={i}
-          name={i < rating ? "star-fill-accent" : "star-fill"}
+          name={i < rating ? "star-fill-accent" : "star-fill-empty"}
           size={16}
           className="shrink-0"
         />

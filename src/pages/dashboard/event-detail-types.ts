@@ -145,6 +145,8 @@ export type EventDetail = {
   breadcrumb: string[]
   title: string
   coverImages: string[]
+  /** Private causes — used when copying the access code from the header menu. */
+  accessCode?: string | null
   meta: EventDetailMetaRow[]
   about: {
     label: string

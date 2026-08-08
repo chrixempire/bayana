@@ -18,6 +18,14 @@
 
 @font-face {
   font-family: "SF Pro";
+  src: url("./fonts/sf-pro/SFPRODISPLAYMEDIUM.OTF") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro";
   src: url("./fonts/sf-pro/SFPRODISPLAYBOLD.OTF") format("opentype");
   font-weight: 700;
   font-style: normal;
@@ -62,7 +70,7 @@
   --color-text-table-header: #656f78;
   --color-text-progress: #8c400c;
   --color-text-neutral-400: #76808b;
-  --color-text-disabled-300: #b6bcc4;
+  --color-text-disabled-300: #a0acb6;
   --color-text-on-accent-bg: #9b4f10;
   --color-text-negative: #94233a;
   --color-text-success: #12802a;
@@ -87,9 +95,10 @@
   --color-bg-success-soft: #ddf2e5;
   --color-bg-warning-soft: #f8f0e2;
   --color-bg-info-soft: #dde5ff;
-  --color-bg-nav: #120528;
-  --color-bg-on-nav: #4a3768;
-  --color-bg-on-on-nav: #5d467d;
+  --color-bg-nav: #20083a;
+  --color-bg-on-nav: #513a69;
+  --color-bg-on-on-nav: #6b5284;
+  --color-bg-nav-avatar: #6b5284;
 
   --color-border-default-100: #ebeef2;
   --color-border-on-bg-200: #dde2e8;
@@ -139,7 +148,8 @@
 
   --color-icon-default: #30363d;
   --color-icon-neutral: #76808b;
-  --color-icon-disabled: #b6bcc4;
+  --color-icon-disabled: #a0acb6;
+  --color-icon-star-empty: #dde2e8;
   --color-icon-on-accent-bg: #ff7a1a;
   --color-icon-negative: #f2385a;
   --color-icon-info: #325adb;
@@ -154,7 +164,7 @@
   --color-text-table-header: #656f78;
   --color-text-progress: #8c400c;
   --color-text-neutral-400: #76808b;
-  --color-text-disabled-300: #b6bcc4;
+  --color-text-disabled-300: #a0acb6;
   --color-text-on-accent-bg: #9b4f10;
   --color-text-negative: #94233a;
   --color-text-success: #12802a;
@@ -179,9 +189,10 @@
   --color-bg-success-soft: #ddf2e5;
   --color-bg-warning-soft: #f8f0e2;
   --color-bg-info-soft: #dde5ff;
-  --color-bg-nav: #120528;
-  --color-bg-on-nav: #4a3768;
-  --color-bg-on-on-nav: #5d467d;
+  --color-bg-nav: #20083a;
+  --color-bg-on-nav: #513a69;
+  --color-bg-on-on-nav: #6b5284;
+  --color-bg-nav-avatar: #6b5284;
 
   --color-border-default-100: #ebeef2;
   --color-border-on-bg-200: #dde2e8;
@@ -232,7 +243,8 @@
 
   --color-icon-default: #30363d;
   --color-icon-neutral: #76808b;
-  --color-icon-disabled: #b6bcc4;
+  --color-icon-disabled: #a0acb6;
+  --color-icon-star-empty: #dde2e8;
   --color-icon-on-accent-bg: #ff7a1a;
   --color-icon-negative: #f2385a;
   --color-icon-info: #325adb;
@@ -313,7 +325,7 @@ input:-webkit-autofill:active {
 @utility type-small-semibold {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -337,7 +349,7 @@ input:-webkit-autofill:active {
 @utility type-button-large {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 22px;
   letter-spacing: 0;
 }

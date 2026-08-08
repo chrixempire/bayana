@@ -40,7 +40,7 @@ export function AnalyticsStatCard({
           {displayValue}
         </span>
         {card.star ? (
-          <EventIcon name={empty ? "star-fill" : "star-fill-accent"} size={16} className="shrink-0" />
+          <EventIcon name={empty ? "star-fill-empty" : "star-fill-accent"} size={16} className="shrink-0" />
         ) : null}
       </div>
       <div className="flex gap-1.5 text-sm leading-[22px] tracking-[-0.1px]">

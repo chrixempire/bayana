@@ -3,6 +3,7 @@ import { EVENT_ICON_SIZE } from "../../events/icons/event-icon-sizes"
 import { RadioGroup } from "../../ui/radio-group"
 import { Input } from "../../ui/input"
 import { CreateEventDateRangeField } from "../CreateEventDateRangeField"
+import { CreateEventTimeRangeField } from "../CreateEventTimeRangeField"
 import { CreateEventFieldGroup } from "../CreateEventFieldGroup"
 import { CreateEventStepHeading } from "../CreateEventStepHeading"
 import { CreateEventFieldHint } from "../CreateEventFieldHint"
@@ -242,29 +243,12 @@ export function CreateEventStepSettings({
       </CreateEventFieldGroup>
 
       <CreateEventFieldGroup label="Time" required>
-        <div className="flex items-center gap-3">
-          <div className="relative min-w-0 flex-1">
-            <Input
-              density="compact"
-              type="time"
-              value={form.timeStart}
-              onChange={(event) => onChange({ timeStart: event.target.value })}
-              className="pr-10"
-            />
-            <EventIcon name="time-fill" size={EVENT_ICON_SIZE.meta} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
-          </div>
-          <span className="shrink-0 text-sm leading-[22px] text-text-table-header">to</span>
-          <div className="relative min-w-0 flex-1">
-            <Input
-              density="compact"
-              type="time"
-              value={form.timeEnd}
-              onChange={(event) => onChange({ timeEnd: event.target.value })}
-              className="pr-10"
-            />
-            <EventIcon name="time-fill" size={EVENT_ICON_SIZE.meta} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
-          </div>
-        </div>
+        <CreateEventTimeRangeField
+          start={form.timeStart}
+          end={form.timeEnd}
+          onStartChange={(timeStart) => onChange({ timeStart })}
+          onEndChange={(timeEnd) => onChange({ timeEnd })}
+        />
       </CreateEventFieldGroup>
 
       <CreateEventFieldGroup label="Organizer" required>

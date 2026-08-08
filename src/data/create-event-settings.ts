@@ -7,7 +7,6 @@ export const CREATE_EVENT_LOCATION_SUGGESTIONS = [
 ] as const
 
 export const CREATE_EVENT_NOTIFY_OPTIONS = [
-  "15 minutes",
   "30 minutes",
   "1 hour",
   "1 day",

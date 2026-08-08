@@ -23,6 +23,10 @@ import {
   verificationRowShowsNavArrow,
 } from "../../components/verification/VerificationStatusTag"
 import { isDateInRange, type ResolvedDateRange } from "../../lib/event-date-filters"
+import {
+  featureSearchInputClassName,
+  featureSearchWrapperClassName,
+} from "../../lib/feature-search-styles"
 import { tableSurfaceClassName } from "../../lib/table-styles"
 import { pageTitleClassName } from "../../lib/auth-form-styles"
 import { toast } from "../../hooks/use-toast"
@@ -137,7 +141,7 @@ export function VerificationPage() {
               }}
             />
           </div>
-          <div className="w-full xl:max-w-[400px]">
+          <div className={featureSearchWrapperClassName}>
             <Input
               density="compact"
               value={query}
@@ -148,7 +152,7 @@ export function VerificationPage() {
               placeholder="Search verifications"
               leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
               aria-label="Search verifications"
-              className="h-8 min-h-8 rounded-[10px] border-0 bg-bg-default-100 px-3 shadow-none"
+              className={featureSearchInputClassName}
             />
           </div>
         </div>

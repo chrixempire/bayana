@@ -141,7 +141,7 @@ export function DashboardHeader({
         <DropdownMenu>
           <DropdownMenuTrigger
             type="button"
-            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-bg-nav-tab-active text-sm font-semibold leading-5 text-text-nav-tab-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-bg-nav-avatar text-sm font-semibold leading-5 text-text-on-solid-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             aria-label="Account menu"
             disabled={isLoggingOut}
           >
@@ -149,7 +149,7 @@ export function DashboardHeader({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[15rem] p-1.5">
             <div className="flex items-center gap-2.5 px-2.5 py-2">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-bg-nav-tab-active text-sm font-semibold text-text-nav-tab-active">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-bg-nav-avatar text-sm font-semibold text-text-on-solid-bg">
                 {menuProfileAvatar}
               </span>
               <div className="flex min-w-0 flex-col">

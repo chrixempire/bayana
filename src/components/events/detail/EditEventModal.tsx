@@ -54,7 +54,7 @@ export function EditEventModal({
   open: boolean
   onClose: () => void
   event: EventDetail
-  onSave: (patch: EventEditPatch) => void
+  onSave: (patch: EventEditPatch) => void | Promise<void>
 }) {
   const [section, setSection] = useState<Section>("basic")
   const [title, setTitle] = useState(event.title)
@@ -64,6 +64,7 @@ export function EditEventModal({
   const [images, setImages] = useState<string[]>(event.coverImages)
   const [coverIndex, setCoverIndex] = useState(0)
   const [wasOpen, setWasOpen] = useState(open)
+  const [saving, setSaving] = useState(false)
 
   // Re-seed the form whenever a fresh edit session opens (render-time reset).
   if (open !== wasOpen) {
@@ -76,6 +77,7 @@ export function EditEventModal({
       setContact(event.meta.find((row) => row.id === "contact")?.value ?? "")
       setImages(event.coverImages)
       setCoverIndex(0)
+      setSaving(false)
     }
   }
 
@@ -83,21 +85,33 @@ export function EditEventModal({
   const truncatedTitle = event.title.length > 34 ? `${event.title.slice(0, 34)}…` : event.title
 
   const save = () => {
+    if (saving) return
+
     const ordered =
       coverIndex > 0 && images[coverIndex]
         ? [images[coverIndex], ...images.filter((_, i) => i !== coverIndex)]
         : images
-    onSave({
-      title: title.trim() || event.title,
-      description,
-      requirements: requirements
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean),
-      contact,
-      coverImages: ordered,
-    })
-    onClose()
+
+    void (async () => {
+      setSaving(true)
+      try {
+        await onSave({
+          title: title.trim() || event.title,
+          description,
+          requirements: requirements
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean),
+          contact,
+          coverImages: ordered,
+        })
+        onClose()
+      } catch {
+        // Parent surfaces the error toast; keep the modal open for retry.
+      } finally {
+        setSaving(false)
+      }
+    })()
   }
 
   return (
@@ -110,11 +124,11 @@ export function EditEventModal({
       className="max-h-[92vh]"
       footer={
         <>
-          <Button variant="neutral" size="sm" className="rounded-[10px]" onClick={onClose}>
+          <Button variant="neutral" size="sm" className="rounded-[10px]" onClick={onClose} disabled={saving}>
             Close
           </Button>
-          <Button variant="primary" size="sm" className="rounded-[10px]" onClick={save}>
-            Save changes
+          <Button variant="primary" size="sm" className="rounded-[10px]" onClick={save} disabled={saving}>
+            {saving ? "Saving…" : "Save changes"}
           </Button>
         </>
       }

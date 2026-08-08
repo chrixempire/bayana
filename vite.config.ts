@@ -21,6 +21,10 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           cookieDomainRewrite: 'localhost',
         },
+        '/storage': {
+          target: proxyTarget,
+          changeOrigin: true,
+        },
       },
     },
   }

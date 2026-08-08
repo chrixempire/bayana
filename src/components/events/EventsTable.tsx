@@ -71,6 +71,7 @@ type EventsTableProps = {
   selectedIds: Set<string>
   onSelectedIdsChange: (ids: Set<string>) => void
   onRowAction?: (rowId: string, actionId: string) => void
+  onRowClick?: (row: EventTableRow) => void
   loading?: boolean
   className?: string
 }
@@ -353,6 +354,7 @@ export function EventsTable({
   selectedIds,
   onSelectedIdsChange,
   onRowAction,
+  onRowClick,
   loading = false,
   className,
 }: EventsTableProps) {
@@ -452,7 +454,18 @@ export function EventsTable({
             />
             <tbody>
               {rows.map((row) => (
-                <TableRow key={row.id} data-state={selectedIds.has(row.id) ? "selected" : undefined}>
+                <TableRow
+                  key={row.id}
+                  data-state={selectedIds.has(row.id) ? "selected" : undefined}
+                  className={onRowClick ? "cursor-pointer" : undefined}
+                  onClick={
+                    onRowClick
+                      ? () => {
+                          onRowClick(row)
+                        }
+                      : undefined
+                  }
+                >
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
@@ -460,6 +473,11 @@ export function EventsTable({
                         column.type === "checkbox" && tableCellSelectClassName,
                         column.type === "actions" && tableCellActionsClassName,
                       )}
+                      onClick={
+                        column.type === "checkbox" || column.type === "actions"
+                          ? (event) => event.stopPropagation()
+                          : undefined
+                      }
                     >
                       {renderCell(column, row, cellCtx)}
                     </TableCell>

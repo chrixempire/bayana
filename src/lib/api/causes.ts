@@ -1,6 +1,12 @@
 import type { CreateEventFormState } from "../../pages/dashboard/create-event-types"
+import { normalizeApiDateInput } from "../create-event-format"
 import { apiRequest } from "./client"
 import type { ApiCause, CauseFormLookups, CausePublishStatus } from "./cause-types"
+import {
+  mapCertificateForApi,
+  mapReliabilityScoreForApi,
+  mapReminderTimeBeforeForApi,
+} from "./cause-form-map"
 import type { ApiDataResponse, ApiMessageResponse } from "./types"
 
 function appendFlag(formData: FormData, key: string, enabled: boolean) {
@@ -8,8 +14,7 @@ function appendFlag(formData: FormData, key: string, enabled: boolean) {
 }
 
 function parseReminderMinutes(value: string): string {
-  const match = value.match(/\d+/)
-  return match?.[0] ?? "30"
+  return mapReminderTimeBeforeForApi(value)
 }
 
 function resolveCategoryId(name: string, lookups: CauseFormLookups): number | null {
@@ -64,6 +69,8 @@ export function buildCauseFormData(
 
   if (form.hasCapacityLimit) {
     formData.append("max_volunteers_capacity", String(form.capacity))
+  } else {
+    formData.append("max_volunteers_capacity", "0")
   }
 
   form.categories.forEach((category, index) => {
@@ -103,10 +110,11 @@ export function buildCauseFormData(
     formData.append("access_code", form.eventPasscode.trim())
   }
 
-  formData.append("certificate", form.certificateAccess)
-  if (form.certificateAccess === "automated") {
-    formData.append("reliability_score", String(form.reliabilityScore))
-  }
+  formData.append("certificate", mapCertificateForApi(form.certificateAccess))
+  formData.append(
+    "reliability_score",
+    mapReliabilityScoreForApi(form.certificateAccess, form.reliabilityScore),
+  )
 
   appendFlag(formData, "org_collaboration", form.ngoCollaboration)
   formData.append("status", status)
@@ -122,6 +130,97 @@ export function buildCauseFormData(
       formData.append(`image[${index}]`, image.file, image.name)
     }
   })
+
+  return formData
+}
+
+function appendApiFlag(formData: FormData, key: string, value: unknown) {
+  const enabled =
+    value === true || value === 1 || value === "1" || value === "true"
+  formData.append(key, enabled ? "1" : "0")
+}
+
+function normalizeTimeForApi(value?: string | null): string {
+  if (!value) return ""
+  // API may return `08:30:00`; create/update examples use `HH:mm`.
+  return value.slice(0, 5)
+}
+
+/**
+ * Rebuilds cause form-data for PUT from the loaded API cause + editable patch fields.
+ * Postman updates send the full create payload again.
+ */
+export function buildCauseUpdateFormData(
+  cause: ApiCause,
+  patch: {
+    title: string
+    description: string
+    requirements: string[]
+  },
+): FormData {
+  const formData = new FormData()
+  const startDate = cause.start_date ? normalizeApiDateInput(cause.start_date) : ""
+  const endDate = cause.end_date ? normalizeApiDateInput(cause.end_date) : startDate
+
+  formData.append("title", patch.title.trim())
+  formData.append("description", patch.description.trim())
+  formData.append("requirements", patch.requirements.join("\n"))
+  formData.append(
+    "volunteering_type",
+    cause.volunteering_type === "virtual" ? "virtual" : "in_person",
+  )
+
+  if (cause.volunteering_type === "virtual") {
+    formData.append("google_meet_link", cause.google_meet_link ?? "")
+  } else if (cause.address?.trim()) {
+    formData.append("address", cause.address.trim())
+  }
+
+  formData.append("max_volunteers_capacity", String(Number(cause.max_volunteers_capacity) || 0))
+
+  const areas = cause.cause_areas ?? cause.categories ?? cause.category ?? []
+  areas.forEach((area, index) => {
+    if (area.id != null) formData.append(`category[${index}]`, String(area.id))
+  })
+
+  appendApiFlag(formData, "enable_skill_breakdown", cause.enable_skill_breakdown)
+
+  ;(cause.skills ?? []).forEach((skill, index) => {
+    const skillId = skill.id ?? skill.skill_id ?? skill.pivot?.skill_id
+    if (skillId == null) return
+    const required = Number(skill.pivot?.individuals_required ?? skill.individuals_required) || 1
+    formData.append(`skills[${index}][skill_id]`, String(skillId))
+    formData.append(`skills[${index}][individuals_required]`, String(required))
+  })
+
+  appendApiFlag(formData, "accept_donations", cause.accept_donations)
+  formData.append("start_date", startDate)
+  formData.append("end_date", endDate)
+  formData.append("start_time", normalizeTimeForApi(cause.start_time))
+  formData.append("end_time", normalizeTimeForApi(cause.end_time))
+  appendApiFlag(formData, "enable_event_reminders", cause.enable_event_reminders)
+
+  if (
+    cause.enable_event_reminders === true ||
+    cause.enable_event_reminders === 1 ||
+    cause.enable_event_reminders === "1"
+  ) {
+    formData.append("reminder_time_before", String(cause.reminder_time_before ?? "30"))
+  }
+
+  formData.append("visibility", cause.visibility === "private" ? "private" : "public")
+  if (cause.visibility === "private" && cause.access_code?.trim()) {
+    formData.append("access_code", cause.access_code.trim())
+  }
+
+  // Backend currently only accepts automated certificates.
+  formData.append("certificate", "automated")
+  formData.append(
+    "reliability_score",
+    String(Math.max(1, Number(cause.reliability_score) || 1)),
+  )
+  appendApiFlag(formData, "org_collaboration", cause.org_collaboration)
+  formData.append("status", cause.status === "draft" ? "draft" : "active")
 
   return formData
 }

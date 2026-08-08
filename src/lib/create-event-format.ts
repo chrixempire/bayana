@@ -1,6 +1,26 @@
+/** Strip time/timezone from API values like `2026-08-10T00:00:00.000000Z`. */
+export function normalizeApiDateInput(value: string): string {
+  const trimmed = value.trim()
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed
+
+  const datePart = trimmed.match(/^(\d{4}-\d{2}-\d{2})/)
+  if (datePart) return datePart[1]
+
+  const parsed = new Date(trimmed)
+  if (!Number.isNaN(parsed.getTime())) {
+    const year = parsed.getFullYear()
+    const month = String(parsed.getMonth() + 1).padStart(2, "0")
+    const day = String(parsed.getDate()).padStart(2, "0")
+    return `${year}-${month}-${day}`
+  }
+
+  return trimmed
+}
+
 function parseDate(value: string) {
   if (!value) return null
-  const date = new Date(`${value}T12:00:00`)
+  const normalized = normalizeApiDateInput(value)
+  const date = new Date(`${normalized}T12:00:00`)
   return Number.isNaN(date.getTime()) ? null : date
 }
 
@@ -24,7 +44,7 @@ export function formatDateRangeDisplay(start: string, end: string) {
   return `${formatDisplayDate(start)} - ${formatDisplayDate(end)}`
 }
 
-function formatTime12h(value: string) {
+export function formatTime12h(value: string) {
   const [hoursRaw, minutesRaw] = value.split(":")
   const hours = Number(hoursRaw)
   const minutes = Number(minutesRaw)
@@ -78,6 +98,12 @@ export function formatNeedsSummaryDateRange(start: string, end: string) {
   if (!start && !end) return "--"
   if (start && end) return `${formatOrdinalDate(start)} to ${formatOrdinalDate(end)}`
   return formatOrdinalDate(start || end)
+}
+
+/** Display date for cause detail surfaces, e.g. "10th Aug 2026". */
+export function formatCauseDisplayDate(value?: string | null, fallback = "—"): string {
+  if (!value?.trim()) return fallback
+  return formatOrdinalDate(value) || fallback
 }
 
 export function formatSummaryDateTime(start: string, _end: string, timeStart: string, timeEnd: string) {

@@ -4,6 +4,10 @@ import { DashboardLayout } from "../../components/dashboard/DashboardLayout"
 import { DASHBOARD_DETAIL_MAX_WIDTH_PX } from "../../lib/dashboard-layout"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
 import { tableHeadCellClassName, tableSurfaceClassName } from "../../lib/table-styles"
+import {
+  featureSearchInputClassName,
+  featureSearchWrapperClassName,
+} from "../../lib/feature-search-styles"
 import { DataTablePagination, FilterDropdown } from "../../components/data-table"
 import {
   Table,
@@ -277,7 +281,7 @@ function TableShell<T>({
             />
           ))}
         </div>
-        <div className="w-full xl:max-w-[300px]">
+        <div className={featureSearchWrapperClassName}>
           <Input
             density="compact"
             value={query}
@@ -285,6 +289,7 @@ function TableShell<T>({
             placeholder={searchPlaceholder}
             leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label={searchPlaceholder}
+            className={featureSearchInputClassName}
           />
         </div>
       </div>

@@ -245,9 +245,8 @@ export function CauseImageUpload({ images, onChange }: CauseImageUploadProps) {
         )}
         style={{ height: CREATE_EVENT_IMAGE_UPLOADER_HEIGHT_PX }}
       >
-        <span className="inline-flex items-center justify-center gap-1 rounded-lg border border-border-default-100 bg-bg-canvas px-2 py-1.5 text-text-table-header">
+        <span className="inline-flex items-center justify-center rounded-lg border border-border-default-100 bg-bg-canvas px-2 py-1.5 text-text-table-header">
           <EventIcon name="upload-2-fill" size={EVENT_ICON_SIZE.buttonLeading} />
-          <EventIcon name="add-circle-fill" size={EVENT_ICON_SIZE.buttonTrailing} />
         </span>
         <span className="type-events-tab text-center">Drag & drop or choose image</span>
         <span className="type-create-event-caption text-center">

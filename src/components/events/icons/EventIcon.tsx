@@ -64,6 +64,7 @@ const ICONS = {
   "stop-fill": "/events/icons/stop-fill.svg",
   "star-fill": "/events/icons/star-fill.svg",
   "star-fill-accent": "/events/icons/star-fill-accent.svg",
+  "star-fill-empty": "/events/icons/star-fill-empty.svg",
   "time-fill": "/events/icons/time-fill.svg",
   "upload-2-fill": "/events/icons/upload-2-fill.svg",
   "user-3-fill": "/events/icons/user-3-fill.svg",

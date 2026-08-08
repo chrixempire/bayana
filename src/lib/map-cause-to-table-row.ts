@@ -1,35 +1,28 @@
 import type { ApiCause } from "./api/cause-types"
+import {
+  readCauseAreaNames,
+  readCauseCoverUrl,
+  readCauseVolunteersJoined,
+  readCauseVolunteersMax,
+} from "./api/cause-readers"
+import { formatNeedsSummaryDateRange, formatTime12h, normalizeApiDateInput } from "./create-event-format"
 import { getCauseUuid } from "./api/causes"
 import type { EventTableRow } from "../pages/dashboard/events-types"
 
-function readCategories(cause: ApiCause): string[] {
-  const categories = cause.categories ?? cause.category ?? []
-  return categories.map((item) => item.name).filter(Boolean)
-}
-
-function readCoverUrl(cause: ApiCause): string {
-  if (Array.isArray(cause.images) && cause.images.length > 0) {
-    const first = cause.images[0]
-    if (typeof first === "string") return first
-    return first.url ?? first.path ?? ""
-  }
-
-  if (Array.isArray(cause.image) && cause.image[0]) return cause.image[0]
-  if (typeof cause.image === "string") return cause.image
-
-  return ""
-}
-
 function formatDateRange(startDate?: string | null, endDate?: string | null): string | null {
   if (!startDate && !endDate) return null
-  if (startDate && endDate && startDate !== endDate) return `${startDate} - ${endDate}`
-  return startDate ?? endDate ?? null
+  if (startDate && endDate && normalizeApiDateInput(startDate) !== normalizeApiDateInput(endDate)) {
+    return formatNeedsSummaryDateRange(startDate, endDate)
+  }
+  return formatNeedsSummaryDateRange(startDate ?? endDate ?? "", endDate ?? startDate ?? "") || null
 }
 
 function formatTimeRange(startTime?: string | null, endTime?: string | null): string | null {
   if (!startTime && !endTime) return null
-  if (startTime && endTime) return `${startTime} - ${endTime}`
-  return startTime ?? endTime ?? null
+  if (startTime && endTime) {
+    return `${formatTime12h(startTime)} - ${formatTime12h(endTime)}`
+  }
+  return startTime ? formatTime12h(startTime) : endTime ? formatTime12h(endTime) : null
 }
 
 function mapVolunteeringType(value?: string | null): EventTableRow["volunteerType"]["type"] {
@@ -55,14 +48,16 @@ export function mapCauseToTableRow(cause: ApiCause): EventTableRow | null {
   const id = getCauseUuid(cause)
   if (!id || !cause.title) return null
 
-  const tags = readCategories(cause)
+  const tags = readCauseAreaNames(cause)
   const volunteeringType = mapVolunteeringType(cause.volunteering_type)
+  const maxVolunteers = readCauseVolunteersMax(cause)
+  const joinedVolunteers = readCauseVolunteersJoined(cause)
 
   return {
     id,
     kind: "cause",
     cause: {
-      thumbnailUrl: readCoverUrl(cause),
+      thumbnailUrl: readCauseCoverUrl(cause),
       title: cause.title,
       description: cause.description ?? "",
     },
@@ -76,18 +71,23 @@ export function mapCauseToTableRow(cause: ApiCause): EventTableRow | null {
     },
     volunteerType: {
       type: volunteeringType,
-      detail: volunteeringType === "in-person" ? cause.address ?? null : volunteeringType === "virtual" ? "Virtual" : null,
+      detail:
+        volunteeringType === "in-person"
+          ? cause.address ?? null
+          : volunteeringType === "virtual"
+            ? "Virtual"
+            : null,
     },
     date: {
       range: formatDateRange(cause.start_date, cause.end_date),
       time: formatTimeRange(cause.start_time, cause.end_time),
-      startDate: cause.start_date ?? null,
-      endDate: cause.end_date ?? null,
+      startDate: cause.start_date ? normalizeApiDateInput(cause.start_date) : null,
+      endDate: cause.end_date ? normalizeApiDateInput(cause.end_date) : null,
     },
-    volunteers: cause.max_volunteers_capacity
+    volunteers: maxVolunteers
       ? {
-          current: 0,
-          max: Number(cause.max_volunteers_capacity) || 0,
+          current: joinedVolunteers,
+          max: maxVolunteers,
         }
       : null,
     shareUrl: null,

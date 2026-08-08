@@ -22,29 +22,41 @@ function AboutCard({ about }: { about: EventDetail["about"] }) {
 
       <div className="flex flex-col gap-1.5">
         <DetailFieldLabel>Category</DetailFieldLabel>
-        <div className="flex flex-wrap gap-1.5">
-          {about.categories.map((category) => (
-            <DetailChip key={category}>{category}</DetailChip>
-          ))}
-        </div>
+        {about.categories.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {about.categories.map((category) => (
+              <DetailChip key={category}>{category}</DetailChip>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm font-medium leading-[22px] text-text-events-strong">—</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1.5">
         <DetailFieldLabel>Requirements</DetailFieldLabel>
-        <ul className="list-disc pl-[21px] text-sm font-medium leading-[22px] text-text-events-strong">
-          {about.requirements.map((requirement) => (
-            <li key={requirement}>{requirement}</li>
-          ))}
-        </ul>
+        {about.requirements.length > 0 ? (
+          <ul className="list-disc pl-[21px] text-sm font-medium leading-[22px] text-text-events-strong">
+            {about.requirements.map((requirement) => (
+              <li key={requirement}>{requirement}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm font-medium leading-[22px] text-text-events-strong">—</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1.5">
         <DetailFieldLabel>Skills needed</DetailFieldLabel>
-        <div className="flex flex-wrap gap-1.5">
-          {about.skills.map((skill) => (
-            <DetailChip key={skill}>{skill}</DetailChip>
-          ))}
-        </div>
+        {about.skills.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {about.skills.map((skill) => (
+              <DetailChip key={skill}>{skill}</DetailChip>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm font-medium leading-[22px] text-text-events-strong">—</p>
+        )}
       </div>
     </DetailCard>
   )

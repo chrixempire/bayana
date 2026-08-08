@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { EventIcon } from "../../components/events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
@@ -33,6 +33,17 @@ import { toast } from "../../hooks/use-toast"
 import type { EventEditPatch } from "../../components/events/detail/EditEventModal"
 import { getEventDetail } from "./event-detail-scenarios"
 import { buildNeedsEventDetail } from "./event-detail-needs"
+import type { ApiCause } from "../../lib/api/cause-types"
+import {
+  buildCauseUpdateFormData,
+  deleteOrganisationCause,
+  getOrganisationCause,
+  updateOrganisationCause,
+} from "../../lib/api/causes"
+import { ApiError } from "../../lib/api/types"
+import { mapCauseToEventDetail } from "../../lib/map-cause-to-event-detail"
+import { Skeleton } from "../../components/ui/skeleton"
+import { Button } from "../../components/ui/button"
 import type {
   EventDetail,
   EventDetailStatus,
@@ -201,6 +212,26 @@ function seedEvent(
   return event
 }
 
+function DetailPageSkeleton() {
+  return (
+    <div className="flex flex-col gap-6 py-6">
+      <Skeleton className="h-4 w-48" />
+      <div className="flex flex-col gap-6 lg:flex-row">
+        <Skeleton className="aspect-[566/306] w-full rounded-2xl lg:max-w-[566px]" />
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-5 w-24" />
+          <div className="flex flex-col gap-3 pt-2">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Skeleton key={index} className="h-5 w-full max-w-md" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Breadcrumb({ items, onHome }: { items: string[]; onHome: () => void }) {
   return (
     <nav
@@ -243,44 +274,131 @@ export function EventDetailPage() {
     kind: searchParams.get("kind"),
     collab: searchParams.get("collab"),
   }
-  const [event, setEvent] = useState(() => seedEvent(eventId, variantOpts))
+  const useMockDetail = variantOpts.kind === "needs" || Boolean(variantOpts.collab)
   const key = `${eventId}|${variantOpts.status}|${variantOpts.visibility}|${variantOpts.type}|${variantOpts.kind}|${variantOpts.collab}`
   const [seedKey, setSeedKey] = useState(key)
+  const [event, setEvent] = useState<EventDetail | null>(() =>
+    useMockDetail ? seedEvent(eventId, variantOpts) : null,
+  )
+  const [apiCause, setApiCause] = useState<ApiCause | null>(null)
+  const [loading, setLoading] = useState(!useMockDetail)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const activeTab = parseEventDetailTab(searchParams.get("tab"))
-  const isNeeds = event.kind === "needs"
+  const isNeeds = event?.kind === "needs"
 
   const [collabState, setCollabState] = useState<CollaborationState | null>(
     parseCollab(variantOpts.collab),
   )
 
-  // Re-seed the working copy when the event or any variant override changes (render-time reset).
-  if (seedKey !== key) {
+  useEffect(() => {
+    if (useMockDetail || !eventId) return
+
+    let cancelled = false
+
+    void (async () => {
+      setLoading(true)
+      setLoadError(null)
+
+      try {
+        const response = await getOrganisationCause(eventId)
+        if (cancelled) return
+
+        const mapped = mapCauseToEventDetail(response.data)
+        if (!mapped) {
+          setLoadError("This cause could not be loaded.")
+          setEvent(null)
+          setApiCause(null)
+          return
+        }
+
+        setApiCause(response.data)
+        setEvent(mapped)
+      } catch (error) {
+        if (cancelled) return
+
+        setEvent(null)
+        setApiCause(null)
+        setLoadError(error instanceof ApiError ? error.message : "Unable to load this cause.")
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [eventId, useMockDetail])
+
+  // Re-seed the mock working copy when the event or any variant override changes.
+  if (useMockDetail && seedKey !== key) {
     setSeedKey(key)
     setEvent(seedEvent(eventId, variantOpts))
     setCollabState(parseCollab(variantOpts.collab))
   }
 
-  const applyEdit = (patch: EventEditPatch) => {
-    setEvent((prev) => ({
-      ...prev,
-      title: patch.title,
-      breadcrumb: [...prev.breadcrumb.slice(0, -1), patch.title],
-      coverImages: patch.coverImages,
-      about: {
-        ...prev.about,
-        description: patch.description,
-        requirements: patch.requirements,
-      },
-      meta: prev.meta.map((row) =>
-        row.id === "contact" ? { ...row, value: patch.contact } : row,
-      ),
-    }))
+  const applyEdit = async (patch: EventEditPatch) => {
+    if (!useMockDetail && eventId && apiCause) {
+      try {
+        const response = await updateOrganisationCause(
+          eventId,
+          buildCauseUpdateFormData(apiCause, {
+            title: patch.title,
+            description: patch.description,
+            requirements: patch.requirements,
+          }),
+        )
+        const mapped = mapCauseToEventDetail(response.data) ?? mapCauseToEventDetail({
+          ...apiCause,
+          title: patch.title,
+          description: patch.description,
+          requirements: patch.requirements.join("\n"),
+        })
+        if (mapped) {
+          setApiCause(response.data)
+          setEvent({
+            ...mapped,
+            coverImages: patch.coverImages.length ? patch.coverImages : mapped.coverImages,
+            meta: mapped.meta.map((row) =>
+              row.id === "contact" ? { ...row, value: patch.contact } : row,
+            ),
+          })
+        }
+        toast({ variant: "success", title: "Cause updated" })
+        return
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Unable to update cause",
+          description: error instanceof ApiError ? error.message : "Please try again.",
+        })
+        throw error
+      }
+    }
+
+    setEvent((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        title: patch.title,
+        breadcrumb: [...prev.breadcrumb.slice(0, -1), patch.title],
+        coverImages: patch.coverImages,
+        about: {
+          ...prev.about,
+          description: patch.description,
+          requirements: patch.requirements,
+        },
+        meta: prev.meta.map((row) =>
+          row.id === "contact" ? { ...row, value: patch.contact } : row,
+        ),
+      }
+    })
     toast({ variant: "success", title: "Event updated" })
   }
 
   const setVolunteers = (volunteers: VolunteersData) =>
-    setEvent((prev) => ({ ...prev, volunteers }))
-  const setUpdates = (updates: UpdatesData) => setEvent((prev) => ({ ...prev, updates }))
+    setEvent((prev) => (prev ? { ...prev, volunteers } : prev))
+  const setUpdates = (updates: UpdatesData) =>
+    setEvent((prev) => (prev ? { ...prev, updates } : prev))
 
   const [editOpen, setEditOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
@@ -316,7 +434,36 @@ export function EventDetailPage() {
   }
 
   const goToEvents = () => navigate(DASHBOARD_TAB_PATHS.events)
-  const shareUrl = `app.bayana.com/${event.id}`
+  const shareUrl = useMemo(() => {
+    if (!event) return ""
+    if (typeof window === "undefined") return `app.bayana.com/${event.id}`
+    return `${window.location.origin}/events/${event.id}`
+  }, [event])
+
+  if (loading) {
+    return (
+      <DashboardLayout activeTab="events">
+        <div className={dashboardDetailContentClassName}>
+          <DetailPageSkeleton />
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  if (loadError || !event) {
+    return (
+      <DashboardLayout activeTab="events">
+        <div className={cn(dashboardDetailContentClassName, "flex flex-col gap-4 py-10")}>
+          <p className="text-sm font-medium text-text-events-strong">
+            {loadError ?? "This cause could not be found."}
+          </p>
+          <Button type="button" variant="neutral" className="w-fit" onClick={goToEvents}>
+            Back to events
+          </Button>
+        </div>
+      </DashboardLayout>
+    )
+  }
 
   const renderTab = () => {
     if (isNeeds) {
@@ -376,7 +523,15 @@ export function EventDetailPage() {
               onDelete={() => setDeleteOpen(true)}
               onViewAttendance={() => setAttendanceOpen(true)}
               onCopyAccessCode={() => {
-                void navigator.clipboard?.writeText("ACME-2025")
+                const code = event.accessCode?.trim()
+                if (!code) {
+                  toast({
+                    title: "No access code",
+                    description: "This cause does not have an access code.",
+                  })
+                  return
+                }
+                void navigator.clipboard?.writeText(code)
                 toast({ variant: "success", title: "Access code copied" })
               }}
               onCloseEvent={() => setCloseOpen(true)}
@@ -435,8 +590,23 @@ export function EventDetailPage() {
         confirmLabel="Delete event"
         variant="destructive"
         onConfirm={() => {
-          toast({ variant: "success", title: "Event deleted" })
-          goToEvents()
+          void (async () => {
+            if (!useMockDetail && eventId) {
+              try {
+                await deleteOrganisationCause(eventId)
+              } catch (error) {
+                toast({
+                  variant: "destructive",
+                  title: "Unable to delete cause",
+                  description: error instanceof ApiError ? error.message : "Please try again.",
+                })
+                return
+              }
+            }
+
+            toast({ variant: "success", title: "Event deleted" })
+            goToEvents()
+          })()
         }}
       />
 
