@@ -26,8 +26,8 @@ import {
   parseCreateEventType,
 } from "../../lib/create-event-paths"
 import { isCreateEventStepValid } from "../../lib/create-event-validation"
-import { buildCauseFormData, createOrganisationCause } from "../../lib/api/causes"
-import { ApiError } from "../../lib/api/types"
+import { buildCauseFormData, CauseFormBuildError, createOrganisationCause } from "../../lib/api/causes"
+import { formatApiError } from "../../lib/api/format-api-error"
 import {
   createInitialFormState,
   getCreateEventSteps,
@@ -138,9 +138,9 @@ export function CreateEventPage() {
       navigate(DASHBOARD_TAB_PATHS.events)
     } catch (error) {
       const description =
-        error instanceof ApiError
+        error instanceof CauseFormBuildError
           ? error.message
-          : "Something went wrong while saving your cause."
+          : formatApiError(error, "Something went wrong while saving your cause.")
 
       toast({
         variant: "destructive",

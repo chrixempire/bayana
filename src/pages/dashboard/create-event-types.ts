@@ -51,7 +51,10 @@ export type CreateEventFormState = {
   eventReminder: boolean
   notifyBefore: string
   ngoCollaboration: boolean
+  /** Display name of the selected collaborator organisation. */
   ngoOrganization: string
+  /** Organisation UUID sent as collaborator[0] when org_collaboration is 1. */
+  ngoCollaboratorId: string
   moreSettingsOpen: boolean
   // Needs-specific
   financialDonations: boolean
@@ -129,6 +132,7 @@ export function createInitialFormState(): CreateEventFormState {
     notifyBefore: "30 minutes",
     ngoCollaboration: false,
     ngoOrganization: "",
+    ngoCollaboratorId: "",
     moreSettingsOpen: false,
     financialDonations: true,
     allowOverfunding: false,

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Input } from "../ui/input"
 import {
+  formatDonationAmountEditingValue,
   formatDonationAmountInputValue,
   parseDonationAmountInput,
 } from "../../lib/create-event-donations"
@@ -16,9 +17,7 @@ export function DonationAmountField({
 }) {
   const [focused, setFocused] = useState(false)
   const displayValue = focused
-    ? value === 0
-      ? ""
-      : String(value)
+    ? formatDonationAmountEditingValue(value)
     : formatDonationAmountInputValue(value)
 
   return (

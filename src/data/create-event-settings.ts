@@ -13,9 +13,3 @@ export const CREATE_EVENT_NOTIFY_OPTIONS = [
 ] as const
 
 export const CREATE_EVENT_FREE_PLAN_MAX_VOLUNTEERS = 10
-
-export const CREATE_EVENT_NGO_OPTIONS = [
-  "Acme2 Incorporation",
-  "Acme2 NGO incorporation",
-  "Bayana Community Trust",
-] as const

@@ -17,6 +17,14 @@ export function parseDonationAmountInput(raw: string): number {
   return Math.round(parsed * 100) / 100
 }
 
+/** Comma-grouped amount while the field is focused (no currency symbol). */
+export function formatDonationAmountEditingValue(amount: number): string {
+  if (amount === 0) return ""
+  return amount.toLocaleString("en-US", {
+    maximumFractionDigits: 2,
+  })
+}
+
 export function formatDonationAmountInputValue(amount: number): string {
   if (amount === 0) return ""
   return formatNaira(amount)

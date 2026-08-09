@@ -63,7 +63,8 @@ export function isCreateEventStepValid(
     const datesOk = Boolean(form.dateStart && form.dateEnd)
     const organizerOk = form.organizer.trim().length > 0
     const passcodeOk = form.visibility !== "private" || form.eventPasscode.trim().length > 0
-    const ngoOk = !form.ngoCollaboration || form.ngoOrganization.trim().length > 0
+    const ngoOk =
+      !form.ngoCollaboration || form.ngoCollaboratorId.trim().length > 0
     return (
       donationTypeSelected &&
       financialOk &&
@@ -91,7 +92,7 @@ export function isCreateEventStepValid(
       form.volunteeringType !== "virtual" || form.googleMeetLink.trim().length > 0
     const capacityOk =
       !form.hasCapacityLimit || !getCapacityError(form.capacity, form.hasCapacityLimit, isPremium)
-    const ngoOk = !form.ngoCollaboration || form.ngoOrganization.trim().length > 0
+    const ngoOk = !form.ngoCollaboration || form.ngoCollaboratorId.trim().length > 0
     const datesOk = Boolean(form.dateStart && form.dateEnd)
     const timesOk = Boolean(form.timeStart && form.timeEnd)
     const organizerOk = form.organizer.trim().length > 0

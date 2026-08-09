@@ -9,6 +9,7 @@ import { CreateEventFieldGroup } from "../CreateEventFieldGroup"
 import { CreateEventStepHeading } from "../CreateEventStepHeading"
 import { CreateEventFieldHint } from "../CreateEventFieldHint"
 import { SearchableSelect } from "../SearchableSelect"
+import { CollaboratorOrgSelect } from "../CollaboratorOrgSelect"
 import { CreateEventRadioOption } from "../CreateEventRadioOption"
 import { BreakdownCapacityCard } from "../BreakdownCapacityCard"
 import { BreakdownCapacityPanel } from "../BreakdownCapacityPanel"
@@ -33,7 +34,6 @@ import { getCapacityError } from "../../../lib/create-event-validation"
 import { syncSkillCapacities } from "../../../lib/create-event-breakdown"
 import {
   CREATE_EVENT_NOTIFY_OPTIONS,
-  CREATE_EVENT_NGO_OPTIONS,
   CREATE_EVENT_ORGANIZERS,
 } from "../../../data/create-event-settings"
 import type { CreateEventFormState } from "../../../pages/dashboard/create-event-types"
@@ -394,7 +394,9 @@ export function CreateEventStepSettings({
               onCheckedChange={(ngoCollaboration) =>
                 onChange({
                   ngoCollaboration,
-                  ...(ngoCollaboration ? {} : { ngoOrganization: "" }),
+                  ...(ngoCollaboration
+                    ? {}
+                    : { ngoOrganization: "", ngoCollaboratorId: "" }),
                 })
               }
               pro={!isPremium}
@@ -404,13 +406,12 @@ export function CreateEventStepSettings({
 
             {form.ngoCollaboration && isPremium ? (
               <CreateEventFieldGroup label="Non-governmental organization" required>
-                <SearchableSelect
-                  value={form.ngoOrganization}
-                  onChange={(ngoOrganization) => onChange({ ngoOrganization })}
-                  options={CREATE_EVENT_NGO_OPTIONS}
-                  placeholder="Select organization"
-                  searchPlaceholder="Search organization"
-                  ariaLabel="Non-governmental organization"
+                <CollaboratorOrgSelect
+                  valueId={form.ngoCollaboratorId}
+                  valueLabel={form.ngoOrganization}
+                  onChange={({ id, label }) =>
+                    onChange({ ngoCollaboratorId: id, ngoOrganization: label })
+                  }
                 />
                 <CreateEventFieldHint>
                   A request would be sent to the collaborating organization to approve collaboration

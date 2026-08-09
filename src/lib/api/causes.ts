@@ -13,6 +13,13 @@ function appendFlag(formData: FormData, key: string, enabled: boolean) {
   formData.append(key, enabled ? "1" : "0")
 }
 
+export class CauseFormBuildError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "CauseFormBuildError"
+  }
+}
+
 function parseReminderMinutes(value: string): string {
   return mapReminderTimeBeforeForApi(value)
 }
@@ -73,19 +80,34 @@ export function buildCauseFormData(
     formData.append("max_volunteers_capacity", "0")
   }
 
+  const unresolvedCategories: string[] = []
   form.categories.forEach((category, index) => {
     const categoryId = resolveCategoryId(category, lookups)
-    if (categoryId != null) {
-      formData.append(`category[${index}]`, String(categoryId))
+    if (categoryId == null) {
+      unresolvedCategories.push(category)
+      return
     }
+    formData.append(`category[${index}]`, String(categoryId))
   })
+
+  if (form.categories.length === 0 || unresolvedCategories.length > 0) {
+    throw new CauseFormBuildError(
+      unresolvedCategories.length > 0
+        ? `Could not map categor${unresolvedCategories.length === 1 ? "y" : "ies"}: ${unresolvedCategories.join(", ")}. Pick categories from the list.`
+        : "Select at least one category.",
+    )
+  }
 
   const useSkillBreakdown = form.hasCapacityLimit && form.breakdownCapacity
   appendFlag(formData, "enable_skill_breakdown", useSkillBreakdown)
 
+  const unresolvedSkills: string[] = []
   form.skills.forEach((skillName, index) => {
     const skillId = resolveSkillId(skillName, lookups)
-    if (skillId == null) return
+    if (skillId == null) {
+      unresolvedSkills.push(skillName)
+      return
+    }
 
     formData.append(`skills[${index}][skill_id]`, String(skillId))
     const individualsRequired = useSkillBreakdown
@@ -93,6 +115,14 @@ export function buildCauseFormData(
       : Math.max(1, Math.floor(form.capacity / Math.max(form.skills.length, 1)))
     formData.append(`skills[${index}][individuals_required]`, String(individualsRequired))
   })
+
+  if (form.skills.length === 0 || unresolvedSkills.length > 0) {
+    throw new CauseFormBuildError(
+      unresolvedSkills.length > 0
+        ? `Could not map skill${unresolvedSkills.length === 1 ? "" : "s"}: ${unresolvedSkills.join(", ")}. Pick skills from the list.`
+        : "Add at least one skill.",
+    )
+  }
 
   appendFlag(formData, "accept_donations", form.receiveDonations)
   if (form.receiveDonations) {
@@ -120,6 +150,16 @@ export function buildCauseFormData(
   )
 
   appendFlag(formData, "org_collaboration", form.ngoCollaboration)
+  if (form.ngoCollaboration) {
+    const collaboratorId = form.ngoCollaboratorId.trim()
+    if (!collaboratorId) {
+      throw new CauseFormBuildError(
+        "Select a collaborating organisation. The API requires an organisation UUID.",
+      )
+    }
+    formData.append("collaborator[0]", collaboratorId)
+  }
+
   formData.append("status", status)
 
   const orderedImages = [...form.images].sort((left, right) => {

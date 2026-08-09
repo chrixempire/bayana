@@ -14,11 +14,7 @@ import {
   CREATE_EVENT_DROPDOWN_SHADOW,
 } from "./create-event-dropdown-styles"
 
-const DEFAULT_SUGGESTED_CATEGORIES = [
-  "Arts, Culture & Technology",
-  "Events",
-  "Youth Development",
-] as const
+const SUGGESTED_CATEGORY_COUNT = 3
 
 export function CategoryTagPicker({
   value,
@@ -39,9 +35,11 @@ export function CategoryTagPicker({
   const panelWidth = useAnchorWidth(showPicker, anchorRef)
 
   const chipLabels = useMemo(() => {
-    const labels = new Set<string>([...DEFAULT_SUGGESTED_CATEGORIES, ...value])
+    // Only suggest labels that exist in `options` so create payloads can resolve IDs.
+    const suggested = options.slice(0, SUGGESTED_CATEGORY_COUNT)
+    const labels = new Set<string>([...suggested, ...value])
     return Array.from(labels)
-  }, [value])
+  }, [options, value])
 
   const visibleOptions = useMemo(() => {
     const normalized = query.trim().toLowerCase()
