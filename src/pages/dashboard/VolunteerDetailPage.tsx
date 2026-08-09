@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { DashboardLayout } from "../../components/dashboard/DashboardLayout"
-import { DASHBOARD_DETAIL_MAX_WIDTH_PX } from "../../lib/dashboard-layout"
+import { dashboardDetailContentClassName } from "../../lib/dashboard-layout"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
 import { tableHeadCellClassName, tableSurfaceClassName } from "../../lib/table-styles"
 import {
@@ -699,12 +699,9 @@ export function VolunteerDetailPage() {
     }
   }, [tab, v])
 
-  const detailContentClass = "mx-auto w-full px-6 xl:px-0"
-  const detailContentStyle = { maxWidth: DASHBOARD_DETAIL_MAX_WIDTH_PX }
-
   return (
     <DashboardLayout activeTab="volunteers">
-      <div className={cn(detailContentClass, "flex flex-col gap-5 py-5")} style={detailContentStyle}>
+      <div className={cn(dashboardDetailContentClassName, "flex flex-col gap-5 py-5")}>
         {/* breadcrumb */}
         <nav className="flex items-center gap-1.5 text-sm text-text-table-header">
           <button

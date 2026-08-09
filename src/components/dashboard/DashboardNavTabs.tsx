@@ -1,7 +1,9 @@
 import { NavLink } from "react-router-dom"
+import { useSlidingIndicator } from "../../hooks/use-sliding-indicator"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
 import { DASHBOARD_TAB_PATHS, type DashboardTabId } from "../../lib/dashboard-paths"
 import { dashboardTabBadgeClassName, dashboardTabClassName } from "../../lib/dashboard-tab-styles"
+import { cn } from "../../lib/utils"
 import { EventIcon } from "../events/icons/EventIcon"
 
 type TabConfig = {
@@ -23,12 +25,29 @@ const TABS: TabConfig[] = [
 ]
 
 export function DashboardNavTabs({ activeTab }: { activeTab: DashboardTabId }) {
+  const { listRef, setTabRef, indicator, ready } = useSlidingIndicator(activeTab, [activeTab])
+
   return (
     <nav
-      className="flex gap-1 overflow-x-auto border-b border-border-default-100 bg-bg-canvas py-3"
+      ref={listRef}
+      className="relative flex gap-1 overflow-x-auto border-b border-border-default-100 bg-bg-canvas py-3"
       style={{ paddingLeft: DASHBOARD_PAGE_GUTTER_PX, paddingRight: DASHBOARD_PAGE_GUTTER_PX }}
       aria-label="Dashboard"
     >
+      <span
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute z-0 rounded-lg bg-bg-nav-tab-active transition-[left,top,width,height,opacity] duration-300 ease-out motion-reduce:transition-none",
+          ready ? "opacity-100" : "opacity-0",
+        )}
+        style={{
+          left: indicator.left,
+          top: indicator.top,
+          width: indicator.width,
+          height: indicator.height,
+        }}
+      />
+
       {TABS.map((tab) => {
         const isActive = tab.id === activeTab
         const path = DASHBOARD_TAB_PATHS[tab.id]
@@ -36,9 +55,10 @@ export function DashboardNavTabs({ activeTab }: { activeTab: DashboardTabId }) {
         return (
           <NavLink
             key={tab.id}
+            ref={(el) => setTabRef(tab.id, el)}
             to={path}
             end
-            className={dashboardTabClassName(isActive)}
+            className={cn(dashboardTabClassName(isActive, { sliding: true }), "relative z-10")}
             aria-current={isActive ? "page" : undefined}
           >
             {tab.label}

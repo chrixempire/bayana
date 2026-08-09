@@ -24,7 +24,7 @@ export const buttonVariants = cva(
         sm: "h-[36px] min-h-[36px] px-4 type-small-medium",
         default: "h-11 min-h-11 px-6 type-button-large",
         lg: "h-[44px] min-h-[44px] px-7 type-button-large",
-        xl: "h-[52px] min-h-[52px] px-8 type-base-semibold",
+        xl: "h-[52px] min-h-[52px] px-8 type-button-large",
         icon: "size-11 rounded-full",
       },
       block: {

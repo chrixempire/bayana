@@ -98,7 +98,7 @@
   --color-bg-nav: #20083a;
   --color-bg-on-nav: #513a69;
   --color-bg-on-on-nav: #6b5284;
-  --color-bg-nav-avatar: #6b5284;
+  --color-bg-nav-avatar: #fff1e8;
 
   --color-border-default-100: #ebeef2;
   --color-border-on-bg-200: #dde2e8;
@@ -141,6 +141,15 @@
   --shadow-control-pressed: inset 0 -4px 0 rgb(170 85 22 / 0.42);
   --shadow-card: 0 2px 8px rgb(44 50 55 / 6%);
   --shadow-card-elevated:
+    0 4px 4px -2px rgb(44 50 55 / 4%),
+    0 2px 2px -1px rgb(44 50 55 / 4%),
+    0 1px 1px -0.5px rgb(44 50 55 / 4%),
+    0 0 0 1px rgb(44 50 55 / 8%);
+  /* Figma Card/shadow-large — header account / org menus */
+  --shadow-card-large:
+    0 32px 32px -16px rgb(44 50 55 / 4%),
+    0 16px 16px -8px rgb(44 50 55 / 4%),
+    0 8px 8px -4px rgb(44 50 55 / 4%),
     0 4px 4px -2px rgb(44 50 55 / 4%),
     0 2px 2px -1px rgb(44 50 55 / 4%),
     0 1px 1px -0.5px rgb(44 50 55 / 4%),
@@ -192,7 +201,7 @@
   --color-bg-nav: #20083a;
   --color-bg-on-nav: #513a69;
   --color-bg-on-on-nav: #6b5284;
-  --color-bg-nav-avatar: #6b5284;
+  --color-bg-nav-avatar: #fff1e8;
 
   --color-border-default-100: #ebeef2;
   --color-border-on-bg-200: #dde2e8;
@@ -236,6 +245,15 @@
   --shadow-control-pressed: inset 0 -4px 0 rgb(170 85 22 / 0.42);
   --shadow-card: 0 2px 8px rgb(44 50 55 / 6%);
   --shadow-card-elevated:
+    0 4px 4px -2px rgb(44 50 55 / 4%),
+    0 2px 2px -1px rgb(44 50 55 / 4%),
+    0 1px 1px -0.5px rgb(44 50 55 / 4%),
+    0 0 0 1px rgb(44 50 55 / 8%);
+  /* Figma Card/shadow-large — header account / org menus */
+  --shadow-card-large:
+    0 32px 32px -16px rgb(44 50 55 / 4%),
+    0 16px 16px -8px rgb(44 50 55 / 4%),
+    0 8px 8px -4px rgb(44 50 55 / 4%),
     0 4px 4px -2px rgb(44 50 55 / 4%),
     0 2px 2px -1px rgb(44 50 55 / 4%),
     0 1px 1px -0.5px rgb(44 50 55 / 4%),
@@ -317,7 +335,8 @@ input:-webkit-autofill:active {
 @utility type-small-medium {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  /* Figma Small/Medium — SF Pro Medium is 510 */
+  font-weight: 510;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -330,10 +349,11 @@ input:-webkit-autofill:active {
   letter-spacing: 0;
 }
 
+/* Figma Small/Bold — SF Pro Semibold (590), letter-spacing 0 */
 @utility type-small-bold {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 590;
   line-height: 22px;
   letter-spacing: 0;
 }
@@ -358,7 +378,7 @@ input:-webkit-autofill:active {
 @utility type-events-tab {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 510;
   line-height: 22px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -375,7 +395,7 @@ input:-webkit-autofill:active {
 @utility type-create-event-field-label {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 510;
   line-height: 22px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -428,7 +448,7 @@ input:-webkit-autofill:active {
 @utility type-events-table-head {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 510;
   line-height: 20px;
   letter-spacing: 0;
   color: var(--color-text-table-header);
@@ -462,15 +482,17 @@ input:-webkit-autofill:active {
   color: var(--color-text-events-strong);
 }
 
+/** Figma Small/Medium — primary table cell text. */
 @utility type-table-cell-primary {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 510;
   line-height: 22px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
 }
 
+/** Figma Small/Regular — secondary table cell text. */
 @utility type-table-cell-secondary {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
@@ -480,11 +502,11 @@ input:-webkit-autofill:active {
   color: var(--color-text-table-header);
 }
 
-/** Figma Tags & Chip in table cells — Micro/Medium 12px / 500 / 20px. */
+/** Figma Tags & Chip in table cells — Micro/Medium 12px / 510 / 20px. */
 @utility type-table-cell-tag {
   font-family: "SF Pro", ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 510;
   line-height: 20px;
   letter-spacing: 0;
   color: var(--color-text-events-strong);
@@ -642,4 +664,117 @@ input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* ── Auth entry 3D flip (login ↔ create-account) ── */
+
+.auth-entry-flip-scene {
+  perspective: 1400px;
+  min-height: 720px;
+}
+
+.auth-entry-flip-card {
+  position: relative;
+  width: 100%;
+  min-height: 720px;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.auth-entry-flip-card--flipped {
+  transform: rotateY(180deg);
+}
+
+.auth-entry-flip-card--instant {
+  transition-duration: 0.01ms;
+}
+
+.auth-entry-flip-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.auth-entry-flip-face--back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-entry-flip-card {
+    transition: none !important;
+  }
+}
+
+/* Page title / subtitle enter */
+.ui-page-heading-enter {
+  animation: ui-page-heading-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ui-page-subtitle-enter {
+  animation: ui-page-subtitle-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+@keyframes ui-page-heading-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ui-page-subtitle-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tab panel / table flow */
+.ui-tab-panel-enter {
+  animation: ui-tab-panel-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes ui-tab-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Auth entry title/subtitle pulse after flip */
+.auth-entry-anim-copy {
+  animation: auth-entry-copy-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+}
+
+@keyframes auth-entry-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-page-heading-enter,
+  .ui-page-subtitle-enter,
+  .ui-tab-panel-enter,
+  .auth-entry-anim-copy {
+    animation: none !important;
+  }
 }

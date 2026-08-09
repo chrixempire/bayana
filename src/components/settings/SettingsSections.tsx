@@ -47,8 +47,8 @@ import {
 export function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="flex flex-col gap-1">
-      <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.2px] text-text-events-strong">{title}</h1>
-      <p className="text-sm leading-[22px] text-text-table-header">{subtitle}</p>
+      <h1 className="font-display text-2xl font-semibold leading-8 tracking-[-0.1px] text-text-events-strong">{title}</h1>
+      <p className="type-small-regular text-text-table-header">{subtitle}</p>
     </div>
   )
 }
@@ -146,9 +146,10 @@ export function ProfileSection() {
   const photo = useImageUpload("2MB")
 
   return (
-    <div className={cn("flex flex-col gap-6", FORM_WIDTH)}>
+    <div className={cn("flex flex-col gap-8", FORM_WIDTH)}>
       <SectionHeader title="Profile" subtitle="Manage your personal information" />
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-3">
         {photo.preview ? (
           <img src={photo.preview} alt="Profile" className="size-16 shrink-0 rounded-full object-cover" />
         ) : (
@@ -157,10 +158,14 @@ export function ProfileSection() {
         <div className="flex flex-col items-start gap-1.5">
           <SettingsUploadButton onClick={photo.open}>Upload photo</SettingsUploadButton>
           {photo.input}
-          <span className="text-xs text-text-table-header">JPG, PNG & GIF file up to 2MB at least 400px by 400px</span>
+          <span className="flex items-center gap-1 text-xs leading-5 text-text-table-header">
+            <EventIcon name="information-fill" size={EVENT_ICON_SIZE.meta} className="text-icon-neutral" />
+            JPG, PNG & GIF file up to 2MB at least 400px by 400px
+          </span>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <FieldLabel>First name</FieldLabel>
           <Input density="compact" value={first} onChange={(e) => setFirst(e.target.value)} />
@@ -205,6 +210,8 @@ export function ProfileSection() {
       <div className="flex flex-col gap-2">
         <FieldLabel>Role</FieldLabel>
         <Input density="compact" disabled placeholder="Administrator" />
+      </div>
+      </div>
       </div>
     </div>
   )

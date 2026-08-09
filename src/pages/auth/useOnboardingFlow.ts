@@ -162,7 +162,7 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
   const goToStep = (step: OnboardingFlowStep) =>
     navigate(`${AUTH_ONBOARDING_PATH}/${step}`, { state: { returnToReview: true } })
   const closePlanModal = () => navigate(`${AUTH_ONBOARDING_PATH}/review`)
-  const openPlanModal = () => navigate(`${AUTH_ONBOARDING_PATH}/review?plan=open`)
+  // Plan picker kept for manual `?plan=open` / legacy choose-plan URL; not opened after submit.
 
   const submitOnboarding = async () => {
     const nextErrors = getSubmitValidationErrors(data)
@@ -186,7 +186,8 @@ export function useOnboardingFlow(currentStep: OnboardingFlowStep) {
         title: "Onboarding submitted",
         description: response.message || "Your organisation details have been sent for verification.",
       })
-      openPlanModal()
+      // Plan picker is hidden for now — go straight to Getting started via /home.
+      navigate(AUTH_HOME_PATH, { replace: true })
     } catch (error) {
       if (error instanceof ApiError) {
         const apiFieldErrors = mapOnboardingApiFieldErrors(error.fieldErrors)

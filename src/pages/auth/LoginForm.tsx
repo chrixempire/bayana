@@ -24,7 +24,7 @@ import {
 import { markVerifyAfterLogin } from "../../lib/auth/verify-flow-state"
 import { AUTH_EMAIL_VERIFY_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import { setAuthSession } from "../../lib/auth/session"
-import { AUTH_CREATE_ACCOUNT_PATH, AUTH_FORGOT_PASSWORD_PATH } from "../../lib/auth-paths"
+import { AUTH_FORGOT_PASSWORD_PATH } from "../../lib/auth-paths"
 import {
   authBodyTextClassName,
   authFieldLabelClassName,
@@ -34,7 +34,13 @@ import {
 import { mapLoginApiErrors, validateLogin, type LoginFieldErrors } from "./login-validation"
 import { cn } from "../../lib/utils"
 
-export function LoginPage() {
+type LoginFormProps = {
+  onSwitchToSignUp: () => void
+  /** Bumps when the face becomes active so title/subtitle can re-animate. */
+  copyKey?: string | number
+}
+
+export function LoginForm({ onSwitchToSignUp, copyKey = "signin" }: LoginFormProps) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const nextPath = resolveSafeNextPath(searchParams.get("next"))
@@ -165,130 +171,131 @@ export function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-bg-canvas text-text-default-500">
-      <div className="mx-auto flex min-h-screen max-w-[1440px] justify-center px-6 py-14">
-        <div className="mx-auto flex w-full max-w-[396px] flex-col items-center gap-8 pt-[88px]">
-          <BayanaLogo className="h-12 w-auto" />
+    <div className="mx-auto flex w-full max-w-[396px] flex-col items-center gap-8">
+      <BayanaLogo className="h-12 w-auto" />
 
-          <div className="flex w-full flex-col gap-8">
-            <div className="flex flex-col gap-4 text-center">
-              <h1 className="font-display text-[20px] font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
-                Log in to Bayana
-              </h1>
-              <p className={authBodyTextClassName}>
-                Don&apos;t have an account?{" "}
-                <Link to={AUTH_CREATE_ACCOUNT_PATH} className="type-small-medium text-[#278cff] underline underline-offset-2">
-                  Sign up
-                </Link>
-              </p>
-            </div>
-
-            <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="login-email" className={cn("block", authFieldLabelClassName)}>
-                    Email address
-                  </label>
-                  <Input
-                    density="compact"
-                    id="login-email"
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    placeholder="name@work-email.com"
-                    value={email}
-                    invalid={Boolean(fieldErrors.email)}
-                    disabled={isSubmitting}
-                    onChange={(event) => {
-                      setEmail(event.target.value)
-                      clearFieldError("email")
-                    }}
-                  />
-                  {fieldErrors.email ? <p className="text-xs text-text-negative">{fieldErrors.email}</p> : null}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <label
-                      htmlFor="login-password"
-                      className={cn("block", authFieldLabelClassName)}
-                    >
-                      Password
-                    </label>
-                    <Link
-                      to={AUTH_FORGOT_PASSWORD_PATH}
-                      className="type-small-medium text-[#278cff] underline-offset-2 hover:underline"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <Input
-                    density="compact"
-                    id="login-password"
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    autoComplete="current-password"
-                    placeholder="Enter your password"
-                    value={password}
-                    invalid={Boolean(fieldErrors.password)}
-                    disabled={isSubmitting}
-                    rightIcon={
-                      <button
-                        type="button"
-                        aria-label={showPassword ? "Hide password" : "Show password"}
-                        className="cursor-pointer text-text-neutral-400"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                      >
-                        {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                      </button>
-                    }
-                    onChange={(event) => {
-                      setPassword(event.target.value)
-                      clearFieldError("password")
-                    }}
-                  />
-                  {fieldErrors.password ? <p className="text-xs text-text-negative">{fieldErrors.password}</p> : null}
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                variant="primary"
-                block
-                disabled={isSubmitting}
-                className={authPrimaryButtonClassName}
-                rightIcon={
-                  isSubmitting ? (
-                    <SpinnerIcon className="size-4 text-white" />
-                  ) : (
-                    <ContinueArrowIcon className="size-4 text-white" />
-                  )
-                }
-              >
-                {isSubmitting ? "Signing in..." : "Sign in"}
-              </Button>
-
-              <div className="flex items-center gap-4">
-                <div className="h-px flex-1 bg-border-default-100" />
-                <span className="text-sm leading-[22px] text-text-neutral-400">or</span>
-                <div className="h-px flex-1 bg-border-default-100" />
-              </div>
-
-              <Button
+      <div className="flex w-full flex-col gap-8">
+        <div className="flex flex-col gap-4 text-center">
+          <div key={copyKey} className="auth-entry-anim-copy flex flex-col gap-4">
+            <h1 className="font-display text-[20px] font-semibold leading-8 tracking-[-0.2px] text-text-default-500">
+              Log in to Bayana
+            </h1>
+            <p className={authBodyTextClassName}>
+              Don&apos;t have an account?{" "}
+              <button
                 type="button"
-                variant="neutral"
-                block
-                disabled={isSubmitting}
-                className={authNeutralButtonClassName}
-                leftIcon={<GoogleGIcon className="size-5" />}
-                onClick={handleGoogleSignIn}
+                onClick={onSwitchToSignUp}
+                className="type-small-medium text-[#278cff] underline underline-offset-2"
               >
-                Continue with Google
-              </Button>
-            </form>
+                Sign up
+              </button>
+            </p>
           </div>
         </div>
+
+        <form className="flex w-full flex-col gap-6" onSubmit={(event) => void handleSubmit(event)}>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="login-email" className={cn("block", authFieldLabelClassName)}>
+                Email address
+              </label>
+              <Input
+                density="compact"
+                id="login-email"
+                type="email"
+                name="email"
+                autoComplete="email"
+                placeholder="name@work-email.com"
+                value={email}
+                invalid={Boolean(fieldErrors.email)}
+                disabled={isSubmitting}
+                onChange={(event) => {
+                  setEmail(event.target.value)
+                  clearFieldError("email")
+                }}
+              />
+              {fieldErrors.email ? <p className="text-xs text-text-negative">{fieldErrors.email}</p> : null}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-3">
+                <label htmlFor="login-password" className={cn("block", authFieldLabelClassName)}>
+                  Password
+                </label>
+                <Link
+                  to={AUTH_FORGOT_PASSWORD_PATH}
+                  className="type-small-medium text-[#278cff] underline-offset-2 hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <Input
+                density="compact"
+                id="login-password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                value={password}
+                invalid={Boolean(fieldErrors.password)}
+                disabled={isSubmitting}
+                rightIcon={
+                  <button
+                    type="button"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="cursor-pointer text-text-neutral-400"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                  </button>
+                }
+                onChange={(event) => {
+                  setPassword(event.target.value)
+                  clearFieldError("password")
+                }}
+              />
+              {fieldErrors.password ? (
+                <p className="text-xs text-text-negative">{fieldErrors.password}</p>
+              ) : null}
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            variant="primary"
+            block
+            disabled={isSubmitting}
+            className={authPrimaryButtonClassName}
+            rightIcon={
+              isSubmitting ? (
+                <SpinnerIcon className="size-4 text-white" />
+              ) : (
+                <ContinueArrowIcon className="size-4 text-white" />
+              )
+            }
+          >
+            {isSubmitting ? "Signing in..." : "Sign in"}
+          </Button>
+
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-border-default-100" />
+            <span className="text-sm leading-[22px] text-text-neutral-400">or</span>
+            <div className="h-px flex-1 bg-border-default-100" />
+          </div>
+
+          <Button
+            type="button"
+            variant="neutral"
+            block
+            disabled={isSubmitting}
+            className={authNeutralButtonClassName}
+            leftIcon={<GoogleGIcon className="size-5" />}
+            onClick={handleGoogleSignIn}
+          >
+            Continue with Google
+          </Button>
+        </form>
       </div>
-    </main>
+    </div>
   )
 }

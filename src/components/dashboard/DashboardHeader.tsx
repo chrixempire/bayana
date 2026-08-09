@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import { EventIcon } from "../events/icons/EventIcon"
+import { EventIcon, type EventIconName } from "../events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { performLogout } from "../../lib/auth/logout"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
@@ -21,26 +21,50 @@ type DashboardHeaderProps = {
   organizationInitial?: string
   planLabel?: string
   userInitial?: string
+  userName?: string
+  userRole?: string
 }
 
-const ORGANIZATION_OPTIONS = [
-  { name: "Acme Incorporation", initial: "A", plan: "Free" },
-  { name: "Bayana Foundation", initial: "B", plan: "Pro" },
-] as const
+/** Figma header menus — 265×172, 16px radius, Card/shadow-large. */
+const headerMenuContentClassName =
+  "flex w-[265px] flex-col gap-3 overflow-hidden rounded-2xl border-0 bg-bg-canvas p-1.5 shadow-[var(--shadow-card-large)]"
+
+const headerMenuItemClassName =
+  "h-8 cursor-pointer gap-1 rounded-lg p-2 type-small-medium text-text-events-strong focus:bg-bg-default-100 data-[highlighted]:bg-bg-default-100"
+
+function HeaderMenuItem({
+  icon,
+  label,
+  disabled,
+  onSelect,
+}: {
+  icon: EventIconName
+  label: string
+  disabled?: boolean
+  onSelect: () => void
+}) {
+  return (
+    <DropdownMenuItem
+      className={headerMenuItemClassName}
+      disabled={disabled}
+      onSelect={onSelect}
+    >
+      <EventIcon name={icon} size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
+      <span className="px-1">{label}</span>
+    </DropdownMenuItem>
+  )
+}
 
 export function DashboardHeader({
   organizationName = "Acme Incorporation",
   organizationInitial = "A",
   planLabel = "Free",
   userInitial = "D",
+  userName = "Daniel Osonuga",
+  userRole = "Administrator",
 }: DashboardHeaderProps) {
   const navigate = useNavigate()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
-  const [activeOrg, setActiveOrg] = useState({
-    name: organizationName,
-    initial: organizationInitial,
-    plan: planLabel,
-  })
 
   const handleLogout = async () => {
     if (isLoggingOut) return
@@ -53,12 +77,6 @@ export function DashboardHeader({
   }
 
   const navProfileAvatar = isLoggingOut ? (
-    <SpinnerIcon className="size-4 text-text-nav-tab-active" aria-hidden />
-  ) : (
-    userInitial
-  )
-
-  const menuProfileAvatar = isLoggingOut ? (
     <SpinnerIcon className="size-4 text-text-nav-tab-active" aria-hidden />
   ) : (
     userInitial
@@ -78,15 +96,15 @@ export function DashboardHeader({
           <DropdownMenuTrigger
             type="button"
             className="inline-flex h-9 min-w-0 max-w-[220px] cursor-pointer items-center gap-2 rounded-lg bg-bg-on-nav pl-1 pr-1.5 text-left transition-colors hover:bg-bg-on-on-nav focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:max-w-none"
-            aria-label="Switch organization"
+            aria-label="Organization menu"
           >
             <span
               aria-hidden
               className="flex size-6 shrink-0 items-center justify-center rounded bg-bg-accent text-[11px] font-bold leading-[18px] text-text-on-solid-bg"
             >
-              {activeOrg.initial}
+              {organizationInitial}
             </span>
-            <span className="truncate type-small-medium text-text-on-solid-bg">{activeOrg.name}</span>
+            <span className="truncate type-small-medium text-text-on-solid-bg">{organizationName}</span>
             <EventIcon
               name="selector-vertical-line"
               size={EVENT_ICON_SIZE.meta}
@@ -94,24 +112,42 @@ export function DashboardHeader({
               className="shrink-0 opacity-90"
             />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="min-w-[14rem] p-1.5">
-            {ORGANIZATION_OPTIONS.map((org) => (
-              <DropdownMenuItem
-                key={org.name}
-                className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
-                onSelect={() => setActiveOrg(org)}
+          <DropdownMenuContent align="start" sideOffset={8} className={headerMenuContentClassName}>
+            <div className="flex w-full items-center gap-2">
+              <span
+                aria-hidden
+                className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-bg-accent text-xl font-bold leading-7 text-text-on-solid-bg"
               >
-                <span className="flex size-6 shrink-0 items-center justify-center rounded bg-bg-accent text-[11px] font-bold text-text-on-solid-bg">
-                  {org.initial}
-                </span>
-                <span className="truncate">{org.name}</span>
-              </DropdownMenuItem>
-            ))}
+                {organizationInitial}
+              </span>
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <span className="truncate type-small-medium text-text-events-strong">{organizationName}</span>
+                <span className="text-xs leading-5 text-text-table-header">{planLabel}</span>
+              </div>
+            </div>
+            <div className="flex w-full flex-col gap-1">
+              <HeaderMenuItem
+                icon="building-1-fill"
+                label="NGO profile"
+                onSelect={() => navigate("/settings?tab=ngo-profile")}
+              />
+              <HeaderMenuItem
+                icon="settings-3-fill"
+                label="Settings"
+                onSelect={() => navigate("/settings")}
+              />
+              <HeaderMenuItem
+                icon="exit-fill"
+                label={isLoggingOut ? "Signing out..." : "Sign out"}
+                disabled={isLoggingOut}
+                onSelect={() => void handleLogout()}
+              />
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
         <span className="inline-flex h-[18px] shrink-0 items-center rounded bg-bg-accent px-1 py-0.5 text-[10px] font-medium leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
-          {activeOrg.plan}
+          {planLabel}
         </span>
       </div>
 
@@ -141,49 +177,53 @@ export function DashboardHeader({
         <DropdownMenu>
           <DropdownMenuTrigger
             type="button"
-            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-bg-nav-avatar text-sm font-semibold leading-5 text-text-on-solid-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-[0.5px] border-border-input-active bg-bg-nav-avatar text-base font-semibold leading-5 text-text-nav-tab-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             aria-label="Account menu"
             disabled={isLoggingOut}
           >
             {navProfileAvatar}
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[15rem] p-1.5">
-            <div className="flex items-center gap-2.5 px-2.5 py-2">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-bg-nav-avatar text-sm font-semibold text-text-on-solid-bg">
-                {menuProfileAvatar}
+          <DropdownMenuContent align="end" sideOffset={8} className={headerMenuContentClassName}>
+            {/* Figma Avatar instance: 40×40 beside name (node 18331:390551) */}
+            <div className="flex w-full items-center gap-2">
+              <span
+                aria-hidden
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-[0.5px] border-border-input-active bg-bg-nav-avatar text-[24px] font-semibold leading-7 text-text-nav-tab-active"
+              >
+                {isLoggingOut ? (
+                  <SpinnerIcon className="size-4 text-text-nav-tab-active" aria-hidden />
+                ) : (
+                  userInitial
+                )}
               </span>
-              <div className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-semibold text-text-events-strong">Daniel Osonuga</span>
-                <span className="text-xs text-text-table-header">Administrator</span>
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <span className="truncate type-small-medium text-text-events-strong">{userName}</span>
+                <span className="text-xs leading-5 text-text-table-header">{userRole}</span>
               </div>
             </div>
-            <div className="my-1 border-t border-border-default-100" />
-            <DropdownMenuItem
-              className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
-              onSelect={() => navigate("/settings")}
-            >
-              <EventIcon name="user-3-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer rounded-lg px-2.5 py-2 text-sm"
-              onSelect={() => toast({ title: "Coming soon", description: "Help & support will be available soon." })}
-            >
-              <EventIcon name="information-fill" size={EVENT_ICON_SIZE.dropdownItem} className="text-icon-neutral" />
-              Help &amp; support
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer rounded-lg px-2.5 py-2 text-sm text-text-negative focus:bg-bg-negative-soft"
-              disabled={isLoggingOut}
-              onSelect={() => void handleLogout()}
-            >
-              {isLoggingOut ? (
-                <SpinnerIcon className="size-4 text-text-negative" />
-              ) : (
-                <EventIcon name="arrow-right-fill" size={EVENT_ICON_SIZE.dropdownItem} negative />
-              )}
-              {isLoggingOut ? "Signing out..." : "Sign out"}
-            </DropdownMenuItem>
+            <div className="flex w-full flex-col gap-1">
+              <HeaderMenuItem
+                icon="user-3-fill"
+                label="Profile"
+                onSelect={() => navigate("/settings?tab=profile")}
+              />
+              <HeaderMenuItem
+                icon="question-fill"
+                label="Help & support"
+                onSelect={() =>
+                  toast({
+                    title: "Coming soon",
+                    description: "Help & support will be available soon.",
+                  })
+                }
+              />
+              <HeaderMenuItem
+                icon="exit-fill"
+                label={isLoggingOut ? "Signing out..." : "Sign out"}
+                disabled={isLoggingOut}
+                onSelect={() => void handleLogout()}
+              />
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

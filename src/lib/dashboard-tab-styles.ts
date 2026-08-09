@@ -1,11 +1,17 @@
 import { cn } from "./utils"
 
-/** Dashboard top nav tab — inactive uses Small/Medium; active uses Small/Semibold. */
-export function dashboardTabClassName(isActive: boolean) {
+/** Dashboard top nav tab — inactive Small/Medium; active Small/Bold (Figma / feedback doc). */
+export function dashboardTabClassName(
+  isActive: boolean,
+  options?: { sliding?: boolean },
+) {
   return cn(
     "inline-flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-lg px-2 py-0 transition-colors",
     isActive
-      ? "type-small-semibold bg-bg-nav-tab-active text-text-nav-tab-active"
+      ? cn(
+          "type-small-bold text-text-nav-tab-active",
+          options?.sliding ? "bg-transparent" : "bg-bg-nav-tab-active",
+        )
       : "type-small-medium text-text-events-strong hover:bg-bg-default-100",
   )
 }

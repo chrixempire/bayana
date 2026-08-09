@@ -1,6 +1,13 @@
 import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { DashboardLayout, DashboardWideContent } from "../../components/dashboard/DashboardLayout"
+import {
+  DashboardLayout,
+  DashboardSettingsContent,
+  SETTINGS_NARROW_CONTENT_PX,
+  SETTINGS_SIDEBAR_GAP_PX,
+  SETTINGS_SIDEBAR_WIDTH_PX,
+  SETTINGS_WIDE_CONTENT_PX,
+} from "../../components/dashboard/DashboardLayout"
 import {
   AuditLogsSection,
   BillingSection,
@@ -58,40 +65,50 @@ export function SettingsPage() {
     setSearchParams(next, { replace: true })
   }
 
+  const isNarrow = NARROW_SECTIONS.has(section)
+
   return (
     <DashboardLayout activeTab="settings">
-      <DashboardWideContent flushBottom className="pb-16">
-        <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
-          <aside className="shrink-0 lg:w-[200px]">
-            <nav className="flex flex-col gap-4 lg:sticky lg:top-6">
+      <DashboardSettingsContent>
+        <div
+          className="flex flex-col lg:flex-row"
+          style={{ gap: SETTINGS_SIDEBAR_GAP_PX }}
+        >
+          <aside className="shrink-0" style={{ width: SETTINGS_SIDEBAR_WIDTH_PX }}>
+            <nav className="flex w-full flex-col gap-6 lg:sticky lg:top-6">
               {NAV_GROUPS.map((group) => (
-                <div key={group.heading} className="flex flex-col gap-1">
+                <div key={group.heading} className="flex w-full flex-col gap-1.5">
                   <p className="px-2 py-0 text-xs font-medium leading-5 text-text-table-header">{group.heading}</p>
-                  {group.items.map((item) => {
-                    const active = item.id === section
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => go(item.id)}
-                        className={cn(
-                          "flex h-8 w-fit cursor-pointer items-center gap-1 rounded-lg p-2 transition-colors",
-                          active
-                            ? "type-small-semibold bg-bg-nav-tab-active text-text-nav-tab-active"
-                            : "type-small-medium text-text-events-strong hover:bg-bg-default-100",
-                        )}
-                      >
-                        <EventIcon name={item.icon} size={EVENT_ICON_SIZE.nav} accent={active} />
-                        {item.label}
-                      </button>
-                    )
-                  })}
+                  <div className="flex w-full flex-col gap-1">
+                    {group.items.map((item) => {
+                      const active = item.id === section
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => go(item.id)}
+                          className={cn(
+                            "flex h-8 w-full cursor-pointer items-center gap-1 rounded-lg p-2 transition-colors",
+                            active
+                              ? "type-small-semibold bg-bg-nav-tab-active text-text-nav-tab-active"
+                              : "type-small-medium text-text-events-strong hover:bg-bg-default-100",
+                          )}
+                        >
+                          <EventIcon name={item.icon} size={EVENT_ICON_SIZE.nav} accent={active} />
+                          {item.label}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
               ))}
             </nav>
           </aside>
 
-          <div className={cn("min-w-0 flex-1", NARROW_SECTIONS.has(section) && "max-w-[592px]")}>
+          <div
+            className="min-w-0 flex-1"
+            style={{ maxWidth: isNarrow ? SETTINGS_NARROW_CONTENT_PX : SETTINGS_WIDE_CONTENT_PX }}
+          >
             {section === "profile" ? <ProfileSection /> : null}
             {section === "notifications" ? <NotificationsSection /> : null}
             {section === "privacy" ? <PrivacySecuritySection /> : null}
@@ -104,7 +121,7 @@ export function SettingsPage() {
             {section === "audit" ? <AuditLogsSection /> : null}
           </div>
         </div>
-      </DashboardWideContent>
+      </DashboardSettingsContent>
     </DashboardLayout>
   )
 }

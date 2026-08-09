@@ -55,7 +55,7 @@ export function GettingStartedIntroVideo() {
           >
             <PlayIcon />
           </button>
-          <p className="absolute bottom-4 left-1/2 z-10 max-w-[calc(100%-2rem)] -translate-x-1/2 rounded-full bg-bg-canvas px-4 py-2 text-center text-xs font-medium leading-5 text-text-default-500 shadow-control-elevated">
+          <p className="absolute bottom-4 left-1/2 z-10 max-w-[calc(100%-2rem)] -translate-x-1/2 rounded-full bg-bg-canvas px-4 py-2 text-center type-small-medium text-text-events-strong shadow-control-elevated">
             Watch a 3-mins intro about Bayana from our Founders
           </p>
         </>

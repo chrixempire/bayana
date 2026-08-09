@@ -100,10 +100,10 @@ export function SetupTaskCard({ task }: { task: SetupTask }) {
       {task.progress ? <ProgressRing current={task.progress.current} total={task.progress.total} /> : icon ? <TaskIconBox>{icon}</TaskIconBox> : null}
 
       <div className="min-w-0 flex-1">
-        <h3 className="font-display text-sm font-semibold leading-[22px] tracking-[-0.1px] text-text-default-500">
+        <h3 className="font-display text-sm font-semibold leading-[22px] tracking-[-0.1px] text-text-events-strong">
           {task.title}
         </h3>
-        <p className="mt-0.5 type-small-regular text-text-neutral-400">{task.description}</p>
+        <p className="mt-0.5 type-small-regular text-text-table-header">{task.description}</p>
       </div>
 
       <TaskAction action={task.action} />

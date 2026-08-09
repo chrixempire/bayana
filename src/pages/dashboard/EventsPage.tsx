@@ -8,6 +8,8 @@ import { parseEventsTab, withTabSearchParam } from "../../lib/dashboard-tab-para
 import { EventsTable } from "../../components/events/EventsTable"
 import { EventsProgressBadge } from "../../components/events/EventsProgressBadge"
 import { EventsSubTabs } from "../../components/events/EventsSubTabs"
+import { AnimatedPageTitle } from "../../components/ui/AnimatedPageTitle"
+import { TabPanel } from "../../components/ui/TabPanel"
 import {
   DataTablePagination,
   DateRangeFilter,
@@ -20,7 +22,6 @@ import {
   DashboardWideContent,
 } from "../../components/dashboard/DashboardLayout"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
-import { pageTitleClassName } from "../../lib/auth-form-styles"
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { EventIcon } from "../../components/events/icons/EventIcon"
@@ -413,9 +414,7 @@ export function EventsPage() {
 
       <DashboardWideContent flushBottom className="flex flex-col gap-6">
         <div className="flex shrink-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <h1 className={pageTitleClassName}>
-            {pageConfig.title}
-          </h1>
+          <AnimatedPageTitle>{pageConfig.title}</AnimatedPageTitle>
 
           <div className="flex flex-wrap items-center gap-3">
             <EventsProgressBadge
@@ -529,7 +528,7 @@ export function EventsPage() {
           </div>
         </section>
 
-        <div className={tableSurfaceClassName}>
+        <TabPanel activeKey={activeTab} className={tableSurfaceClassName}>
           <EventsTable
             rows={pagedRows}
             columns={columns}
@@ -559,7 +558,7 @@ export function EventsPage() {
               }}
             />
           )}
-        </div>
+        </TabPanel>
       </DashboardWideContent>
     </DashboardLayout>
   )

@@ -1,5 +1,6 @@
-import { getAuthToken } from "../auth/session"
 import { getApiFetchCredentials, isCookieAuthEnabled } from "../auth/auth-strategy"
+import { handleUnauthorizedResponse } from "../auth/handle-unauthorized"
+import { getAuthToken } from "../auth/session"
 import { getApiBaseUrl } from "./config"
 import { normalizeApiError } from "./errors"
 import { ApiError } from "./types"
@@ -48,6 +49,10 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   }
 
   if (!response.ok) {
+    // Login/register use auth: false — wrong password must not clear/redirect.
+    if (response.status === 401 && auth) {
+      handleUnauthorizedResponse()
+    }
     const errorPayload = payload as {
       message?: string
       errors?: Record<string, string[]>

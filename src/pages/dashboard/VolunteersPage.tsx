@@ -6,7 +6,9 @@ import {
   DashboardWideContent,
 } from "../../components/dashboard/DashboardLayout"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
-import { pageTitleClassName } from "../../lib/auth-form-styles"
+import { AnimatedPageTitle } from "../../components/ui/AnimatedPageTitle"
+import { TabPanel } from "../../components/ui/TabPanel"
+import { UnderlineTabs } from "../../components/ui/UnderlineTabs"
 import {
   DataTableEmptyState,
   DataTablePagination,
@@ -175,9 +177,7 @@ export function VolunteersPage() {
     <DashboardLayout activeTab="volunteers">
       <DashboardWideContent flushBottom className="flex flex-col gap-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <h1 className={pageTitleClassName}>
-            Volunteers
-          </h1>
+          <AnimatedPageTitle>Volunteers</AnimatedPageTitle>
           <button
             type="button"
             className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[10px] bg-button-neutral px-3 text-sm font-semibold leading-[22px] text-text-events-strong shadow-button-neutral transition-colors hover:bg-button-neutral-hover"
@@ -203,29 +203,17 @@ export function VolunteersPage() {
         {/* sub-tabs */}
         <DashboardFullBleed className="border-b border-border-default-100">
           <div style={GUTTER}>
-            <div className="flex gap-6">
-              {SUB_TABS.map((tab) => {
-                const active = tab.id === activeTab
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => goToTab(tab.id)}
-                    className={cn(
-                      "type-events-tab relative cursor-pointer pb-3 transition-colors",
-                      active
-                        ? "text-text-events-strong after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-bg-accent"
-                        : "text-text-table-header hover:text-text-neutral-400",
-                    )}
-                  >
-                    {tab.label}
-                  </button>
-                )
-              })}
-            </div>
+            <UnderlineTabs
+              ariaLabel="Volunteer sections"
+              tabs={SUB_TABS}
+              activeTab={activeTab}
+              onTabChange={(id) => goToTab(id as typeof activeTab)}
+              variant="accent"
+            />
           </div>
         </DashboardFullBleed>
 
+        <TabPanel activeKey={activeTab}>
         {activeTab === "reviews" ? (
           <ReviewsTab isEmpty={isEmptyScenario} />
         ) : (
@@ -512,6 +500,7 @@ export function VolunteersPage() {
             </div>
           </>
         )}
+        </TabPanel>
       </DashboardWideContent>
 
       <ExportVolunteersModal

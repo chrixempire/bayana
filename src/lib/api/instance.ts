@@ -1,7 +1,8 @@
 import { createAuthApi } from "../../services/auth.api"
 import { createOnboardingApi } from "../../services/onboarding.api"
 import { createOrgApi } from "../../services/org.api"
-import { clearAuthToken, getAuthToken } from "./auth-token"
+import { handleUnauthorizedResponse } from "../auth/handle-unauthorized"
+import { getAuthToken } from "./auth-token"
 import { createApiClient } from "./client"
 import { getApiBaseUrl } from "./config"
 
@@ -9,7 +10,7 @@ export const apiClient = createApiClient({
   baseURL: getApiBaseUrl(),
   getAuthToken,
   onAuthFailure: () => {
-    clearAuthToken()
+    handleUnauthorizedResponse()
   },
 })
 

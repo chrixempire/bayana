@@ -10,6 +10,7 @@ import { parseEventDetailTab } from "../../lib/event-detail-paths"
 import { EventDetailHeader } from "../../components/events/detail/EventDetailHeader"
 import { EventDetailTabs } from "../../components/events/detail/EventDetailTabs"
 import type { EventDetailTab } from "../../components/events/detail/EventDetailTabs"
+import { TabPanel } from "../../components/ui/TabPanel"
 import { OverviewTab } from "../../components/events/detail/OverviewTab"
 import { NeedsOverviewTab } from "../../components/events/detail/NeedsOverviewTab"
 import { NeedsInKindDonationsTab } from "../../components/events/detail/NeedsInKindDonationsTab"
@@ -557,7 +558,7 @@ export function EventDetailPage() {
         </div>
 
         <div className={cn(dashboardDetailContentClassName, "py-6")}>
-          {renderTab()}
+          <TabPanel activeKey={activeTab}>{renderTab()}</TabPanel>
         </div>
       </div>
 

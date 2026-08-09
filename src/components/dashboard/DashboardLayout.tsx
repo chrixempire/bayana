@@ -4,7 +4,10 @@ import {
   DASHBOARD_CONTENT_WIDTH_PX,
   DASHBOARD_PAGE_GUTTER_PX,
   DASHBOARD_DETAIL_MAX_WIDTH_PX,
+  SETTINGS_CONTENT_MAX_WIDTH_PX,
+  SETTINGS_CONTENT_TOP_PX,
   dashboardDetailContentClassName,
+  dashboardSettingsContentClassName,
 } from "../../lib/dashboard-layout"
 import type { DashboardTabId } from "../../lib/dashboard-paths"
 
@@ -13,7 +16,13 @@ export {
   DASHBOARD_PAGE_GUTTER_PX,
   DASHBOARD_DETAIL_GUTTER_PX,
   DASHBOARD_DETAIL_MAX_WIDTH_PX,
+  SETTINGS_CONTENT_MAX_WIDTH_PX,
+  SETTINGS_NARROW_CONTENT_PX,
+  SETTINGS_SIDEBAR_GAP_PX,
+  SETTINGS_SIDEBAR_WIDTH_PX,
+  SETTINGS_WIDE_CONTENT_PX,
   dashboardDetailContentClassName,
+  dashboardSettingsContentClassName,
 } from "../../lib/dashboard-layout"
 import { DashboardHeader } from "./DashboardHeader"
 import { DashboardNavTabs } from "./DashboardNavTabs"
@@ -170,6 +179,18 @@ export function DashboardDetailContent({ children, className }: { children: Reac
     <div
       className={cn(dashboardDetailContentClassName, "py-6 sm:py-8", className)}
       style={{ maxWidth: DASHBOARD_DETAIL_MAX_WIDTH_PX }}
+    >
+      {children}
+    </div>
+  )
+}
+
+/** Settings — fixed 1232px content band; 104px side margin at 1440px viewport. */
+export function DashboardSettingsContent({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div
+      className={cn(dashboardSettingsContentClassName, "pb-16", className)}
+      style={{ maxWidth: SETTINGS_CONTENT_MAX_WIDTH_PX, paddingTop: SETTINGS_CONTENT_TOP_PX }}
     >
       {children}
     </div>

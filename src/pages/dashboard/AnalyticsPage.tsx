@@ -24,7 +24,9 @@ import { ExportReportModal } from "../../components/analytics/ExportReportModal"
 import { EventIcon } from "../../components/events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../components/events/icons/event-icon-sizes"
 import { elevatedCardSurfaceClassName } from "../../components/events/detail/detail-primitives"
-import { pageTitleClassName } from "../../lib/auth-form-styles"
+import { AnimatedPageTitle } from "../../components/ui/AnimatedPageTitle"
+import { TabPanel } from "../../components/ui/TabPanel"
+import { UnderlineTabs } from "../../components/ui/UnderlineTabs"
 import { downloadImpactReport } from "../../lib/impact-report"
 import {
   analyticsTableCellClassName,
@@ -140,9 +142,7 @@ export function AnalyticsPage() {
       <DashboardWideContent flushBottom className="flex flex-col gap-6 pb-10">
         {/* Header — Figma 80px content header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className={pageTitleClassName}>
-            Analytics
-          </h1>
+          <AnimatedPageTitle>Analytics</AnimatedPageTitle>
           <div className="flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -182,25 +182,18 @@ export function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Tabs — Figma h-40 border-b-2 active indicator */}
-        <div className="flex gap-4 border-b border-border-default-100">
-          {TABS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => goToTab(item.id)}
-              className={cn(
-                "relative flex h-10 cursor-pointer items-center py-2 text-sm font-medium leading-[22px]",
-                tab === item.id
-                  ? "border-b-2 border-border-input-active text-text-events-strong"
-                  : "text-text-table-header hover:text-text-neutral-400",
-              )}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
+        {/* Tabs — sliding accent indicator */}
+        <UnderlineTabs
+          ariaLabel="Analytics sections"
+          tabs={TABS}
+          activeTab={tab}
+          onTabChange={(id) => goToTab(id as typeof tab)}
+          variant="border"
+          gapClassName="gap-4 border-b border-border-default-100"
+          tabClassName="text-sm font-medium leading-[22px]"
+        />
 
+        <TabPanel activeKey={tab}>
         {tab === "overview" ? (
           <>
             <div className="flex flex-col gap-4">
@@ -404,6 +397,7 @@ export function AnalyticsPage() {
             </ChartCard>
           </>
         ) : null}
+        </TabPanel>
       </DashboardWideContent>
 
       <ExportReportModal

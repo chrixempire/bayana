@@ -1,8 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom"
-import { CreateAccountPage } from "./pages/auth/CreateAccountPage"
+import { GuestOnly } from "./components/auth/GuestOnly"
+import { RequireAuth } from "./components/auth/RequireAuth"
+import { AuthEntryFlipLayout } from "./components/auth/AuthEntryFlipLayout"
 import { LegacyOnboardingRedirect } from "./pages/auth/LegacyOnboardingRedirect"
 import { InvitedMemberPage } from "./pages/auth/InvitedMemberPage"
-import { LoginPage } from "./pages/auth/LoginPage"
 import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage"
 import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage"
 import { GoogleCallbackPage } from "./pages/auth/GoogleCallbackPage"
@@ -41,31 +42,48 @@ function App() {
     <Routes>
       <Route path="/" element={<Navigate to={AUTH_CREATE_ACCOUNT_PATH} replace />} />
       <Route path="/auth" element={<Navigate to={AUTH_CREATE_ACCOUNT_PATH} replace />} />
-      <Route path={AUTH_LOGIN_PATH} element={<LoginPage />} />
-      <Route path={AUTH_FORGOT_PASSWORD_PATH} element={<ForgotPasswordPage />} />
-      <Route path={AUTH_RESET_PASSWORD_PATH} element={<ResetPasswordPage />} />
+
+      {/* Public auth entry — signed-in users are bounced away */}
+      <Route element={<GuestOnly />}>
+        {/* Pathless flip layout stays mounted across login ↔ create-account */}
+        <Route element={<AuthEntryFlipLayout />}>
+          <Route path={AUTH_LOGIN_PATH} element={null} />
+          <Route path={AUTH_CREATE_ACCOUNT_PATH} element={null} />
+        </Route>
+        <Route path={AUTH_FORGOT_PASSWORD_PATH} element={<ForgotPasswordPage />} />
+        <Route path={AUTH_RESET_PASSWORD_PATH} element={<ResetPasswordPage />} />
+      </Route>
+
+      {/* Reachable signed-out or signed-in (callbacks / magic links) */}
       <Route path={AUTH_GOOGLE_CALLBACK_PATH} element={<GoogleCallbackPage />} />
       <Route path={AUTH_INVITE_PATH} element={<InvitedMemberPage />} />
-      <Route path="/auth/create-account" element={<CreateAccountPage />} />
       <Route path={`${AUTH_EMAIL_VERIFY_PATH}/:id/:hash`} element={<EmailVerifyPage />} />
       <Route path={`${AUTH_EMAIL_VERIFY_PATH}/*`} element={<EmailVerifyPage />} />
-      <Route path={AUTH_HOME_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
-      <Route path={GETTING_STARTED_PATH} element={<GettingStartedPage />} />
-      <Route path={DASHBOARD_TAB_PATHS.dashboard} element={<DashboardPage />} />
-      <Route path={DASHBOARD_TAB_PATHS.settings} element={<SettingsPage />} />
-      <Route path={DASHBOARD_TAB_PATHS.analytics} element={<AnalyticsPage />} />
-      <Route path={DASHBOARD_TAB_PATHS.events} element={<EventsPage />} />
-      <Route path={DASHBOARD_TAB_PATHS.volunteers} element={<VolunteersPage />} />
-      <Route path="/volunteers/:volunteerId" element={<VolunteerDetailPage />} />
-      <Route path={DASHBOARD_TAB_PATHS.verification} element={<VerificationPage />} />
-      <Route path={DASHBOARD_TAB_PATHS.messages} element={<MessagesPage />} />
-      <Route path="/events/create" element={<CreateEventPage />} />
-      <Route path={EVENT_DETAIL_PATH} element={<EventDetailPage />} />
-      <Route path={GETTING_STARTED_LEGACY_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
-      <Route path="/home/legacy" element={<HomePage />} />
-      <Route path="/auth/onboarding/choose-plan" element={<Navigate to={`${AUTH_ONBOARDING_PATH}/review?plan=open`} replace />} />
-      <Route path="/auth/onboarding/:step" element={<OnboardingPage />} />
-      <Route path="/auth/onboarding" element={<Navigate to={`${AUTH_ONBOARDING_PATH}/check-email`} replace />} />
+
+      {/* App shell — session required */}
+      <Route element={<RequireAuth />}>
+        <Route path={AUTH_HOME_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
+        <Route path={GETTING_STARTED_PATH} element={<GettingStartedPage />} />
+        <Route path={DASHBOARD_TAB_PATHS.dashboard} element={<DashboardPage />} />
+        <Route path={DASHBOARD_TAB_PATHS.settings} element={<SettingsPage />} />
+        <Route path={DASHBOARD_TAB_PATHS.analytics} element={<AnalyticsPage />} />
+        <Route path={DASHBOARD_TAB_PATHS.events} element={<EventsPage />} />
+        <Route path={DASHBOARD_TAB_PATHS.volunteers} element={<VolunteersPage />} />
+        <Route path="/volunteers/:volunteerId" element={<VolunteerDetailPage />} />
+        <Route path={DASHBOARD_TAB_PATHS.verification} element={<VerificationPage />} />
+        <Route path={DASHBOARD_TAB_PATHS.messages} element={<MessagesPage />} />
+        <Route path="/events/create" element={<CreateEventPage />} />
+        <Route path={EVENT_DETAIL_PATH} element={<EventDetailPage />} />
+        <Route path={GETTING_STARTED_LEGACY_PATH} element={<Navigate to={GETTING_STARTED_PATH} replace />} />
+        <Route path="/home/legacy" element={<HomePage />} />
+        <Route
+          path="/auth/onboarding/choose-plan"
+          element={<Navigate to={`${AUTH_ONBOARDING_PATH}/review?plan=open`} replace />}
+        />
+        <Route path="/auth/onboarding/:step" element={<OnboardingPage />} />
+        <Route path="/auth/onboarding" element={<Navigate to={`${AUTH_ONBOARDING_PATH}/check-email`} replace />} />
+      </Route>
+
       <Route path="/onboarding/:step" element={<LegacyOnboardingRedirect />} />
     </Routes>
   )

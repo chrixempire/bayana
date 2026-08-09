@@ -28,7 +28,7 @@ import {
   featureSearchWrapperClassName,
 } from "../../lib/feature-search-styles"
 import { tableSurfaceClassName } from "../../lib/table-styles"
-import { pageTitleClassName } from "../../lib/auth-form-styles"
+import { AnimatedPageTitle } from "../../components/ui/AnimatedPageTitle"
 import { toast } from "../../hooks/use-toast"
 import {
   VERIFICATION_ROWS,
@@ -105,9 +105,7 @@ export function VerificationPage() {
   return (
     <DashboardLayout activeTab="verification">
       <DashboardWideContent flushBottom className="flex flex-col gap-6">
-        <h1 className={pageTitleClassName}>
-          Verification
-        </h1>
+        <AnimatedPageTitle>Verification</AnimatedPageTitle>
 
         <div className="flex flex-col gap-4 sm:flex-row">
           <OverviewCard label="Total verifications" value={String(totals.total)} />

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { AnalyticsStatCard } from "../../components/analytics/AnalyticsStatCard"
 import { LineChart } from "../../components/analytics/charts"
@@ -17,7 +17,14 @@ import {
 } from "../../components/ui/dropdown-menu"
 import { DASHBOARD_TAB_PATHS } from "../../lib/dashboard-paths"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
-import { sectionTitleClassName, pageTitleClassName } from "../../lib/auth-form-styles"
+import { eventDetailPath } from "../../lib/event-detail-paths"
+import {
+  extractCausesFromResponse,
+  getOrganisationCauses,
+} from "../../lib/api/causes"
+import { mapCausesToTableRows } from "../../lib/map-cause-to-table-row"
+import { sectionTitleClassName } from "../../lib/auth-form-styles"
+import { AnimatedPageTitle } from "../../components/ui/AnimatedPageTitle"
 import {
   dashboardNeutralDropdownTriggerClassName,
   dropdownTriggerOpenClassName,
@@ -30,12 +37,12 @@ import {
   ACTIVE_EVENTS_SERIES,
   DASHBOARD_SIDE_STATS,
   DASHBOARD_STATS,
-  RECENT_EVENTS,
   RECENT_REVIEWS,
   UNREAD_MESSAGES,
   type EventStatus,
   type UnreadMessage,
 } from "./dashboard-data"
+import type { EventTableRow } from "./events-types"
 
 const DATE_OPTIONS = ["This month", "Last month", "Last 3 months", "This year", "All time"]
 
@@ -110,9 +117,9 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-function Thumb({ src }: { src: string }) {
+function Thumb({ src }: { src?: string | null }) {
   const [failed, setFailed] = useState(false)
-  if (failed) {
+  if (!src || failed) {
     return <span className="block size-10 shrink-0 rounded-lg bg-gradient-to-br from-bg-accent-soft to-bg-default-100" />
   }
   return (
@@ -175,6 +182,16 @@ function DashboardSectionCard({
   )
 }
 
+const STATUS_LABEL: Record<NonNullable<EventTableRow["visibility"]["lifecycleStatus"]>, EventStatus> = {
+  active: "Active",
+  upcoming: "Upcoming",
+  completed: "Completed",
+}
+
+function mapRowStatus(row: EventTableRow): EventStatus {
+  return STATUS_LABEL[row.visibility.lifecycleStatus ?? "upcoming"] ?? "Upcoming"
+}
+
 export function DashboardPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -189,6 +206,31 @@ export function DashboardPage() {
         : "verified"
 
   const [dateLabel, setDateLabel] = useState("This month")
+  const [recentEvents, setRecentEvents] = useState<EventTableRow[]>([])
+  const [recentEventsLoading, setRecentEventsLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+
+    void (async () => {
+      setRecentEventsLoading(true)
+      try {
+        const response = await getOrganisationCauses()
+        if (cancelled) return
+        setRecentEvents(mapCausesToTableRows(extractCausesFromResponse(response)).slice(0, 5))
+      } catch {
+        if (!cancelled) setRecentEvents([])
+      } finally {
+        if (!cancelled) setRecentEventsLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const showRecentEventsEmpty = !recentEventsLoading && recentEvents.length === 0
 
   return (
     <DashboardLayout activeTab="dashboard" showOnboardingBanner={isEmpty}>
@@ -221,9 +263,7 @@ export function DashboardPage() {
         ) : null}
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className={pageTitleClassName}>
-            Dashboard
-          </h1>
+          <AnimatedPageTitle>Dashboard</AnimatedPageTitle>
           <div className="flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -295,7 +335,7 @@ export function DashboardPage() {
               title="Recent events"
               onSeeAll={() => navigate(DASHBOARD_TAB_PATHS.events)}
             >
-              {isEmpty ? (
+              {showRecentEventsEmpty ? (
                 <div className="flex h-[240px] items-center justify-center text-sm leading-[22px] text-text-table-header">
                   No events yet
                 </div>
@@ -307,43 +347,80 @@ export function DashboardPage() {
                     <span>Visibility</span>
                     <span>Date</span>
                   </div>
-                  {RECENT_EVENTS.map((event, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => navigate(DASHBOARD_TAB_PATHS.events)}
-                      className="grid w-full grid-cols-[minmax(0,348fr)_minmax(0,148fr)_minmax(0,200fr)_minmax(0,240fr)] items-center gap-3 border-b border-border-default-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bg-default-100/60"
-                    >
-                      <div className="flex min-w-0 items-center gap-3">
-                        <Thumb src={event.thumb} />
-                        <div className="flex min-w-0 flex-col">
-                          <span className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
-                            {event.title}
-                          </span>
-                          <span className="truncate text-xs leading-5 text-text-table-header">
-                            {event.subtitle}
-                          </span>
+                  {recentEventsLoading
+                    ? Array.from({ length: 3 }, (_, index) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-[minmax(0,348fr)_minmax(0,148fr)_minmax(0,200fr)_minmax(0,240fr)] items-center gap-3 border-b border-border-default-100 px-4 py-3 last:border-0"
+                        >
+                          <div className="flex min-w-0 items-center gap-3">
+                            <div className="size-10 shrink-0 animate-pulse rounded-lg bg-bg-default-100" />
+                            <div className="flex min-w-0 flex-1 flex-col gap-2">
+                              <div className="h-3.5 w-40 animate-pulse rounded bg-bg-default-100" />
+                              <div className="h-3 w-28 animate-pulse rounded bg-bg-default-100" />
+                            </div>
+                          </div>
+                          <div className="h-3.5 w-12 animate-pulse rounded bg-bg-default-100" />
+                          <div className="h-3.5 w-16 animate-pulse rounded bg-bg-default-100" />
+                          <div className="h-3.5 w-24 animate-pulse rounded bg-bg-default-100" />
                         </div>
-                      </div>
-                      <span className="text-sm leading-[22px] text-text-events-strong">{event.type}</span>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="flex items-center gap-1 text-sm leading-[22px] text-text-events-strong">
-                          <EventIcon
-                            name={event.visibility === "Public" ? "earth-fill" : "lock-fill-red"}
-                            size={EVENT_ICON_SIZE.tableVisibility}
-                          />
-                          {event.visibility}
-                        </span>
-                        <span className={cn("text-xs leading-5", STATUS_TONE[event.status])}>
-                          {event.status}
-                        </span>
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-sm leading-[22px] text-text-events-strong">{event.dateRange}</span>
-                        <span className="text-xs leading-5 text-text-table-header">{event.time}</span>
-                      </div>
-                    </button>
-                  ))}
+                      ))
+                    : recentEvents.map((event) => {
+                        const status = mapRowStatus(event)
+                        const visibilityLabel =
+                          event.visibility.type === "private"
+                            ? "Private"
+                            : event.visibility.type === "drafts"
+                              ? "Draft"
+                              : "Public"
+                        return (
+                          <button
+                            key={event.id}
+                            type="button"
+                            onClick={() => navigate(eventDetailPath(event.id))}
+                            className="grid w-full grid-cols-[minmax(0,348fr)_minmax(0,148fr)_minmax(0,200fr)_minmax(0,240fr)] items-center gap-3 border-b border-border-default-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bg-default-100/60"
+                          >
+                            <div className="flex min-w-0 items-center gap-3">
+                              <Thumb src={event.cause.thumbnailUrl ?? undefined} />
+                              <div className="flex min-w-0 flex-col">
+                                <span className="truncate text-sm font-medium leading-[22px] text-text-events-strong">
+                                  {event.cause.title}
+                                </span>
+                                <span className="truncate text-xs leading-5 text-text-table-header">
+                                  {event.cause.description}
+                                </span>
+                              </div>
+                            </div>
+                            <span className="text-sm leading-[22px] text-text-events-strong">Cause</span>
+                            <div className="flex flex-col gap-0.5">
+                              <span className="flex items-center gap-1 text-sm leading-[22px] text-text-events-strong">
+                                <EventIcon
+                                  name={
+                                    event.visibility.type === "public"
+                                      ? "earth-fill"
+                                      : "lock-fill-red"
+                                  }
+                                  size={EVENT_ICON_SIZE.tableVisibility}
+                                />
+                                {visibilityLabel}
+                              </span>
+                              {event.visibility.type !== "drafts" ? (
+                                <span className={cn("text-xs leading-5", STATUS_TONE[status])}>
+                                  {status}
+                                </span>
+                              ) : null}
+                            </div>
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-sm leading-[22px] text-text-events-strong">
+                                {event.date.range ?? "—"}
+                              </span>
+                              <span className="text-xs leading-5 text-text-table-header">
+                                {event.date.time ?? ""}
+                              </span>
+                            </div>
+                          </button>
+                        )
+                      })}
                 </div>
               )}
             </DashboardSectionCard>

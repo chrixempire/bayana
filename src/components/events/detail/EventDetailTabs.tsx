@@ -1,4 +1,4 @@
-import { cn } from "../../../lib/utils"
+import { UnderlineTabs } from "../../ui/UnderlineTabs"
 import type { EventDetailTabId } from "../../../pages/dashboard/event-detail-types"
 
 export type EventDetailTab = {
@@ -18,28 +18,15 @@ export function EventDetailTabs({
   className?: string
 }) {
   return (
-    <div className={cn("flex gap-4", className)} role="tablist" aria-label="Event sections">
-      {tabs.map((tab) => {
-        const isActive = tab.id === activeTab
-
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={isActive}
-            onClick={() => onTabChange(tab.id)}
-            className={cn(
-              "flex h-12 cursor-pointer items-center justify-center border-b-2 py-2 text-sm font-medium leading-[22px] transition-colors",
-              isActive
-                ? "border-border-input-active text-text-events-strong"
-                : "border-transparent text-text-table-header hover:text-text-events-strong",
-            )}
-          >
-            {tab.label}
-          </button>
-        )
-      })}
-    </div>
+    <UnderlineTabs
+      className={className}
+      ariaLabel="Event sections"
+      tabs={tabs}
+      activeTab={activeTab}
+      onTabChange={(id) => onTabChange(id as EventDetailTabId)}
+      variant="border"
+      gapClassName="gap-4"
+      tabClassName="h-12 justify-center text-sm font-medium leading-[22px]"
+    />
   )
 }
