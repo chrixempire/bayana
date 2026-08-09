@@ -26,9 +26,8 @@ import {
   parseCreateEventType,
 } from "../../lib/create-event-paths"
 import { isCreateEventStepValid } from "../../lib/create-event-validation"
-import { buildCauseFormData, createOrganisationCause, getCauseUuid } from "../../lib/api/causes"
+import { buildCauseFormData, createOrganisationCause } from "../../lib/api/causes"
 import { ApiError } from "../../lib/api/types"
-import { eventDetailPath } from "../../lib/event-detail-paths"
 import {
   createInitialFormState,
   getCreateEventSteps,
@@ -130,19 +129,13 @@ export function CreateEventPage() {
         }),
       )
 
-      const causeUuid = getCauseUuid(response.data)
       toast({
         variant: "success",
         title: status === "draft" ? "Draft saved" : "Cause created successfully",
         description: response.message,
       })
 
-      if (status === "draft" || !causeUuid) {
-        navigate(DASHBOARD_TAB_PATHS.events)
-        return
-      }
-
-      navigate(eventDetailPath(causeUuid))
+      navigate(DASHBOARD_TAB_PATHS.events)
     } catch (error) {
       const description =
         error instanceof ApiError

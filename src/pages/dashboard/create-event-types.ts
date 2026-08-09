@@ -28,6 +28,8 @@ export type CreateEventFormState = {
   requirements: string
   skills: string[]
   volunteeringType: VolunteeringType
+  /** Google Meet URL — required when volunteeringType is virtual. */
+  googleMeetLink: string
   location: string
   hasCapacityLimit: boolean
   capacity: number
@@ -104,6 +106,7 @@ export function createInitialFormState(): CreateEventFormState {
     requirements: "",
     skills: [],
     volunteeringType: "in-person",
+    googleMeetLink: "",
     location: "",
     hasCapacityLimit: false,
     capacity: 10,

@@ -1,6 +1,6 @@
 import { toast as sonnerToast } from "sonner"
 
-export type ToastVariant = "default" | "success" | "destructive"
+export type ToastVariant = "default" | "success" | "destructive" | "info"
 
 export type ToastPayload = {
   id?: string | number
@@ -22,6 +22,8 @@ export function toast({ id, title, description, variant = "default", duration }:
       return { id: sonnerToast.success(title, options) }
     case "destructive":
       return { id: sonnerToast.error(title, options) }
+    case "info":
+      return { id: sonnerToast.info(title, options) }
     default:
       return { id: sonnerToast(title, options) }
   }

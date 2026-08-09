@@ -87,6 +87,8 @@ export function isCreateEventStepValid(
   if (stepId === "settings") {
     const locationOk =
       form.volunteeringType === "virtual" || form.location.trim().length > 0
+    const meetLinkOk =
+      form.volunteeringType !== "virtual" || form.googleMeetLink.trim().length > 0
     const capacityOk =
       !form.hasCapacityLimit || !getCapacityError(form.capacity, form.hasCapacityLimit, isPremium)
     const ngoOk = !form.ngoCollaboration || form.ngoOrganization.trim().length > 0
@@ -106,6 +108,7 @@ export function isCreateEventStepValid(
 
     return (
       locationOk &&
+      meetLinkOk &&
       capacityOk &&
       datesOk &&
       timesOk &&

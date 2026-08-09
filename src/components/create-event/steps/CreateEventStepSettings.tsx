@@ -2,6 +2,7 @@ import { EventIcon } from "../../events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../../events/icons/event-icon-sizes"
 import { RadioGroup } from "../../ui/radio-group"
 import { Input } from "../../ui/input"
+import { toast } from "../../../hooks/use-toast"
 import { CreateEventDateRangeField } from "../CreateEventDateRangeField"
 import { CreateEventTimeRangeField } from "../CreateEventTimeRangeField"
 import { CreateEventFieldGroup } from "../CreateEventFieldGroup"
@@ -104,6 +105,13 @@ export function CreateEventStepSettings({
                 onChange({ volunteeringType, visibility: "public", eventPasscode: "" })
                 return
               }
+              if (volunteeringType === "virtual") {
+                toast({
+                  variant: "info",
+                  title: "Add a Google Meet link",
+                  description: "Paste the Google Meet link you want volunteers to use for this virtual cause.",
+                })
+              }
               onChange({ volunteeringType })
             }}
             className="flex flex-row flex-wrap items-center gap-6"
@@ -112,7 +120,12 @@ export function CreateEventStepSettings({
             <CreateEventRadioOption value="virtual" label="Virtual" />
           </RadioGroup>
 
-          {form.volunteeringType === "virtual" ? <VirtualGoogleMeetCallout /> : null}
+          {form.volunteeringType === "virtual" ? (
+            <VirtualGoogleMeetCallout
+              value={form.googleMeetLink}
+              onChange={(googleMeetLink) => onChange({ googleMeetLink })}
+            />
+          ) : null}
         </div>
       </CreateEventFieldGroup>
 
@@ -206,7 +219,6 @@ export function CreateEventStepSettings({
             ...(receiveDonations ? {} : { donationAmount: 0, disableOverfunding: false }),
           })
         }
-        pro={!isPremium}
       />
 
       {form.receiveDonations ? (

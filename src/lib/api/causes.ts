@@ -60,7 +60,7 @@ export function buildCauseFormData(
   )
 
   if (form.volunteeringType === "virtual") {
-    formData.append("google_meet_link", "")
+    formData.append("google_meet_link", form.googleMeetLink.trim())
   }
 
   if (form.volunteeringType === "in-person") {
@@ -95,6 +95,9 @@ export function buildCauseFormData(
   })
 
   appendFlag(formData, "accept_donations", form.receiveDonations)
+  if (form.receiveDonations) {
+    formData.append("donation_goal_amount", String(form.donationAmount))
+  }
   formData.append("start_date", form.dateStart)
   formData.append("end_date", form.dateEnd)
   formData.append("start_time", form.timeStart)

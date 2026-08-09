@@ -778,3 +778,26 @@ input[type="number"]::-webkit-inner-spin-button {
     animation: none !important;
   }
 }
+
+/* Virtual cause — Google Meet borderless input caret pulse */
+.google-meet-link-input {
+  caret-color: var(--color-bg-accent);
+  animation: google-meet-caret-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes google-meet-caret-pulse {
+  0%,
+  100% {
+    caret-color: var(--color-bg-accent);
+  }
+  50% {
+    caret-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .google-meet-link-input {
+    animation: none;
+    caret-color: var(--color-bg-accent);
+  }
+}
