@@ -9,7 +9,7 @@ export type UnderlineTabItem = {
 }
 
 type UnderlineTabsProps = {
-  tabs: UnderlineTabItem[]
+  tabs: readonly UnderlineTabItem[]
   activeTab: string
   onTabChange: (id: string) => void
   ariaLabel: string
