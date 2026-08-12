@@ -35,14 +35,23 @@ import type { EventEditPatch } from "../../components/events/detail/EditEventMod
 import { getEventDetail } from "./event-detail-scenarios"
 import { buildNeedsEventDetail } from "./event-detail-needs"
 import type { ApiCause } from "../../lib/api/cause-types"
+import type { ApiNeed } from "../../lib/api/need-types"
 import {
   buildCauseUpdateFormData,
   deleteOrganisationCause,
   getOrganisationCause,
   updateOrganisationCause,
 } from "../../lib/api/causes"
+import {
+  buildNeedUpdateFormData,
+  deleteOrganisationNeed,
+  getOrganisationNeed,
+  updateOrganisationNeed,
+} from "../../lib/api/needs"
+import { formatApiError } from "../../lib/api/format-api-error"
 import { ApiError } from "../../lib/api/types"
 import { mapCauseToEventDetail } from "../../lib/map-cause-to-event-detail"
+import { mapNeedToEventDetail } from "../../lib/map-need-to-event-detail"
 import { Skeleton } from "../../components/ui/skeleton"
 import { Button } from "../../components/ui/button"
 import type {
@@ -275,17 +284,19 @@ export function EventDetailPage() {
     kind: searchParams.get("kind"),
     collab: searchParams.get("collab"),
   }
-  const useMockDetail = variantOpts.kind === "needs" || Boolean(variantOpts.collab)
+  const useMockDetail = Boolean(variantOpts.collab)
+  const isNeedsRoute = variantOpts.kind === "needs"
   const key = `${eventId}|${variantOpts.status}|${variantOpts.visibility}|${variantOpts.type}|${variantOpts.kind}|${variantOpts.collab}`
   const [seedKey, setSeedKey] = useState(key)
   const [event, setEvent] = useState<EventDetail | null>(() =>
     useMockDetail ? seedEvent(eventId, variantOpts) : null,
   )
   const [apiCause, setApiCause] = useState<ApiCause | null>(null)
+  const [apiNeed, setApiNeed] = useState<ApiNeed | null>(null)
   const [loading, setLoading] = useState(!useMockDetail)
   const [loadError, setLoadError] = useState<string | null>(null)
   const activeTab = parseEventDetailTab(searchParams.get("tab"))
-  const isNeeds = event?.kind === "needs"
+  const isNeeds = event?.kind === "needs" || isNeedsRoute
 
   const [collabState, setCollabState] = useState<CollaborationState | null>(
     parseCollab(variantOpts.collab),
@@ -301,25 +312,84 @@ export function EventDetailPage() {
       setLoadError(null)
 
       try {
-        const response = await getOrganisationCause(eventId)
-        if (cancelled) return
+        if (isNeedsRoute) {
+          const response = await getOrganisationNeed(eventId)
+          if (cancelled) return
 
-        const mapped = mapCauseToEventDetail(response.data)
-        if (!mapped) {
-          setLoadError("This cause could not be loaded.")
-          setEvent(null)
+          const mapped = mapNeedToEventDetail(response.data)
+          if (!mapped) {
+            setLoadError("This need could not be loaded.")
+            setEvent(null)
+            setApiNeed(null)
+            setApiCause(null)
+            return
+          }
+
+          setApiNeed(response.data)
           setApiCause(null)
+          setEvent(mapped)
           return
         }
 
-        setApiCause(response.data)
-        setEvent(mapped)
+        try {
+          const response = await getOrganisationCause(eventId)
+          if (cancelled) return
+
+          const mapped = mapCauseToEventDetail(response.data)
+          if (!mapped) {
+            setLoadError("This cause could not be loaded.")
+            setEvent(null)
+            setApiCause(null)
+            setApiNeed(null)
+            return
+          }
+
+          setApiCause(response.data)
+          setApiNeed(null)
+          setEvent(mapped)
+          return
+        } catch (causeError) {
+          // If the UUID isn't a cause, try loading it as a need (deep links without ?kind=needs).
+          if (!(causeError instanceof ApiError) || (causeError.status !== 404 && causeError.status !== 422)) {
+            throw causeError
+          }
+
+          const response = await getOrganisationNeed(eventId)
+          if (cancelled) return
+
+          const mapped = mapNeedToEventDetail(response.data)
+          if (!mapped) {
+            setLoadError("This event could not be loaded.")
+            setEvent(null)
+            setApiNeed(null)
+            setApiCause(null)
+            return
+          }
+
+          setApiNeed(response.data)
+          setApiCause(null)
+          setEvent(mapped)
+          setSearchParams(
+            (prev) => {
+              const next = new URLSearchParams(prev)
+              next.set("kind", "needs")
+              return next
+            },
+            { replace: true },
+          )
+        }
       } catch (error) {
         if (cancelled) return
 
         setEvent(null)
         setApiCause(null)
-        setLoadError(error instanceof ApiError ? error.message : "Unable to load this cause.")
+        setApiNeed(null)
+        setLoadError(
+          formatApiError(
+            error,
+            isNeedsRoute ? "Unable to load this need." : "Unable to load this event.",
+          ),
+        )
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -328,7 +398,7 @@ export function EventDetailPage() {
     return () => {
       cancelled = true
     }
-  }, [eventId, useMockDetail])
+  }, [eventId, useMockDetail, isNeedsRoute, setSearchParams])
 
   // Re-seed the mock working copy when the event or any variant override changes.
   if (useMockDetail && seedKey !== key) {
@@ -338,6 +408,44 @@ export function EventDetailPage() {
   }
 
   const applyEdit = async (patch: EventEditPatch) => {
+    if (!useMockDetail && eventId && apiNeed) {
+      try {
+        const response = await updateOrganisationNeed(
+          eventId,
+          buildNeedUpdateFormData(apiNeed, {
+            title: patch.title,
+            description: patch.description,
+          }),
+        )
+        const mapped =
+          mapNeedToEventDetail(response.data) ??
+          mapNeedToEventDetail({
+            ...apiNeed,
+            title: patch.title,
+            description: patch.description,
+          })
+        if (mapped) {
+          setApiNeed(response.data)
+          setEvent({
+            ...mapped,
+            coverImages: patch.coverImages.length ? patch.coverImages : mapped.coverImages,
+            meta: mapped.meta.map((row) =>
+              row.id === "contact" ? { ...row, value: patch.contact } : row,
+            ),
+          })
+        }
+        toast({ variant: "success", title: "Need updated" })
+        return
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Unable to update need",
+          description: formatApiError(error, "Please try again."),
+        })
+        throw error
+      }
+    }
+
     if (!useMockDetail && eventId && apiCause) {
       try {
         const response = await updateOrganisationCause(
@@ -370,7 +478,7 @@ export function EventDetailPage() {
         toast({
           variant: "destructive",
           title: "Unable to update cause",
-          description: error instanceof ApiError ? error.message : "Please try again.",
+          description: formatApiError(error, "Please try again."),
         })
         throw error
       }
@@ -434,7 +542,8 @@ export function EventDetailPage() {
     )
   }
 
-  const goToEvents = () => navigate(DASHBOARD_TAB_PATHS.events)
+  const goToEvents = () =>
+    navigate(isNeeds || apiNeed ? `${DASHBOARD_TAB_PATHS.events}?tab=needs` : DASHBOARD_TAB_PATHS.events)
   const shareUrl = useMemo(() => {
     if (!event) return ""
     if (typeof window === "undefined") return `app.bayana.com/${event.id}`
@@ -456,7 +565,7 @@ export function EventDetailPage() {
       <DashboardLayout activeTab="events">
         <div className={cn(dashboardDetailContentClassName, "flex flex-col gap-4 py-10")}>
           <p className="text-sm font-medium text-text-events-strong">
-            {loadError ?? "This cause could not be found."}
+            {loadError ?? "This event could not be found."}
           </p>
           <Button type="button" variant="neutral" className="w-fit" onClick={goToEvents}>
             Back to events
@@ -594,12 +703,16 @@ export function EventDetailPage() {
           void (async () => {
             if (!useMockDetail && eventId) {
               try {
-                await deleteOrganisationCause(eventId)
+                if (isNeeds || apiNeed) {
+                  await deleteOrganisationNeed(eventId)
+                } else {
+                  await deleteOrganisationCause(eventId)
+                }
               } catch (error) {
                 toast({
                   variant: "destructive",
-                  title: "Unable to delete cause",
-                  description: error instanceof ApiError ? error.message : "Please try again.",
+                  title: isNeeds || apiNeed ? "Unable to delete need" : "Unable to delete cause",
+                  description: formatApiError(error, "Please try again."),
                 })
                 return
               }

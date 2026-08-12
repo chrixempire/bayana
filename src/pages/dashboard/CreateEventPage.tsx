@@ -27,6 +27,7 @@ import {
 } from "../../lib/create-event-paths"
 import { isCreateEventStepValid } from "../../lib/create-event-validation"
 import { buildCauseFormData, CauseFormBuildError, createOrganisationCause } from "../../lib/api/causes"
+import { buildNeedFormData, createOrganisationNeed, NeedFormBuildError } from "../../lib/api/needs"
 import { formatApiError } from "../../lib/api/format-api-error"
 import {
   createInitialFormState,
@@ -45,8 +46,9 @@ export function CreateEventPage() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const isCauseFlow = eventType === "cause"
+  const isNeedFlow = eventType === "needs"
   const { lookups, categoryOptions, skillOptions, isLoading: lookupsLoading, error: lookupsError } =
-    useCauseLookups(isCauseFlow)
+    useCauseLookups(isCauseFlow || isNeedFlow)
 
   const stepId = parseCreateEventStep(searchParams.get("step"))
   const activeStepIndex = Math.max(
@@ -160,9 +162,69 @@ export function CreateEventPage() {
     }
   }
 
+  const submitNeed = async () => {
+    if (!isNeedFlow || isSubmitting) return
+
+    if (lookupsLoading) {
+      toast({
+        variant: "destructive",
+        title: "Still loading options",
+        description: "Please wait for categories to finish loading.",
+      })
+      return
+    }
+
+    if (lookupsError) {
+      toast({
+        variant: "destructive",
+        title: "Unable to create need",
+        description: lookupsError,
+      })
+      return
+    }
+
+    if (!canCreate) return
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await createOrganisationNeed(
+        buildNeedFormData(form, {
+          lookups: { categoryIdByName: lookups.categoryIdByName },
+        }),
+      )
+
+      toast({
+        variant: "success",
+        title: "Need created successfully",
+        description: response.message,
+      })
+
+      navigate(`${DASHBOARD_TAB_PATHS.events}?tab=needs`)
+    } catch (error) {
+      const description =
+        error instanceof NeedFormBuildError
+          ? error.message
+          : formatApiError(error, "Something went wrong while saving your need.")
+
+      toast({
+        variant: "destructive",
+        title: "Unable to create need",
+        description,
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const handleCreate = () => {
     if (isCauseFlow) {
       void submitCause("active")
+      return
+    }
+
+    if (isNeedFlow) {
+      void submitNeed()
       return
     }
 
@@ -235,6 +297,7 @@ export function CreateEventPage() {
                   form={form}
                   onChange={patchForm}
                   onBack={handleBack}
+                  categoryOptions={isNeedFlow ? categoryOptions : undefined}
                 />
               ) : null}
               {activeStep.id === "needs-config" ? (

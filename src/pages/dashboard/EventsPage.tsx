@@ -40,8 +40,14 @@ import {
   extractCausesFromResponse,
   getOrganisationCauses,
 } from "../../lib/api/causes"
-import { ApiError } from "../../lib/api/types"
+import {
+  deleteOrganisationNeed,
+  extractNeedsFromResponse,
+  getOrganisationNeeds,
+} from "../../lib/api/needs"
+import { formatApiError } from "../../lib/api/format-api-error"
 import { mapCausesToTableRows } from "../../lib/map-cause-to-table-row"
+import { mapNeedsToTableRows } from "../../lib/map-need-to-table-row"
 import {
   getEventsPageConfig,
   getEventsScenarioData,
@@ -77,9 +83,10 @@ function rowRequestStatusLabel(row: EventTableRow): string {
   return "Accepted"
 }
 
-function buildEventDetailUrl(row: EventTableRow) {
+function buildEventDetailUrl(row: EventTableRow, tab?: Parameters<typeof eventDetailPath>[1]) {
   if (row.kind === "collaboration") {
     const params = new URLSearchParams()
+    if (tab && tab !== "home") params.set("tab", tab)
     if (row.eventType === "needs") params.set("kind", "needs")
     const collab = row.requestBadges?.includes("new-request")
       ? "new-request"
@@ -92,7 +99,10 @@ function buildEventDetailUrl(row: EventTableRow) {
     const query = params.toString()
     return `${eventDetailPath(row.id)}${query ? `?${query}` : ""}`
   }
-  return eventDetailPath(row.id)
+  if (row.kind === "needs" || row.eventType === "needs") {
+    return eventDetailPath(row.id, tab, { kind: "needs" })
+  }
+  return eventDetailPath(row.id, tab)
 }
 
 type DeleteTarget = { id: string; kind: "draft" | "event" } | null
@@ -114,6 +124,7 @@ export function EventsPage() {
 
   const [rows, setRows] = useState<EventTableRow[]>([])
   const [causesLoading, setCausesLoading] = useState(false)
+  const [needsLoading, setNeedsLoading] = useState(false)
 
   useEffect(() => {
     if (activeTab !== "causes") return
@@ -138,10 +149,45 @@ export function EventsPage() {
         toast({
           variant: "destructive",
           title: "Unable to load causes",
-          description: error instanceof ApiError ? error.message : "Please try again.",
+          description: formatApiError(error, "Please try again."),
         })
       } finally {
         if (!cancelled) setCausesLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [activeTab])
+
+  useEffect(() => {
+    if (activeTab !== "needs") return
+
+    let cancelled = false
+
+    void (async () => {
+      setNeedsLoading(true)
+
+      try {
+        const response = await getOrganisationNeeds()
+        if (cancelled) return
+
+        const apiNeedRows = mapNeedsToTableRows(extractNeedsFromResponse(response))
+        setRows((previous) => {
+          const otherRows = previous.filter((row) => row.kind !== "needs")
+          return [...apiNeedRows, ...otherRows]
+        })
+      } catch (error) {
+        if (cancelled) return
+
+        toast({
+          variant: "destructive",
+          title: "Unable to load needs",
+          description: formatApiError(error, "Please try again."),
+        })
+      } finally {
+        if (!cancelled) setNeedsLoading(false)
       }
     })()
 
@@ -164,7 +210,10 @@ export function EventsPage() {
     endDate: null,
   })
 
-  const loading = useSimulatedLoading() || (activeTab === "causes" && causesLoading)
+  const loading =
+    useSimulatedLoading() ||
+    (activeTab === "causes" && causesLoading) ||
+    (activeTab === "needs" && needsLoading)
   const activeTabConfig = pageConfig.tabs.find((tab) => tab.id === activeTab) ?? pageConfig.tabs[0]
   const activeKind = KIND_BY_TAB[activeTab]
   const kindCount = rows.filter((row) => (row.kind ?? "cause") === activeKind).length
@@ -326,11 +375,13 @@ export function EventsPage() {
       return
     }
     if (actionId === "view-volunteers") {
-      navigate(eventDetailPath(rowId, "volunteers"))
+      const row = rows.find((item) => item.id === rowId)
+      navigate(row ? buildEventDetailUrl(row, "volunteers") : eventDetailPath(rowId, "volunteers"))
       return
     }
     if (actionId === "post-updates") {
-      navigate(eventDetailPath(rowId, "updates"))
+      const row = rows.find((item) => item.id === rowId)
+      navigate(row ? buildEventDetailUrl(row, "updates") : eventDetailPath(rowId, "updates"))
       return
     }
 
@@ -344,23 +395,34 @@ export function EventsPage() {
     if (!deleteTarget) return
 
     const row = rows.find((item) => item.id === deleteTarget.id)
-    const isCauseRow = (row?.kind ?? "cause") === "cause"
+    const rowKind = row?.kind ?? "cause"
 
     void (async () => {
-      if (isCauseRow) {
+      if (rowKind === "cause") {
         try {
           await deleteOrganisationCause(deleteTarget.id)
         } catch (error) {
           toast({
             variant: "destructive",
             title: "Unable to delete cause",
-            description: error instanceof ApiError ? error.message : "Please try again.",
+            description: formatApiError(error, "Please try again."),
+          })
+          return
+        }
+      } else if (rowKind === "needs") {
+        try {
+          await deleteOrganisationNeed(deleteTarget.id)
+        } catch (error) {
+          toast({
+            variant: "destructive",
+            title: "Unable to delete need",
+            description: formatApiError(error, "Please try again."),
           })
           return
         }
       }
 
-      setRows((prev) => prev.filter((row) => row.id !== deleteTarget.id))
+      setRows((prev) => prev.filter((item) => item.id !== deleteTarget.id))
       toast({
         variant: "success",
         title: deleteTarget.kind === "draft" ? "Draft deleted" : "Event deleted",

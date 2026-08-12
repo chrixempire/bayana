@@ -18,6 +18,8 @@ export type InKindItem = {
   description: string
   quantity: number
   imageUrl: string | null
+  /** Local file for multipart upload (`item[n][image]`). */
+  file?: File
 }
 
 export type CreateEventFormState = {

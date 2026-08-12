@@ -215,30 +215,32 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "http://api.joinbayana.com/api/v1/auth/email/verify/019f241b-ec38-70da-9cac-dace1c2e1514/09d09940f946880dcea4f1bb546fdbdd0c47ee0b?expires=1783020837&signature=5c8d493f1a90090adaa0500d32ecd5c1eaa802700ee159a03c118bef1ad829c0",
+                  "raw": "http://127.0.0.1:8080/api/v1/auth/email/verify/019fd75e-483e-72f6-b7e5-86eba3aa6ff6/09d09940f946880dcea4f1bb546fdbdd0c47ee0b?expires=1786028309&signature=5489b0b5a8f4408b3305788e9baa7e443deed015bf5ba9a6659038da80b319b5",
                   "protocol": "http",
                   "host": [
-                    "api",
-                    "joinbayana",
-                    "com"
+                    "127",
+                    "0",
+                    "0",
+                    "1"
                   ],
+                  "port": "8080",
                   "path": [
                     "api",
                     "v1",
                     "auth",
                     "email",
                     "verify",
-                    "019f241b-ec38-70da-9cac-dace1c2e1514",
+                    "019fd75e-483e-72f6-b7e5-86eba3aa6ff6",
                     "09d09940f946880dcea4f1bb546fdbdd0c47ee0b"
                   ],
                   "query": [
                     {
                       "key": "expires",
-                      "value": "1783020837"
+                      "value": "1786028309"
                     },
                     {
                       "key": "signature",
-                      "value": "5c8d493f1a90090adaa0500d32ecd5c1eaa802700ee159a03c118bef1ad829c0"
+                      "value": "5489b0b5a8f4408b3305788e9baa7e443deed015bf5ba9a6659038da80b319b5"
                     }
                   ]
                 },
@@ -972,7 +974,7 @@
                       "key": "image[0]",
                       "type": "file",
                       "uuid": "7ad9667a-5c82-46f4-a291-c3ed0c93927b",
-                      "src": "/C:/Users/DELL/Pictures/Screenshots/Screenshot (1575).png"
+                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
                     },
                     {
                       "key": "image[1]",
@@ -1154,6 +1156,78 @@
                       "value": "58",
                       "type": "text",
                       "uuid": "e99946c3-9c9e-4bb4-bbd8-5192223c7b2e"
+                    },
+                    {
+                      "key": "dates[0][start_date]",
+                      "value": "2026-08-10",
+                      "type": "text",
+                      "uuid": "8ffbd376-5643-4534-abf5-6c7b2a6ea5f6"
+                    },
+                    {
+                      "key": "dates[0][end_date]",
+                      "value": "2026-08-12",
+                      "type": "text",
+                      "uuid": "b9e60c34-b339-495d-a0c3-8e03bb4680bc"
+                    },
+                    {
+                      "key": "dates[0][start_times]",
+                      "value": "10:00",
+                      "type": "text",
+                      "uuid": "f0a4e509-cfe0-4bdb-9315-e73b37af9a94"
+                    },
+                    {
+                      "key": "dates[0][end_times]",
+                      "value": "18:00",
+                      "type": "text",
+                      "uuid": "0b019d93-ceff-427c-9c8a-0eb67fa70f88"
+                    },
+                    {
+                      "key": "dates[1][start_date]",
+                      "value": "2026-08-13",
+                      "type": "text",
+                      "uuid": "4575d3d6-6ff4-438b-8671-6dd411d9d28e"
+                    },
+                    {
+                      "key": "dates[1][end_date]",
+                      "value": "2026-08-15",
+                      "type": "text",
+                      "uuid": "9d2817ff-1013-4025-bed3-eea0c238dbb0"
+                    },
+                    {
+                      "key": "dates[1][start_times]",
+                      "value": "12:00",
+                      "type": "text",
+                      "uuid": "ca274a6e-01ef-475c-96d6-f96b3d7478ab"
+                    },
+                    {
+                      "key": "dates[1][end_times]",
+                      "value": "17:00",
+                      "type": "text",
+                      "uuid": "61262399-0988-44b4-9c61-bb1f46873a99"
+                    },
+                    {
+                      "key": "dates[2][start_date]",
+                      "value": "2026-08-20",
+                      "type": "text",
+                      "uuid": "e8de5bcf-c583-4abf-92fe-d91c104c1875"
+                    },
+                    {
+                      "key": "dates[2][end_date]",
+                      "value": "2026-08-20",
+                      "type": "text",
+                      "uuid": "38355c2b-0c39-4bf7-ae05-e44edf79a89e"
+                    },
+                    {
+                      "key": "dates[2][start_times]",
+                      "value": "10:00",
+                      "type": "text",
+                      "uuid": "b6199887-7669-42ef-a49d-9158a6f10f06"
+                    },
+                    {
+                      "key": "dates[2][end_times]",
+                      "value": "15:00",
+                      "type": "text",
+                      "uuid": "decf37a4-6449-4f07-8039-58e58094672e"
                     }
                   ]
                 },
@@ -1190,8 +1264,7 @@
                       "key": "image[0]",
                       "type": "file",
                       "uuid": "7ad9667a-5c82-46f4-a291-c3ed0c93927b",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png",
-                      "disabled": true
+                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
                     },
                     {
                       "key": "image[1]",
@@ -1288,30 +1361,6 @@
                       "uuid": "02fa0509-9098-424f-9b58-3d21893bf714"
                     },
                     {
-                      "key": "start_date",
-                      "value": "2026-07-06",
-                      "type": "text",
-                      "uuid": "16f5a7f3-3869-466b-b90e-505e7c4d5131"
-                    },
-                    {
-                      "key": "end_date",
-                      "value": "2026-07-11",
-                      "type": "text",
-                      "uuid": "777949ce-265f-4eb8-b575-a4da71791470"
-                    },
-                    {
-                      "key": "start_time",
-                      "value": "09:00",
-                      "type": "text",
-                      "uuid": "31ddb594-ed92-4c77-b432-aec5ebdbb3d6"
-                    },
-                    {
-                      "key": "end_time",
-                      "value": "15:30",
-                      "type": "text",
-                      "uuid": "05072ead-0c5a-4ad0-8ed8-e49125339b0c"
-                    },
-                    {
                       "key": "enable_event_reminders",
                       "value": "1",
                       "type": "text",
@@ -1385,11 +1434,53 @@
                       "value": "20",
                       "type": "text",
                       "uuid": "facba9bc-497b-4e89-8cb1-5b2fca219b21"
+                    },
+                    {
+                      "key": "removed_dates[0]",
+                      "value": "019fd791-e5e7-704d-85be-fddb3fcc665b",
+                      "type": "text",
+                      "uuid": "b911dcf0-ad6a-4e46-8706-52f7b7903d4a"
+                    },
+                    {
+                      "key": "removed_dates[1]",
+                      "value": "019fd791-e5f2-703b-aeb5-0c1b8270d095",
+                      "type": "text",
+                      "uuid": "15d8bf98-cf9d-4629-ac48-8c51fa7b0e5f"
+                    },
+                    {
+                      "key": "dates[0][uuid]",
+                      "value": "019fd791-e60a-7299-b9e1-7ada7388cd27",
+                      "type": "text",
+                      "uuid": "a22c7c51-7a12-4c32-beea-f233a3004601"
+                    },
+                    {
+                      "key": "dates[0][start_date]",
+                      "value": "2026-08-19",
+                      "type": "text",
+                      "uuid": "bad741d6-27b6-4b38-8a40-320fb6a51098"
+                    },
+                    {
+                      "key": "dates[0][end_date]",
+                      "value": "2026-08-27",
+                      "type": "text",
+                      "uuid": "216340a5-0417-49d2-be68-bbcf88709df2"
+                    },
+                    {
+                      "key": "dates[0][start_times]",
+                      "value": "10:30",
+                      "type": "text",
+                      "uuid": "3aa3c70d-f016-4b5c-9613-871da735f058"
+                    },
+                    {
+                      "key": "dates[0][end_times]",
+                      "value": "16:30",
+                      "type": "text",
+                      "uuid": "5dabab90-bbae-4a9a-93c0-2c60a5e04046"
                     }
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/organisation/causes/019f2e54-02f7-7355-918f-4e9c840de285",
+                  "raw": "{{base_url}}/api/v1/organisation/causes/019fd791-ded3-713a-a0b0-b1189f50ec94",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1398,7 +1489,7 @@
                     "v1",
                     "organisation",
                     "causes",
-                    "019f2e54-02f7-7355-918f-4e9c840de285"
+                    "019fd791-ded3-713a-a0b0-b1189f50ec94"
                   ]
                 }
               },
@@ -1407,6 +1498,16 @@
             {
               "name": "Fetch Organisation Causes",
               "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{ngo_admin_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "GET",
                 "header": [],
                 "url": {
@@ -1430,15 +1531,16 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/volunteer/causes",
+                  "raw": "{{base_url}}/api/v1/organisation/causes/browse",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "api",
                     "v1",
-                    "volunteer",
-                    "causes"
+                    "organisation",
+                    "causes",
+                    "browse"
                   ]
                 }
               },
@@ -1678,6 +1780,488 @@
                     "organisation",
                     "causes",
                     "019f2e5f-eff3-7326-9e9c-286337fcd3f2"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Needs",
+          "item": [
+            {
+              "name": "Fetch all Needs",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/needs/browse",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "needs",
+                    "browse"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create a Need",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "title",
+                      "value": "test need 2",
+                      "type": "text",
+                      "uuid": "d71c4504-c356-4095-8b2b-561d52f768f3"
+                    },
+                    {
+                      "key": "description",
+                      "value": "a need description",
+                      "type": "text",
+                      "uuid": "8ab0a6ab-8d2a-44fc-b2a3-333e57aacba9"
+                    },
+                    {
+                      "key": "need_type",
+                      "value": "material",
+                      "type": "text",
+                      "uuid": "165df70c-3507-420c-af16-de578889bbcc"
+                    },
+                    {
+                      "key": "target_amount",
+                      "value": "560",
+                      "type": "text",
+                      "uuid": "040c975c-ffbb-4d12-bf50-93e96ea0ff03"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "USD",
+                      "type": "text",
+                      "uuid": "f190c3b1-d1de-44de-90b2-15edaad56d57"
+                    },
+                    {
+                      "key": "in_kind",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "ea4b9c6b-720c-4080-9b55-bcaa6b1decc0"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "2026-08-05",
+                      "type": "text",
+                      "uuid": "93bd9a61-98f8-4952-8b2c-3460ef1667e3"
+                    },
+                    {
+                      "key": "category[0]",
+                      "value": "4",
+                      "type": "text",
+                      "uuid": "ec28d3f9-e9b8-4fa0-be75-d5e565233c2b"
+                    },
+                    {
+                      "key": "category[1]",
+                      "value": "10",
+                      "type": "text",
+                      "uuid": "ce7b2a4b-73d4-41ba-96c9-15a8d1aa854d"
+                    },
+                    {
+                      "key": "category[2]",
+                      "value": "8",
+                      "type": "text",
+                      "uuid": "f32fc0c7-8c37-43c7-b5fb-967b0c23e733"
+                    },
+                    {
+                      "key": "item[0][name]",
+                      "value": "Bag of RiceS",
+                      "type": "text",
+                      "uuid": "87e49e47-f4a4-4342-bacd-4289628f8100"
+                    },
+                    {
+                      "key": "item[0][description]",
+                      "value": "Long grained basmatti indian rice",
+                      "type": "text",
+                      "uuid": "43bc6039-dc6a-45f3-8b60-557ecfb253e8"
+                    },
+                    {
+                      "key": "item[0][quantity]",
+                      "value": "5",
+                      "type": "text",
+                      "uuid": "9e072f7f-50a2-4bff-a448-e7002e93edfa"
+                    },
+                    {
+                      "key": "item[0][image]",
+                      "type": "file",
+                      "uuid": "6f104f41-7953-400a-8c84-350245d0897d",
+                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                    },
+                    {
+                      "key": "delivery_address",
+                      "value": "5 san francisco",
+                      "type": "text",
+                      "uuid": "8c0be086-805e-43f0-81b2-fe96531c020b"
+                    },
+                    {
+                      "key": "delivery_instructions",
+                      "value": "call me ",
+                      "type": "text",
+                      "uuid": "d22fa7da-bdb7-47ff-8cc1-b269201974df"
+                    },
+                    {
+                      "key": "visibility",
+                      "value": "private",
+                      "type": "text",
+                      "uuid": "27e4eab8-cc6d-40f9-8de7-26b1f2e62c05"
+                    },
+                    {
+                      "key": "access_code",
+                      "value": "784hdu98el3$5_!",
+                      "type": "text",
+                      "uuid": "5d00fb4a-43c7-4770-a743-d44248b13b2b"
+                    },
+                    {
+                      "key": "enable_event_reminders",
+                      "value": "0",
+                      "type": "text",
+                      "uuid": "db677459-7456-4915-981b-1cc245f06206"
+                    },
+                    {
+                      "key": "reminder_time_before",
+                      "value": "30",
+                      "type": "text",
+                      "uuid": "0411fc6b-5904-4b8f-b086-074d7e14cbdb"
+                    },
+                    {
+                      "key": "org_collaboration",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "f970bec9-978d-4447-a8a0-d678fc89e463"
+                    },
+                    {
+                      "key": "collaborator",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "4810e2df-f470-4d72-8dfd-9bf4226b7f70",
+                      "disabled": true
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2026-08-12",
+                      "type": "text",
+                      "uuid": "91ad2ce7-8f37-4e69-a44c-dc3d012175ff"
+                    },
+                    {
+                      "key": "image[0]",
+                      "type": "file",
+                      "uuid": "703a1206-b40e-4659-bc09-81a5406a9c3b",
+                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/needs",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "needs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update a need",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "title",
+                      "value": "PT 2",
+                      "type": "text",
+                      "uuid": "d71c4504-c356-4095-8b2b-561d52f768f3"
+                    },
+                    {
+                      "key": "description",
+                      "value": "a need description",
+                      "type": "text",
+                      "uuid": "8ab0a6ab-8d2a-44fc-b2a3-333e57aacba9"
+                    },
+                    {
+                      "key": "need_type",
+                      "value": "material",
+                      "type": "text",
+                      "uuid": "165df70c-3507-420c-af16-de578889bbcc"
+                    },
+                    {
+                      "key": "target_amount",
+                      "value": "400",
+                      "type": "text",
+                      "uuid": "040c975c-ffbb-4d12-bf50-93e96ea0ff03"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "USD",
+                      "type": "text",
+                      "uuid": "f190c3b1-d1de-44de-90b2-15edaad56d57"
+                    },
+                    {
+                      "key": "in_kind",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "ea4b9c6b-720c-4080-9b55-bcaa6b1decc0"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "2026-08-04",
+                      "type": "text",
+                      "uuid": "93bd9a61-98f8-4952-8b2c-3460ef1667e3"
+                    },
+                    {
+                      "key": "category[0]",
+                      "value": "4",
+                      "type": "text",
+                      "uuid": "ec28d3f9-e9b8-4fa0-be75-d5e565233c2b"
+                    },
+                    {
+                      "key": "category[1]",
+                      "value": "11",
+                      "type": "text",
+                      "uuid": "ce7b2a4b-73d4-41ba-96c9-15a8d1aa854d"
+                    },
+                    {
+                      "key": "category[2]",
+                      "value": "2",
+                      "type": "text",
+                      "uuid": "f32fc0c7-8c37-43c7-b5fb-967b0c23e733"
+                    },
+                    {
+                      "key": "item[0][name]",
+                      "value": "Indian Rice ",
+                      "type": "text",
+                      "uuid": "87e49e47-f4a4-4342-bacd-4289628f8100"
+                    },
+                    {
+                      "key": "item[0][description]",
+                      "value": "grains",
+                      "type": "text",
+                      "uuid": "43bc6039-dc6a-45f3-8b60-557ecfb253e8"
+                    },
+                    {
+                      "key": "item[0][quantity]",
+                      "value": "3",
+                      "type": "text",
+                      "uuid": "9e072f7f-50a2-4bff-a448-e7002e93edfa"
+                    },
+                    {
+                      "key": "item[0][image]",
+                      "type": "file",
+                      "uuid": "6f104f41-7953-400a-8c84-350245d0897d",
+                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png",
+                      "disabled": true
+                    },
+                    {
+                      "key": "delivery_address",
+                      "value": "5 san francisco",
+                      "type": "text",
+                      "uuid": "8c0be086-805e-43f0-81b2-fe96531c020b"
+                    },
+                    {
+                      "key": "delivery_instructions",
+                      "value": "call me ",
+                      "type": "text",
+                      "uuid": "d22fa7da-bdb7-47ff-8cc1-b269201974df"
+                    },
+                    {
+                      "key": "visibility",
+                      "value": "public",
+                      "type": "text",
+                      "uuid": "27e4eab8-cc6d-40f9-8de7-26b1f2e62c05"
+                    },
+                    {
+                      "key": "access_code",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "5d00fb4a-43c7-4770-a743-d44248b13b2b",
+                      "disabled": true
+                    },
+                    {
+                      "key": "enable_event_reminders",
+                      "value": "0",
+                      "type": "text",
+                      "uuid": "db677459-7456-4915-981b-1cc245f06206"
+                    },
+                    {
+                      "key": "reminder_time_before",
+                      "value": "30",
+                      "type": "text",
+                      "uuid": "0411fc6b-5904-4b8f-b086-074d7e14cbdb"
+                    },
+                    {
+                      "key": "org_collaboration",
+                      "value": "0",
+                      "type": "text",
+                      "uuid": "f970bec9-978d-4447-a8a0-d678fc89e463"
+                    },
+                    {
+                      "key": "collaborator",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "4810e2df-f470-4d72-8dfd-9bf4226b7f70",
+                      "disabled": true
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2026-08-12",
+                      "type": "text",
+                      "uuid": "91ad2ce7-8f37-4e69-a44c-dc3d012175ff"
+                    },
+                    {
+                      "key": "image[0]",
+                      "type": "file",
+                      "uuid": "703a1206-b40e-4659-bc09-81a5406a9c3b",
+                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                    },
+                    {
+                      "key": "item[0][id]",
+                      "value": "65",
+                      "type": "text",
+                      "uuid": "16130cfb-e202-4466-82f2-6ebe953ad436"
+                    },
+                    {
+                      "key": "item[1][id]",
+                      "value": "67",
+                      "type": "text",
+                      "uuid": "44db1465-e500-4336-8d94-7f945da71305"
+                    },
+                    {
+                      "key": "item[1][name]",
+                      "value": "Live turkeys",
+                      "type": "text",
+                      "uuid": "ccc31e30-29f5-437a-99d9-3a06402d936e"
+                    },
+                    {
+                      "key": "item[1][description]",
+                      "value": "white turkeys ",
+                      "type": "text",
+                      "uuid": "4dc7b784-5bb3-4da3-9679-8e97efa557e7"
+                    },
+                    {
+                      "key": "item[1][quantity]",
+                      "value": "50",
+                      "type": "text",
+                      "uuid": "112d638e-2eab-44b0-8a44-e8fae82954ed"
+                    },
+                    {
+                      "key": "item[1][image]",
+                      "type": "file",
+                      "uuid": "9795c76d-633e-478e-b865-8ac1cc0cf74f",
+                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png",
+                      "disabled": true
+                    },
+                    {
+                      "key": "removed_items[0]",
+                      "value": "68",
+                      "type": "text",
+                      "uuid": "6ff163ff-909b-4b29-b398-d2a32cef61cf"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/needs/019fcd5c-dbdc-7325-ad16-829fe08c0d39",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "needs",
+                    "019fcd5c-dbdc-7325-ad16-829fe08c0d39"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fetch a single need",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/needs/019fcd5e-a844-7250-b018-f6417d233f5f",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "needs",
+                    "019fcd5e-a844-7250-b018-f6417d233f5f"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fetch Needs Created by Organisation",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/needs",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "needs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete a need",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/needs/019fcd5e-a844-7250-b018-f6417d233f5f",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "needs",
+                    "019fcd5e-a844-7250-b018-f6417d233f5f"
+                  ],
+                  "query": [
+                    {
+                      "key": "",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    }
                   ]
                 }
               },
@@ -3023,12 +3607,286 @@
           ]
         },
         {
-          "name": "New Request",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
+          "name": "Event Management",
+          "item": [
+            {
+              "name": "Event Stats",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/event-stats",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "event-stats"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Events List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "events"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cause Detail",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cause Volunteers Tab",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}/volunteers",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}",
+                    "volunteers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Donations Tab",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}/donations",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}",
+                    "donations"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Beneficiaries Tab",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}/beneficiaries",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}",
+                    "beneficiaries"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Enable Featured cause",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"duration_days\": 7\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}/feature",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}",
+                    "feature"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Disable Featured cause",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}/feature",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}",
+                    "feature"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Enable Urgent cause",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"duration_days\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}/urgent",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}",
+                    "urgent"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Disable Urgent cause",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/causes/{{cause_id}}/urgent",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "causes",
+                    "{{cause_id}}",
+                    "urgent"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Suspend Event",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{cause_id}}/suspend",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "events",
+                    "{{cause_id}}",
+                    "suspend"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unsuspend Event",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_id}}/suspend",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "events",
+                    "{{event_id}}",
+                    "suspend"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }

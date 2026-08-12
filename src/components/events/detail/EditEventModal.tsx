@@ -26,6 +26,17 @@ const SECTIONS: Array<{ id: Section; label: string }> = [
   { id: "settings", label: "Cause settings" },
 ]
 
+function sectionsFor(event: EventDetail) {
+  if (event.kind === "needs") {
+    return [
+      { id: "basic" as const, label: "Basic details" },
+      { id: "about" as const, label: "About this need" },
+      { id: "settings" as const, label: "Need settings" },
+    ]
+  }
+  return SECTIONS
+}
+
 function Field({
   label,
   required,
@@ -83,6 +94,8 @@ export function EditEventModal({
 
   const wordCount = title.trim() ? title.trim().split(/\s+/).length : 0
   const truncatedTitle = event.title.length > 34 ? `${event.title.slice(0, 34)}…` : event.title
+  const sections = sectionsFor(event)
+  const isNeeds = event.kind === "needs"
 
   const save = () => {
     if (saving) return
@@ -135,7 +148,7 @@ export function EditEventModal({
     >
       <div className="flex flex-col md:flex-row">
         <div className="flex gap-1 border-b border-border-default-100 p-4 md:w-[220px] md:shrink-0 md:flex-col md:border-b-0 md:border-r">
-          {SECTIONS.map((item) => (
+          {sections.map((item) => (
             <button
               key={item.id}
               type="button"
@@ -165,8 +178,9 @@ export function EditEventModal({
 
               <Field label="Image" required>
                 <p className="-mt-0.5 text-xs leading-5 text-text-table-header">
-                  This helps volunteers have a visual about this cause. You can upload up to 4 images.
-                  One will be your cover image
+                  This helps {isNeeds ? "donors" : "volunteers"} have a visual about this{" "}
+                  {isNeeds ? "need" : "cause"}. You can upload up to 4 images. One will be your cover
+                  image
                 </p>
                 <ImageUploader
                   images={images}
@@ -190,16 +204,24 @@ export function EditEventModal({
                   ))}
                 </div>
               </Field>
-              <Field label="Requirements">
-                <Textarea value={requirements} onChange={(e) => setRequirements(e.target.value)} rows={4} />
-              </Field>
-              <Field label="Skills needed">
-                <div className="flex flex-wrap gap-1.5">
-                  {event.about.skills.map((skill) => (
-                    <DetailChip key={skill}>{skill}</DetailChip>
-                  ))}
-                </div>
-              </Field>
+              {isNeeds ? null : (
+                <>
+                  <Field label="Requirements">
+                    <Textarea
+                      value={requirements}
+                      onChange={(e) => setRequirements(e.target.value)}
+                      rows={4}
+                    />
+                  </Field>
+                  <Field label="Skills needed">
+                    <div className="flex flex-wrap gap-1.5">
+                      {event.about.skills.map((skill) => (
+                        <DetailChip key={skill}>{skill}</DetailChip>
+                      ))}
+                    </div>
+                  </Field>
+                </>
+              )}
             </>
           ) : null}
 
@@ -209,11 +231,26 @@ export function EditEventModal({
                 <Input density="compact" defaultValue={event.meta.find((r) => r.id === "date")?.value} />
               </Field>
               <Field label="Visibility">
-                <Input density="compact" defaultValue={event.meta.find((r) => r.id === "visibility")?.value} />
+                <Input
+                  density="compact"
+                  defaultValue={event.meta.find((r) => r.id === "visibility")?.value}
+                />
               </Field>
-              <Field label="Volunteering type">
-                <Input density="compact" defaultValue={event.meta.find((r) => r.id === "type")?.value} />
-              </Field>
+              {isNeeds ? (
+                <Field label="Donation type">
+                  <Input
+                    density="compact"
+                    defaultValue={event.meta.find((r) => r.id === "donation-type")?.value}
+                  />
+                </Field>
+              ) : (
+                <Field label="Volunteering type">
+                  <Input
+                    density="compact"
+                    defaultValue={event.meta.find((r) => r.id === "type")?.value}
+                  />
+                </Field>
+              )}
               <Field label="Contact person">
                 <Input density="compact" value={contact} onChange={(e) => setContact(e.target.value)} />
               </Field>

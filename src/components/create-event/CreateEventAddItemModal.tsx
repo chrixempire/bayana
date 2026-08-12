@@ -13,6 +13,7 @@ type ItemDraft = {
   description: string
   quantity: string
   imageUrl: string | null
+  file?: File
 }
 
 const EMPTY_DRAFT: ItemDraft = { name: "", description: "", quantity: "", imageUrl: null }
@@ -24,6 +25,7 @@ function toDraft(item: InKindItem | null): ItemDraft {
     description: item.description,
     quantity: item.quantity > 0 ? String(item.quantity) : "",
     imageUrl: item.imageUrl,
+    file: item.file,
   }
 }
 
@@ -59,12 +61,17 @@ export function CreateEventAddItemModal({
       description: draft.description.trim(),
       quantity: quantityValue,
       imageUrl: draft.imageUrl,
+      file: draft.file,
     })
   }
 
   const handleFile = (file: File | undefined) => {
     if (!file) return
-    setDraft((prev) => ({ ...prev, imageUrl: URL.createObjectURL(file) }))
+    setDraft((prev) => ({
+      ...prev,
+      file,
+      imageUrl: URL.createObjectURL(file),
+    }))
   }
 
   return (
@@ -137,7 +144,7 @@ export function CreateEventAddItemModal({
               <button
                 type="button"
                 aria-label="Remove image"
-                onClick={() => setDraft((prev) => ({ ...prev, imageUrl: null }))}
+                onClick={() => setDraft((prev) => ({ ...prev, imageUrl: null, file: undefined }))}
                 className="absolute right-1 top-1 inline-flex size-6 cursor-pointer items-center justify-center rounded-full bg-bg-canvas text-text-events-strong shadow-[0_2px_8px_rgba(44,50,55,0.12)] hover:bg-bg-on-canvas"
               >
                 <EventIcon name="delete-fill" size={EVENT_ICON_SIZE.fieldHint} />
