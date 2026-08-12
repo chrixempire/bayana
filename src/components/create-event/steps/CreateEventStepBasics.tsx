@@ -1,6 +1,7 @@
 import { Input } from "../../ui/input"
 import { CauseImageUpload } from "../CauseImageUpload"
 import { CreateEventFieldLabel } from "../CreateEventFieldLabel"
+import { CreateEventStepHeading } from "../CreateEventStepHeading"
 import { CREATE_EVENT_TITLE_MAX_WORDS } from "../../../pages/dashboard/create-event-types"
 import type { CreateEventFormState } from "../../../pages/dashboard/create-event-types"
 import type { CreateEventType } from "../../../lib/create-event-paths"
@@ -13,10 +14,12 @@ export function CreateEventStepBasics({
   eventType,
   form,
   onChange,
+  onBack,
 }: {
   eventType: CreateEventType
   form: CreateEventFormState
   onChange: (patch: Partial<CreateEventFormState>) => void
+  onBack: () => void
 }) {
   const wordCount = countWords(form.title)
   const titleOverLimit = wordCount > CREATE_EVENT_TITLE_MAX_WORDS
@@ -25,14 +28,11 @@ export function CreateEventStepBasics({
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex flex-col gap-3">
-        <h2 className="font-display text-2xl font-semibold leading-8 tracking-[-0.1px] text-text-events-strong">
-          First of all...
-        </h2>
-        <p className="type-create-event-subtitle">
-          Provide the title and cover image of this {noun}
-        </p>
-      </div>
+      <CreateEventStepHeading
+        onBack={onBack}
+        title="First of all..."
+        subtitle={`Provide the title and cover image of this ${noun}`}
+      />
 
       <div className="flex flex-col gap-2">
         <CreateEventFieldLabel label="Title" required />

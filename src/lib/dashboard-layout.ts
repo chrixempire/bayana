@@ -65,8 +65,8 @@ export const CREATE_EVENT_CONTENT_TOP_PX = 64
 /** Create event form column — inputs, buttons, and uploader share this width. */
 export const CREATE_EVENT_FORM_MAX_WIDTH_PX = 452
 
-/** Create event summary card (step 3 sidebar). */
-export const CREATE_EVENT_SUMMARY_MAX_WIDTH_PX = 400
+/** Create event summary card (step 3 sidebar) — Figma 18290:41007. */
+export const CREATE_EVENT_SUMMARY_MAX_WIDTH_PX = 398
 
 /** Create event image drop zone height (Figma). */
 export const CREATE_EVENT_IMAGE_UPLOADER_HEIGHT_PX = 130

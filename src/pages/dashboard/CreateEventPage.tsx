@@ -73,8 +73,16 @@ export function CreateEventPage() {
   }
 
   const handleBack = () => {
-    if (activeStepIndex <= 0) return
-    goToStep(activeStepIndex - 1)
+    if (activeStepIndex > 0) {
+      goToStep(activeStepIndex - 1)
+      return
+    }
+    // Step 1 — leave create and return to the page that opened it.
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+    navigate(DASHBOARD_TAB_PATHS.events)
   }
 
   const handleContinue = () => {
@@ -195,7 +203,12 @@ export function CreateEventPage() {
           <div className="flex min-w-0 flex-1 flex-col gap-10 xl:flex-row xl:items-start">
             <CreateEventFormColumn>
               {activeStep.id === "basics" ? (
-                <CreateEventStepBasics eventType={eventType} form={form} onChange={patchForm} />
+                <CreateEventStepBasics
+                  eventType={eventType}
+                  form={form}
+                  onChange={patchForm}
+                  onBack={handleBack}
+                />
               ) : null}
               {activeStep.id === "about" ? (
                 <CreateEventStepAbout
@@ -218,7 +231,11 @@ export function CreateEventPage() {
                 />
               ) : null}
               {activeStep.id === "needs-basics" ? (
-                <CreateEventNeedsStepBasics form={form} onChange={patchForm} />
+                <CreateEventNeedsStepBasics
+                  form={form}
+                  onChange={patchForm}
+                  onBack={handleBack}
+                />
               ) : null}
               {activeStep.id === "needs-config" ? (
                 <CreateEventNeedsStepConfig
