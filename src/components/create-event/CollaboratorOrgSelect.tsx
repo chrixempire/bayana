@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react"
 import type { KeyboardEvent } from "react"
 import { useAnchorWidth } from "../../hooks/use-anchor-width"
-import { searchOrganisations } from "../../lib/api/organisations"
+import { getCauseCollaborators } from "../../lib/api/organisations"
 import { cn } from "../../lib/utils"
 import { EventIcon } from "../events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
@@ -34,7 +34,7 @@ export function CollaboratorOrgSelect({
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [debouncedQuery, setDebouncedQuery] = useState("")
-  const [options, setOptions] = useState<Array<{ id: string; label: string }>>([])
+  const [collaborators, setCollaborators] = useState<Array<{ id: string; label: string }>>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
@@ -50,15 +50,10 @@ export function CollaboratorOrgSelect({
     return () => window.clearTimeout(timer)
   }, [query])
 
+  // The collaborators endpoint has no server-side search, so load the verified
+  // organisations once per open and filter the list client-side below.
   useEffect(() => {
     if (!open) return
-
-    if (UUID_PATTERN.test(debouncedQuery)) {
-      setOptions([{ id: debouncedQuery, label: debouncedQuery }])
-      setIsLoading(false)
-      setError(null)
-      return
-    }
 
     let cancelled = false
 
@@ -67,17 +62,13 @@ export function CollaboratorOrgSelect({
       setError(null)
 
       try {
-        const results = await searchOrganisations(debouncedQuery || "a")
+        const results = await getCauseCollaborators()
         if (cancelled) return
-        setOptions(results.map((org) => ({ id: org.uuid, label: org.name })))
+        setCollaborators(results.map((org) => ({ id: org.uuid, label: org.name })))
       } catch {
         if (cancelled) return
-        setOptions([])
-        setError(
-          debouncedQuery
-            ? "Unable to search organisations. Paste an organisation UUID if you have one."
-            : "Unable to load organisations. Paste an organisation UUID if you have one.",
-        )
+        setCollaborators([])
+        setError("Unable to load organisations. Paste an organisation UUID if you have one.")
       } finally {
         if (!cancelled) setIsLoading(false)
       }
@@ -86,7 +77,18 @@ export function CollaboratorOrgSelect({
     return () => {
       cancelled = true
     }
-  }, [debouncedQuery, open])
+  }, [open])
+
+  const options = useMemo(() => {
+    if (UUID_PATTERN.test(debouncedQuery)) {
+      const match = collaborators.find((org) => org.id === debouncedQuery)
+      return match ? [match] : [{ id: debouncedQuery, label: debouncedQuery }]
+    }
+
+    const needle = debouncedQuery.toLowerCase()
+    if (!needle) return collaborators
+    return collaborators.filter((org) => org.label.toLowerCase().includes(needle))
+  }, [collaborators, debouncedQuery])
 
   const visibleOptions = useMemo(() => {
     if (valueId && valueLabel && !options.some((option) => option.id === valueId)) {

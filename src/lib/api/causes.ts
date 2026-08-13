@@ -281,6 +281,21 @@ export function getOrganisationCauses() {
   })
 }
 
+/** Public browse feed of every cause (not scoped to the current organisation). */
+export function browseCauses(query: { per_page?: number; page?: number; search?: string } = {}) {
+  const params = new URLSearchParams()
+  if (query.search?.trim()) params.set("search", query.search.trim())
+  if (query.per_page) params.set("per_page", String(query.per_page))
+  if (query.page) params.set("page", String(query.page))
+
+  const suffix = params.toString() ? `?${params.toString()}` : ""
+
+  return apiRequest<ApiDataResponse<ApiCause[] | { data?: ApiCause[] }>>(
+    `/api/v1/organisation/causes/browse${suffix}`,
+    { method: "GET" },
+  )
+}
+
 export function getOrganisationCause(causeUuid: string) {
   return apiRequest<ApiDataResponse<ApiCause>>(`/api/v1/organisation/causes/${causeUuid}`, {
     method: "GET",

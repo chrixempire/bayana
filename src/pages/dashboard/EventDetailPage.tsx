@@ -39,9 +39,15 @@ import type { ApiNeed } from "../../lib/api/need-types"
 import {
   buildCauseUpdateFormData,
   deleteOrganisationCause,
+  getCauseUuid,
   getOrganisationCause,
   updateOrganisationCause,
 } from "../../lib/api/causes"
+import {
+  extractParticipants,
+  getCauseParticipants,
+  mapParticipantsToVolunteers,
+} from "../../lib/api/cause-participants"
 import {
   buildNeedUpdateFormData,
   deleteOrganisationNeed,
@@ -400,6 +406,48 @@ export function EventDetailPage() {
     }
   }, [eventId, useMockDetail, isNeedsRoute, setSearchParams])
 
+  // Load real cause participants into the Volunteers tab once the cause resolves.
+  const causeUuid = apiCause ? getCauseUuid(apiCause) : null
+  useEffect(() => {
+    if (useMockDetail || !causeUuid) return
+
+    let cancelled = false
+
+    void (async () => {
+      try {
+        const response = await getCauseParticipants(causeUuid, { per_page: 100 })
+        if (cancelled) return
+
+        const rows = mapParticipantsToVolunteers(extractParticipants(response))
+        setEvent((prev) => {
+          if (!prev) return prev
+          const max = prev.volunteers.totals.volunteers.max
+          const accepted = rows.filter((row) => row.status === "accepted").length
+          return {
+            ...prev,
+            volunteers: {
+              ...prev.volunteers,
+              rows,
+              totals: {
+                ...prev.volunteers.totals,
+                volunteers: { current: accepted, max },
+                spotsLeft: max > 0 ? Math.max(0, max - accepted) : 0,
+                pending: rows.filter((row) => row.status === "pending").length,
+                waitlists: rows.filter((row) => row.status === "waitlist").length,
+              },
+            },
+          }
+        })
+      } catch {
+        // Leave the mapped zero-state in place if participants can't be loaded.
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [causeUuid, useMockDetail])
+
   // Re-seed the mock working copy when the event or any variant override changes.
   if (useMockDetail && seedKey !== key) {
     setSeedKey(key)
@@ -600,7 +648,7 @@ export function EventDetailPage() {
       case "updates":
         return <UpdatesTab data={event.updates} onChange={setUpdates} />
       case "volunteers":
-        return <VolunteersTab data={event.volunteers} onChange={setVolunteers} />
+        return <VolunteersTab data={event.volunteers} onChange={setVolunteers} causeUuid={causeUuid} />
       case "donations":
         return <DonationsTab data={event.donations} />
       case "reviews":

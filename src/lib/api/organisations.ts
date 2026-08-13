@@ -41,6 +41,27 @@ function extractOrganisationList(payload: unknown): OrganisationListItem[] {
   return []
 }
 
+/**
+ * Verified organisations eligible to be added as cause collaborators.
+ * Backed by `GET /organisation/causes/collaborators` (no server-side search),
+ * so callers filter the returned list client-side.
+ */
+export async function getCauseCollaborators() {
+  const response = await apiRequest<ApiDataResponse<unknown>>(
+    "/api/v1/organisation/causes/collaborators",
+    { method: "GET" },
+  )
+
+  return extractOrganisationList(response)
+    .map((item) => {
+      const uuid = readOrgUuid(item)
+      const name = readOrgName(item)
+      if (!uuid || !name) return null
+      return { uuid, name } satisfies OrganisationSearchResult
+    })
+    .filter((item): item is OrganisationSearchResult => item != null)
+}
+
 export async function searchOrganisations(search: string, perPage = 15) {
   const params = new URLSearchParams({
     search: search.trim(),

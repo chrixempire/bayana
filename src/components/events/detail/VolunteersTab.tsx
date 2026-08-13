@@ -22,6 +22,8 @@ import {
 import { DataTableEmptyState, DataTablePagination, FilterDropdown, RowActionsDropdown } from "../../data-table"
 import type { RowActionConfig } from "../../data-table"
 import { toast } from "../../../hooks/use-toast"
+import { updateCauseParticipantStatus } from "../../../lib/api/cause-participants"
+import { formatApiError } from "../../../lib/api/format-api-error"
 import { useSimulatedLoading } from "../../../hooks/use-simulated-loading"
 import { DetailTableSkeleton } from "./DetailTableSkeleton"
 import type {
@@ -115,9 +117,12 @@ function recomputeTotals(
 export function VolunteersTab({
   data,
   onChange,
+  causeUuid,
 }: {
   data: VolunteersData
   onChange: (data: VolunteersData) => void
+  /** When set, accept/decline hit the participants API instead of mutating locally. */
+  causeUuid?: string | null
 }) {
   const [search, setSearch] = useState("")
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -166,9 +171,14 @@ export function VolunteersTab({
     onChange({ ...data, rows, totals: recomputeTotals(rows, data.totals) })
   }
 
-  const confirmAction = () => {
-    if (!action) return
-    const { type, volunteer } = action
+  const clearSelection = (id: string) =>
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      next.delete(id)
+      return next
+    })
+
+  const applyLocalDecision = (type: VolunteerActionType, volunteer: Volunteer) => {
     const nextStatus: VolunteerStatus | null =
       type === "accept" ? "accepted" : type === "waitlist" ? "waitlist" : null
     const rows = nextStatus
@@ -177,11 +187,36 @@ export function VolunteersTab({
     commitRows(rows)
     toast({ variant: "success", title: `${ACTION_CONFIG[type].confirmLabel} · ${volunteer.name}` })
     setDetailVolunteer(null)
-    setSelectedIds((prev) => {
-      const next = new Set(prev)
-      next.delete(volunteer.id)
-      return next
-    })
+    clearSelection(volunteer.id)
+  }
+
+  const confirmAction = () => {
+    if (!action) return
+    const { type, volunteer } = action
+
+    // Accept/decline are the only API-backed decisions; waitlist/remove stay local
+    // until the participants API supports them.
+    if (causeUuid && (type === "accept" || type === "decline")) {
+      void (async () => {
+        try {
+          await updateCauseParticipantStatus(
+            causeUuid,
+            volunteer.id,
+            type === "accept" ? "approved" : "rejected",
+          )
+          applyLocalDecision(type, volunteer)
+        } catch (error) {
+          toast({
+            variant: "destructive",
+            title: type === "accept" ? "Unable to accept request" : "Unable to decline request",
+            description: formatApiError(error, "Please try again."),
+          })
+        }
+      })()
+      return
+    }
+
+    applyLocalDecision(type, volunteer)
   }
 
   const activeConfig = action ? ACTION_CONFIG[action.type] : null
@@ -477,16 +512,47 @@ export function VolunteersTab({
           confirmLabel={bulkConfig.confirmLabel}
           variant={bulkConfig.variant}
           onConfirm={() => {
-            const nextStatus: VolunteerStatus | null =
-              bulk === "accept" ? "accepted" : bulk === "waitlist" ? "waitlist" : null
-            const rows = nextStatus
-              ? data.rows.map((row) =>
-                  selectedIds.has(row.id) ? { ...row, status: nextStatus } : row,
+            const targetIds = data.rows.filter((row) => selectedIds.has(row.id)).map((row) => row.id)
+
+            const applyBulk = (ids: string[]) => {
+              const applyIds = new Set(ids)
+              const nextStatus: VolunteerStatus | null =
+                bulk === "accept" ? "accepted" : bulk === "waitlist" ? "waitlist" : null
+              const rows = nextStatus
+                ? data.rows.map((row) =>
+                    applyIds.has(row.id) ? { ...row, status: nextStatus } : row,
+                  )
+                : data.rows.filter((row) => !applyIds.has(row.id)) // decline
+              commitRows(rows)
+              setSelectedIds(new Set())
+            }
+
+            if (causeUuid && (bulk === "accept" || bulk === "decline")) {
+              const apiStatus = bulk === "accept" ? "approved" : "rejected"
+              void (async () => {
+                const results = await Promise.allSettled(
+                  targetIds.map((id) => updateCauseParticipantStatus(causeUuid, id, apiStatus)),
                 )
-              : data.rows.filter((row) => !selectedIds.has(row.id)) // decline
-            commitRows(rows)
+                const succeeded = targetIds.filter((_, index) => results[index]?.status === "fulfilled")
+                const failed = targetIds.length - succeeded.length
+
+                if (succeeded.length > 0) applyBulk(succeeded)
+
+                if (failed > 0) {
+                  toast({
+                    variant: "destructive",
+                    title: `${bulkConfig.confirmLabel} failed for ${failed} volunteer${failed === 1 ? "" : "s"}`,
+                    description: succeeded.length > 0 ? "The rest were updated." : "Please try again.",
+                  })
+                } else {
+                  toast({ variant: "success", title: `${bulkConfig.confirmLabel} · ${succeeded.length} volunteers` })
+                }
+              })()
+              return
+            }
+
+            applyBulk(targetIds)
             toast({ variant: "success", title: `${bulkConfig.confirmLabel} · ${selectionCount} volunteers` })
-            setSelectedIds(new Set())
           }}
         />
       ) : null}
