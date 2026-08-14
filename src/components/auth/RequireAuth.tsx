@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { AUTH_LOGIN_PATH } from "../../lib/auth-paths"
+import { AuthUserProvider } from "../../lib/auth/AuthUserProvider"
 import { hasAuthSession } from "../../lib/auth/session"
 
 /**
@@ -15,5 +16,9 @@ export function RequireAuth() {
     return <Navigate to={`${AUTH_LOGIN_PATH}${search}`} replace />
   }
 
-  return <Outlet />
+  return (
+    <AuthUserProvider>
+      <Outlet />
+    </AuthUserProvider>
+  )
 }

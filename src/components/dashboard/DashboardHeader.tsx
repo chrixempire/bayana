@@ -11,6 +11,8 @@ import {
 import { EventIcon, type EventIconName } from "../events/icons/EventIcon"
 import { EVENT_ICON_SIZE } from "../events/icons/event-icon-sizes"
 import { performLogout } from "../../lib/auth/logout"
+import { useAuthUser } from "../../lib/auth/auth-user-context"
+import { deriveHeaderIdentity } from "../../lib/auth/header-identity"
 import { DASHBOARD_PAGE_GUTTER_PX } from "../../lib/dashboard-layout"
 import { toast } from "../../hooks/use-toast"
 import { HeaderSearch } from "./HeaderSearch"
@@ -56,15 +58,27 @@ function HeaderMenuItem({
 }
 
 export function DashboardHeader({
-  organizationName = "Acme Incorporation",
-  organizationInitial = "A",
-  planLabel = "Free",
-  userInitial = "D",
-  userName = "Daniel Osonuga",
-  userRole = "Administrator",
+  organizationName,
+  organizationInitial,
+  planLabel,
+  userInitial,
+  userName,
+  userRole,
 }: DashboardHeaderProps) {
   const navigate = useNavigate()
+  const { user } = useAuthUser()
+  const identity = deriveHeaderIdentity(user)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  // Explicit props win (e.g. previews/tests); otherwise show the live `/me` identity.
+  const resolved = {
+    organizationName: organizationName ?? identity.organizationName,
+    organizationInitial: organizationInitial ?? identity.organizationInitial,
+    planLabel: planLabel ?? identity.planLabel,
+    userInitial: userInitial ?? identity.userInitial,
+    userName: userName ?? identity.userName,
+    userRole: userRole ?? identity.userRole,
+  }
 
   const handleLogout = async () => {
     if (isLoggingOut) return
@@ -79,7 +93,7 @@ export function DashboardHeader({
   const navProfileAvatar = isLoggingOut ? (
     <SpinnerIcon className="size-4 text-text-nav-tab-active" aria-hidden />
   ) : (
-    userInitial
+    resolved.userInitial
   )
 
   return (
@@ -102,9 +116,9 @@ export function DashboardHeader({
               aria-hidden
               className="flex size-6 shrink-0 items-center justify-center rounded bg-bg-accent text-[11px] font-bold leading-[18px] text-text-on-solid-bg"
             >
-              {organizationInitial}
+              {resolved.organizationInitial}
             </span>
-            <span className="truncate type-small-medium text-text-on-solid-bg">{organizationName}</span>
+            <span className="truncate type-small-medium text-text-on-solid-bg">{resolved.organizationName}</span>
             <EventIcon
               name="selector-vertical-line"
               size={EVENT_ICON_SIZE.meta}
@@ -118,11 +132,11 @@ export function DashboardHeader({
                 aria-hidden
                 className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-bg-accent text-xl font-bold leading-7 text-text-on-solid-bg"
               >
-                {organizationInitial}
+                {resolved.organizationInitial}
               </span>
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="truncate type-small-medium text-text-events-strong">{organizationName}</span>
-                <span className="text-xs leading-5 text-text-table-header">{planLabel}</span>
+                <span className="truncate type-small-medium text-text-events-strong">{resolved.organizationName}</span>
+                <span className="text-xs leading-5 text-text-table-header">{resolved.planLabel}</span>
               </div>
             </div>
             <div className="flex w-full flex-col gap-1">
@@ -147,7 +161,7 @@ export function DashboardHeader({
         </DropdownMenu>
 
         <span className="inline-flex h-[18px] shrink-0 items-center rounded bg-bg-accent px-1 py-0.5 text-[10px] font-medium leading-[18px] tracking-[0.1px] text-text-on-solid-bg">
-          {planLabel}
+          {resolved.planLabel}
         </span>
       </div>
 
@@ -193,12 +207,12 @@ export function DashboardHeader({
                 {isLoggingOut ? (
                   <SpinnerIcon className="size-4 text-text-nav-tab-active" aria-hidden />
                 ) : (
-                  userInitial
+                  resolved.userInitial
                 )}
               </span>
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="truncate type-small-medium text-text-events-strong">{userName}</span>
-                <span className="text-xs leading-5 text-text-table-header">{userRole}</span>
+                <span className="truncate type-small-medium text-text-events-strong">{resolved.userName}</span>
+                <span className="text-xs leading-5 text-text-table-header">{resolved.userRole}</span>
               </div>
             </div>
             <div className="flex w-full flex-col gap-1">

@@ -12,6 +12,7 @@ import {
 } from "../../lib/auth/parse-email-verify-link"
 import { setPendingEmailVerify } from "../../lib/auth/pending-email-verify"
 import { consumeVerifyAfterLogin } from "../../lib/auth/verify-flow-state"
+import { hasAuthSession } from "../../lib/auth/session"
 import { AUTH_CREATE_ACCOUNT_PATH, AUTH_LOGIN_PATH, AUTH_ONBOARDING_PATH } from "../../lib/auth-paths"
 import {
   authBodyTextClassName,
@@ -67,7 +68,10 @@ export function EmailVerifyPage() {
 
       const verifiedAfterLogin = consumeVerifyAfterLogin()
 
-      if (verifiedAfterLogin) {
+      // Already authenticated (registered in this browser, or signed in to verify):
+      // continue straight into onboarding. Routing through /auth/login here would hit
+      // GuestOnly, which drops the `next` target and lands the user on /get-started.
+      if (hasAuthSession() || verifiedAfterLogin) {
         navigate(ONBOARDING_ENTRY_PATH, { replace: true })
         return
       }
