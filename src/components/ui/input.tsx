@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority"
 import { cn } from "../../lib/utils"
 
 const inputVariants = cva(
-  "flex w-full items-center gap-3 overflow-hidden border bg-input-surface text-text-default-500 shadow-input-default transition-colors focus-within:border-border-input-active focus-within:ring-2 focus-within:ring-[rgb(255,122,26,0.12)]",
+  "flex w-full items-center gap-2 overflow-hidden border bg-input-surface text-text-default-500 shadow-input-default transition-colors focus-within:border-border-input-active focus-within:ring-2 focus-within:ring-[rgb(255,122,26,0.12)]",
   {
     variants: {
       density: {
@@ -54,8 +54,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         ref={ref}
         type={type}
         className={cn(
-          "w-full min-w-0 border-0 bg-transparent [border-radius:inherit] type-small-regular text-[14px] leading-[22px] tracking-[-0.1px] outline-none placeholder:text-input-placeholder disabled:cursor-not-allowed",
-          density === "compact" ? "h-10 min-h-10 px-4 py-2" : "h-[44px] px-4 py-2",
+          "w-full min-w-0 border-0 bg-transparent [border-radius:inherit] type-small-regular text-[14px] leading-[22px] tracking-[-0.1px] outline-none disabled:cursor-not-allowed",
+          density === "compact" ? "h-10 min-h-10 py-2" : "h-[44px] py-2",
+          // Drop the input's own left padding when a leading icon is present so the
+          // icon sits ~8px from the text (Figma), instead of icon-gap + input padding.
+          leftIcon ? "pl-0" : "pl-4",
+          "pr-4",
+          // Search fields (the only inputs with a leading icon) use the Figma
+          // placeholder colour #A0ACB6; other inputs keep the default placeholder.
+          leftIcon ? "placeholder:text-text-disabled-300" : "placeholder:text-input-placeholder",
           isNumber && "tabular-nums",
         )}
         disabled={disabled}

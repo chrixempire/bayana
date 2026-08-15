@@ -5,6 +5,7 @@ import { DashboardContent, DashboardLayout } from "../../components/dashboard/Da
 import { AnimatedPageTitle } from "../../components/ui/AnimatedPageTitle"
 import { authBodyTextClassName } from "../../lib/auth-form-styles"
 import { cn } from "../../lib/utils"
+import { useSettlementAccount } from "../../hooks/use-settlement-account"
 import {
   buildSetupTasks,
   parseGettingStartedScenario,
@@ -14,7 +15,16 @@ import {
 export function GettingStartedPage() {
   const [searchParams] = useSearchParams()
   const scenario = parseGettingStartedScenario(searchParams.get("scenario"))
-  const tasks = buildSetupTasks(scenario)
+  const { hasSettlementAccount } = useSettlementAccount()
+  const baseTasks = buildSetupTasks(scenario)
+  // Reflect the real settlement account: once one exists, the bank step is done.
+  const tasks = hasSettlementAccount
+    ? baseTasks.map((task) =>
+        task.id === "bank"
+          ? { ...task, action: { kind: "completed" as const, label: "Done" as const } }
+          : task,
+      )
+    : baseTasks
   const showBanner = shouldShowOnboardingBanner(scenario)
 
   return (

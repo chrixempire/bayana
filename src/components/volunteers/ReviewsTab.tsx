@@ -177,7 +177,7 @@ export function ReviewsTab({ isEmpty }: { isEmpty: boolean }) {
             placeholder="Search volunteers"
             leftIcon={<EventIcon name="search-line" size={EVENT_ICON_SIZE.search} />}
             aria-label="Search reviews"
-            className="h-8 min-h-8 rounded-[10px] border-0 bg-bg-default-100 px-3 shadow-none"
+            className="h-8 min-h-8 rounded-[10px] border-0 bg-[#EDF0F2] shadow-none"
           />
         </div>
       </div>

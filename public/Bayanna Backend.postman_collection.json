@@ -26,7 +26,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"email\" : \"emmanuel_sofuwa@icloud.com\",\r\n    \"password\": \"testpassword123\"\r\n}",
+                  "raw": "{\r\n    \"email\" : \"emmanuel_sofuwa@cloud.com\",\r\n    \"password\": \"testpassword123\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -170,16 +170,6 @@
             {
               "name": "Auth User",
               "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "4|8OPZOykpd0YF1lzjXxHKhNvkLHI9IIB8RtCafLNm99ed20b9",
-                      "type": "string"
-                    }
-                  ]
-                },
                 "method": "GET",
                 "header": [
                   {
@@ -215,7 +205,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "http://127.0.0.1:8080/api/v1/auth/email/verify/019fd75e-483e-72f6-b7e5-86eba3aa6ff6/09d09940f946880dcea4f1bb546fdbdd0c47ee0b?expires=1786028309&signature=5489b0b5a8f4408b3305788e9baa7e443deed015bf5ba9a6659038da80b319b5",
+                  "raw": "http://127.0.0.1:8080/api/v1/auth/email/verify/019fffe4-5788-701a-bdb4-c88313a3389e/db0f1c04a26f1f13dabe60c7f7de7adf26b89443?expires=1786708183&signature=091a320bae9a31b4cdc657cd23012a95b84d99152b59256cbc31c10fb011e0a6",
                   "protocol": "http",
                   "host": [
                     "127",
@@ -230,17 +220,17 @@
                     "auth",
                     "email",
                     "verify",
-                    "019fd75e-483e-72f6-b7e5-86eba3aa6ff6",
-                    "09d09940f946880dcea4f1bb546fdbdd0c47ee0b"
+                    "019fffe4-5788-701a-bdb4-c88313a3389e",
+                    "db0f1c04a26f1f13dabe60c7f7de7adf26b89443"
                   ],
                   "query": [
                     {
                       "key": "expires",
-                      "value": "1786028309"
+                      "value": "1786708183"
                     },
                     {
                       "key": "signature",
-                      "value": "5489b0b5a8f4408b3305788e9baa7e443deed015bf5ba9a6659038da80b319b5"
+                      "value": "091a320bae9a31b4cdc657cd23012a95b84d99152b59256cbc31c10fb011e0a6"
                     }
                   ]
                 },
@@ -270,13 +260,47 @@
               },
               "response": []
             }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{ngo_admin_token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
           ]
         },
         {
           "name": "Reset Password",
           "item": [
             {
-              "name": "Update Password",
+              "name": "Reset Password",
               "request": {
                 "method": "POST",
                 "header": [],
@@ -332,6 +356,35 @@
                   ]
                 },
                 "description": "## Forgot Password\n\nThis endpoint initiates the forgot-password flow. It accepts an email address, checks if it exists in the system, and if found, sends a password reset link to that email address.\n\nNo authentication is required to access this endpoint.\n\n---\n\n### Request Body\n\n| Field   | Type   | Required | Description                                          |\n|---------|--------|----------|------------------------------------------------------|\n| `email` | string | ✅ Yes   | The email address associated with the user account.  |\n\n**Example:**\n```json\n{\n  \"email\": \"newVolunteer@example.com\"\n}\n```\n\n---\n\n### Success Response\n\n**Status:** `200 OK`\n\n```json\n{\n  \"data\": {\n    \"headers\": {},\n    \"original\": null,\n    \"exception\": null\n  },\n  \"message\": \"Link sent succesfully\"\n}\n```\n\n---\n\n### Notes\n\n- No authentication is required for this endpoint.\n- If the provided email exists in the system, a password reset link is sent to that address.\n- The reset link is delivered via email — the user should check their inbox to proceed with resetting their password.\n"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Password",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"current_password\": \"testpassword123\",\r\n    \"new_password\": \"Bayana#101Cause#\",\r\n    \"new_password_confirmation\": \"Bayana#101Cause#\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/update-password",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "update-password"
+                  ]
+                }
               },
               "response": []
             }
@@ -817,7 +870,7 @@
                       "key": "name",
                       "type": "text",
                       "uuid": "320344a7-e311-41e1-8dff-f2b9610a8bda",
-                      "value": "Test Organization"
+                      "value": "Feed The 5000"
                     },
                     {
                       "key": "registration_number",
@@ -883,31 +936,31 @@
                       "key": "cac_doc",
                       "type": "file",
                       "uuid": "e4006345-4793-4474-8f61-fa0b65ac3755",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "org_certificate_doc",
                       "type": "file",
                       "uuid": "5e4c9a4f-dd10-4a66-9471-8d4a9a29db43",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "proof_of_add_doc",
                       "type": "file",
                       "uuid": "73785942-b8e4-4a95-a2a8-fd576bd3d74c",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "scuml_doc",
                       "type": "file",
                       "uuid": "608ede01-e8ac-4449-901b-ff4cd484cd20",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "logo",
                       "type": "file",
                       "uuid": "46f3d624-f7ce-45ba-8b26-b2f73eb07a61",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "cause_areas[]",
@@ -950,6 +1003,74 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "verification Status",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/verification-status",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "verification-status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fetch document Status",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/documents",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get bank list",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/banks",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "banks"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get settlement account",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
             }
           ]
         },
@@ -974,21 +1095,19 @@
                       "key": "image[0]",
                       "type": "file",
                       "uuid": "7ad9667a-5c82-46f4-a291-c3ed0c93927b",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png"
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "image[1]",
                       "type": "file",
                       "uuid": "8b2c547a-62da-4461-ac49-e60359c5e3b4",
-                      "src": "/C:/Users/DELL/Downloads/PostgreSQL.png",
-                      "disabled": true
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "image[2]",
                       "type": "file",
                       "uuid": "112e2e32-6a20-4948-b2ac-f5bcb0f43fee",
-                      "value": null,
-                      "disabled": true
+                      "src": "postman-cloud:///1f176186-b092-4490-9c66-c1275164dcf3"
                     },
                     {
                       "key": "image[3]",
@@ -1074,25 +1193,29 @@
                       "key": "start_date",
                       "value": "2026-07-10",
                       "type": "text",
-                      "uuid": "16f5a7f3-3869-466b-b90e-505e7c4d5131"
+                      "uuid": "16f5a7f3-3869-466b-b90e-505e7c4d5131",
+                      "disabled": true
                     },
                     {
                       "key": "end_date",
                       "value": "2026-07-11",
                       "type": "text",
-                      "uuid": "777949ce-265f-4eb8-b575-a4da71791470"
+                      "uuid": "777949ce-265f-4eb8-b575-a4da71791470",
+                      "disabled": true
                     },
                     {
                       "key": "start_time",
                       "value": "09:00",
                       "type": "text",
-                      "uuid": "31ddb594-ed92-4c77-b432-aec5ebdbb3d6"
+                      "uuid": "31ddb594-ed92-4c77-b432-aec5ebdbb3d6",
+                      "disabled": true
                     },
                     {
                       "key": "end_time",
                       "value": "15:30",
                       "type": "text",
-                      "uuid": "05072ead-0c5a-4ad0-8ed8-e49125339b0c"
+                      "uuid": "05072ead-0c5a-4ad0-8ed8-e49125339b0c",
+                      "disabled": true
                     },
                     {
                       "key": "enable_event_reminders",
@@ -1159,13 +1282,13 @@
                     },
                     {
                       "key": "dates[0][start_date]",
-                      "value": "2026-08-10",
+                      "value": "2026-08-14",
                       "type": "text",
                       "uuid": "8ffbd376-5643-4534-abf5-6c7b2a6ea5f6"
                     },
                     {
                       "key": "dates[0][end_date]",
-                      "value": "2026-08-12",
+                      "value": "2026-08-14",
                       "type": "text",
                       "uuid": "b9e60c34-b339-495d-a0c3-8e03bb4680bc"
                     },
@@ -1183,13 +1306,13 @@
                     },
                     {
                       "key": "dates[1][start_date]",
-                      "value": "2026-08-13",
+                      "value": "2026-08-15",
                       "type": "text",
                       "uuid": "4575d3d6-6ff4-438b-8671-6dd411d9d28e"
                     },
                     {
                       "key": "dates[1][end_date]",
-                      "value": "2026-08-15",
+                      "value": "2026-08-17",
                       "type": "text",
                       "uuid": "9d2817ff-1013-4025-bed3-eea0c238dbb0"
                     },
@@ -1228,6 +1351,13 @@
                       "value": "15:00",
                       "type": "text",
                       "uuid": "decf37a4-6449-4f07-8039-58e58094672e"
+                    },
+                    {
+                      "key": "donation_goal_amount",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "a3a89d2e-168f-4c5b-a31a-94fc7a79a692",
+                      "disabled": true
                     }
                   ]
                 },
@@ -1243,6 +1373,14 @@
                     "causes"
                   ]
                 }
+              },
+              "response": []
+            },
+            {
+              "name": "Virtual Cause-Google auth",
+              "request": {
+                "method": "GET",
+                "header": []
               },
               "response": []
             },
@@ -1770,7 +1908,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/organisation/causes/019f2e5f-eff3-7326-9e9c-286337fcd3f2",
+                  "raw": "{{base_url}}/api/v1/organisation/causes/01a00018-5e87-723b-8be2-29db1d13652b",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1779,7 +1917,119 @@
                     "v1",
                     "organisation",
                     "causes",
-                    "019f2e5f-eff3-7326-9e9c-286337fcd3f2"
+                    "01a00018-5e87-723b-8be2-29db1d13652b"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Cause Participants",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/causes/{{cause_uuid}}/participants?status=pending&skill_id=1&per_page=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "causes",
+                    "{{cause_uuid}}",
+                    "participants"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "pending"
+                    },
+                    {
+                      "key": "skill_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Participant Details",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/causes/{causeUuid}/participants/{{participantUuid}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "causes",
+                    "{causeUuid}",
+                    "participants",
+                    "{{participantUuid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Approve/Reject Participant",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"status\": \"approved\"\r\n}\r\n\r\n// Allowed values ------ approved | rejected",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/causes/{{causeUuid}}/participants/{{participantUuid}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "causes",
+                    "{{causeUuid}}",
+                    "participants",
+                    "{{participantUuid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fetch Verified Organisations",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/organisation/causes/collaborators",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "organisation",
+                    "causes",
+                    "collaborators"
                   ]
                 }
               },
@@ -2348,6 +2598,37 @@
               "response": []
             },
             {
+              "name": "Join cause",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"skill_id\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/volunteer/causes/{{cause_uuid}}/join",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "volunteer",
+                    "causes",
+                    "{{cause_uuid}}",
+                    "join"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Add_Bookmark",
               "request": {
                 "method": "POST",
@@ -2386,6 +2667,68 @@
                     "causes",
                     "{{causeUuid}}",
                     "bookmark"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Donate to cause",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"amount\": 5000, \r\n  \"is_anonymous\": false\r\n}\r\n\r\n\r\n//  \"is_anonymous\": true ---- for anonymous donations",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/volunteer/causes/{{cause_uuid}}/donate",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "volunteer",
+                    "causes",
+                    "{{cause_uuid}}",
+                    "donate"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Donate to need",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"amount\": 5000, \r\n  \"is_anonymous\": false\r\n}\r\n\r\n\r\n//  \"is_anonymous\": true ---- for anonymous donations",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/volunteer/causes/{{need_uuid}}/donate",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "volunteer",
+                    "causes",
+                    "{{need_uuid}}",
+                    "donate"
                   ]
                 }
               },
@@ -3086,6 +3429,28 @@
                     "v1",
                     "admin",
                     "ngo-stats"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Donations",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/organisations/{{orgUuid}}/donations",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "organisations",
+                    "{{orgUuid}}",
+                    "donations"
                   ]
                 }
               },
@@ -3896,7 +4261,7 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{bearer_token}}",
+        "value": "{{ngo_admin_token}}",
         "type": "string"
       }
     ]
